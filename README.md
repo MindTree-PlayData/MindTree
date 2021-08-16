@@ -1,1 +1,1 @@
-MindTree 입니다
+MindTree 입니다.
