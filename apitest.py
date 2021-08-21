@@ -1,10 +1,10 @@
 import io
 import os
+from datetime import datetime
 from konlpy.tag import Komoran
 # Imports the Google Cloud client library
 from google.cloud import vision
 from hanspell import spell_checker
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/motive/Data_Study/Projects/MindTree/key/future-glider-321504-4b3a509617f3.json'
 
 def OCRrequest():
     # Instantiates a client
@@ -37,15 +37,14 @@ def OCRrequest():
         print(word.description)
 
 
-
-def OCRrequest2():
+def OCRrequest2(useapi):
     # Instantiates a client
     client = vision.ImageAnnotatorClient()
 
     # The name of the image file to annotate
     file_name = os.path.join(
         os.path.dirname(__file__),
-        'resources/data5.jpg')
+        'resources/pc_img.png')
 
     # Loads the image into memory
     with io.open(file_name, 'rb') as image_file:
@@ -65,7 +64,7 @@ def OCRrequest2():
     # words_cat = words[0].description.replace("\n", "")
     words_cat = words[0].description  # 줄바꿈 없이 해봤음
     print(f'뽑힌 텍스트 \n{words[0].description}')
-    print("\n\n이건 replace한 텍스트\n", words_cat)
+    # print("\n\n이건 replace한 텍스트\n", words_cat)
 
     return words_cat
 
@@ -75,6 +74,7 @@ def OCRrequest2():
 
 def spell_check(input_text):
     result = spell_checker.check(input_text)
+    print(type(result))
     print("\n\noriginal")
     print(result.original)
     print("\n\nchecked")
@@ -86,9 +86,17 @@ def spell_check(input_text):
 # 1. 모든 결과를 한 줄로 붙인다.
 
 # 2. nlp 라이브러리 등을 이용해서 보정한다.
-    # 띄어쓰기, 문장 분리 등 처리를 한다.
+# 띄어쓰기, 문장 분리 등 처리를 한다.
 
 # 3. 위 결과를 감성 분석 API로 보낸다.
+
+
+
+# 4. 텍스트 마이닝 - 빈발단어 워드 클라우드..
+    # 1) 한글 형태소 분석, konlpy
+    # 2) 불용어 처리 - 조사 어미 등 제외
+    # 3) 구문분석 -
+    # 4) 분석대상 선정 / 분석
 
 
 if __name__ == "__main__":
