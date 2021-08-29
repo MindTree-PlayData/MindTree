@@ -1,40 +1,23 @@
 import io
 import os
 from datetime import datetime
-from konlpy.tag import Komoran
+import json
+
 # Imports the Google Cloud client library
 from google.cloud import vision
 from hanspell import spell_checker
 
-def OCRrequest():
-    # Instantiates a client
-    client = vision.ImageAnnotatorClient()
+# 형태소 분석
+from konlpy.tag import Kkma, Komoran
 
-    # The name of the image file to annotate
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/data5.jpg')
+# word cloud 그리기
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
-    # Loads the image into memory
-    with io.open(file_name, 'rb') as image_file:
-        content = image_file.read()
 
-    image = vision.Image(content=content)
 
-    # Performs label detection on the image file
-    response = client.label_detection(image=image)
-    labels = response.label_annotations
-
-    response_text = client.text_detection(image=image)
-    words = response_text.text_annotations
-
-    print("------------아래는 분석한 Label입니다.---------------")
-    for label in labels:
-        print(label.description)
-
-    print("------------아래는 뽑은 텍스트 입니다---------------")
-    for word in words:
-        print(word.description)
+def getTimeStr():
+    return "[" + str(datetime.now()) + "]"
 
 
 def OCRrequest2(useapi):
@@ -83,22 +66,126 @@ def spell_check(input_text):
     print(result.words)
 
 
-# 1. 모든 결과를 한 줄로 붙인다.
+def get_pos_tag(text):
+    """ pos tagging -> 원하는 품사에 해당하는 단어만 뽑아내기 """
 
-# 2. nlp 라이브러리 등을 이용해서 보정한다.
-# 띄어쓰기, 문장 분리 등 처리를 한다.
+    # 1. pos tagger initialization
+    print(getTimeStr(), "=== step 3 ===")
+    print(getTimeStr(), "pos tagger initializing....")
+    kkma = Kkma()
+    kkma.pos("시작")
+    print(getTimeStr(), "pos tagger initialized...")
+
+    # 2. 대상 텍스트 pos tagging
+    print(getTimeStr(), "pos tagging 시작...")
+    pos_tagged_results = kkma.pos(text)
+    print(f"pos tagging 결과를 출력합니다.\n{pos_tagged_results}")
+    print(getTimeStr(), "pos tagging 완료...")
+
+    return pos_tagged_results
+
+
+def get_target_word(pos_tagged_results):
+    # 2. 원하는 품사에 해당하는 단어만 뽑아내기
+    word_list = []
+
+    for pos in pos_tagged_results:
+        if pos[1][0] in {"I", "M", "N", "O", "U", "V"}:
+            word_list.append(pos[0])
+
+    print(getTimeStr(), f"{len(pos_tagged_results)}중에 {len(word_list)}개를 추출하였습니다.")
+
+
+    # 단어의 빈도를 출력한다.
+    word_frequency = get_frequency(word_list)
+    print(getTimeStr(), f"단어의 빈도는 \n{word_frequency}\n")
+
+    # 빈도 결과를 저장한다.
+
+
+    # 단어의 리스트를 출력한다.
+    print(getTimeStr(), f"단어의 리스트를 출력합니다\n{word_list}\n")
+
+    return word_list
+
+def get_frequency(word_list):
+    """ list에 있는 단어들의 빈도를 {단어:빈도}의 딕셔너리 형태로 반환한다. """
+    print(getTimeStr(), "단어의 빈도를 확인합니다.")
+    word_freq_dict = {}
+    for word in word_list:  # 리스트에 있는 단어를 하나씩 조회함.
+        if word in word_freq_dict:  # dict에 한개라도 있으면 개수를 올림
+            word_freq_dict[word] += 1
+        elif word not in word_freq_dict:  # 한개도 없으면 그 단어 key에 대한 값은 1이 된다.
+            word_freq_dict[word] = 1
+    print(getTimeStr(), "단어의 빈도 확인 완료, 딕셔너리를 반환")
+
+    return word_freq_dict
+
+
+
+def save_result(resultFileName, word_freq):
+    with open(resultFileName, "w") as json_file:
+        json.dump(word_freq, json_file, ensure_ascii=False)
+
+def save_list(result_file_name, target_list):
+    # 단어의 리스트를 저장한다.
+    with open(result_file_name, "w") as list_file:
+        list_file.write(f"{target_list}")
+
 
 # 3. 위 결과를 감성 분석 API로 보낸다.
 
-
-
 # 4. 텍스트 마이닝 - 빈발단어 워드 클라우드..
-    # 1) 한글 형태소 분석, konlpy
-    # 2) 불용어 처리 - 조사 어미 등 제외
-    # 3) 구문분석 -
-    # 4) 분석대상 선정 / 분석
+# 1) 한글 형태소 분석, konlpy ->
+# 2) 불용어 처리 - 조사 어미 등 제외
+# 3) 구문분석 -
+# 4) 분석대상 선정 / 분석
+
+
+def make_word_cloud(word_list):
+    """ 단어의 list를 받아서 word cloud를 만들고, 출력한다."""
+
+    # word cloud에 넣기 위해 str형태로 반환
+    word_list_str = ",".join(word_list)
+
+    # word cloud를 만든다.
+    wc = WordCloud(background_color="white", max_font_size=100,
+                   font_path='/Users/motive/Library/Fonts/D2Coding-Ver1.3.2-20180524-all.ttc',
+                   max_words=10)
+
+    cloud = wc.generate(word_list_str)
+
+    # word cloud를 출력한다.
+    print(getTimeStr(), "Word Cloud를 출력합니다.")
+    plt.imshow(cloud)
+    plt.axis('off')
+    plt.show()
+
+""" OCR -> spell check -> 저장
+    
+    -> pos tagging -> target word -> 저장
+    """
+def text_mining():
+    user_id = 'donkey'  # 나중에 flask에서 객체화된 id를 받을 것.
+    result_file_name = "./results/" + user_id + "_" + "word_list.txt"
+
+    if os.path.isfile(result_file_name):  # 분석한 리스트가 있으면 그걸 가져옴
+        with open(result_file_name, "r") as word_list:
+            make_word_cloud(word_list)
+
+    else:  # 분석한 리스트가 없으면 pos tagging을 실시함.
+        with open("sampletext.txt", "r") as sample_text:
+            print(type(sample_text))
+            pos_tag_results = get_pos_tag(sample_text.read())
+
+        word_list = get_target_word(pos_tag_results)
+        save_list(result_file_name, word_list)
+        make_word_cloud(word_list)
+    print(getTimeStr(), "종료합니다...")
 
 
 if __name__ == "__main__":
-    text = OCRrequest2()
-    spell_check(text)
+    # text = OCRrequest2()
+    # spell_check(text)
+
+    text_mining()
