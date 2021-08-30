@@ -1,0 +1,352 @@
+{
+	"document": {
+		"sentiment": "negative",
+		"confidence": {
+			"negative": 55.98402,
+			"positive": 31.973736,
+			"neutral": 12.042241
+		}
+	},
+	"sentences": [
+		{
+			"content": "\ub098\ub294 \ucee4\uc11c \uc131\uacf5\ud558\uaca0\ub2e4\uace0 \ub2e4\uc9d0\uc744 \ud588\ub2e4.",
+			"offset": 0,
+			"length": 20,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.00037899843,
+				"positive": 0.008173194,
+				"neutral": 0.9914478
+			},
+			"highlights": [
+				{
+					"offset": 6,
+					"length": 13
+				}
+			]
+		},
+		{
+			"content": "\n\ud55c\ucabd \ub208\uc5c6\ub294 \uc5c4\ub9c8\ub3c4 \uc2eb\uace0..\n\uc774\ub807\uac8c \uac00\ub09c\ud55c\uac8c \ub108\ubb34\ub3c4 \uc2eb\uc5c8\uae30 \ub54c\ubb38\uc5d0..\n\ub098\ub294 \uc545\ucc29\uac19\uc774 \uacf5\ubd80\ud588\ub2e4.",
+			"offset": 20,
+			"length": 53,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.9939832,
+				"positive": 0.000809002,
+				"neutral": 0.0052078264
+			},
+			"highlights": [
+				{
+					"offset": 40,
+					"length": 10
+				}
+			]
+		},
+		{
+			"content": "\n\n\uc5c4\ub9c8 \uacc1\uc744 \ub5a0\ub098 \ub098\ub294 \uc11c\uc6b8\uc5d0 \uc62c\ub77c\uc640\n\uacf5\ubd80\ud574\uc11c \ub2f9\ub2f9\ud788 \uc11c\uc6b8\ub300\ub97c..\ud569\uaca9\ud588\ub2e4.",
+			"offset": 73,
+			"length": 42,
+			"sentiment": "positive",
+			"confidence": {
+				"negative": 0.0013741833,
+				"positive": 0.9664256,
+				"neutral": 0.032200202
+			},
+			"highlights": [
+				{
+					"offset": 37,
+					"length": 4
+				}
+			]
+		},
+		{
+			"content": "\n\n\uacb0\ud63c\uc744 \ud588\ub2e4.",
+			"offset": 115,
+			"length": 9,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0004055007,
+				"positive": 0.0008051899,
+				"neutral": 0.99878925
+			},
+			"highlights": [
+				{
+					"offset": 2,
+					"length": 6
+				}
+			]
+		},
+		{
+			"content": " \ub0b4\uc9d1\ub3c4 \uc0dd\uacbc\ub2e4.",
+			"offset": 124,
+			"length": 9,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0005786051,
+				"positive": 0.0014515975,
+				"neutral": 0.9979697
+			},
+			"highlights": [
+				{
+					"offset": 1,
+					"length": 7
+				}
+			]
+		},
+		{
+			"content": " \uc544\uc774\ub3c4 \uc0dd\uacbc\ub2e4.",
+			"offset": 133,
+			"length": 9,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0008678501,
+				"positive": 0.0015635848,
+				"neutral": 0.99756855
+			},
+			"highlights": [
+				{
+					"offset": 1,
+					"length": 7
+				}
+			]
+		},
+		{
+			"content": "\n\uc774\uc81c \ub098\ub294 \uac00\uc815\uc744 \uafb8\uba70 \ud589\ubcf5\ud558\uac8c \uc0b0\ub2e4.",
+			"offset": 142,
+			"length": 22,
+			"sentiment": "positive",
+			"confidence": {
+				"negative": 0.0007565708,
+				"positive": 0.9983683,
+				"neutral": 0.0008750859
+			},
+			"highlights": [
+				{
+					"offset": 14,
+					"length": 7
+				}
+			]
+		},
+		{
+			"content": "\n\n\uc5ec\uae30\uc11c\ub294 \uc5c4\ub9c8\uc0dd\uac01\uc774 \ub098\uc9c0 \uc54a\uae30..\ub54c\ubb38\uc5d0 \uc88b\uc558\ub2e4.",
+			"offset": 164,
+			"length": 28,
+			"sentiment": "positive",
+			"confidence": {
+				"negative": 1.2599238e-05,
+				"positive": 0.9999757,
+				"neutral": 1.1762747e-05
+			},
+			"highlights": [
+				{
+					"offset": 20,
+					"length": 7
+				}
+			]
+		},
+		{
+			"content": "\n\uc774 \ud589\ubcf5\uc774 \uae4a\uc5b4 \uac08\ub54c\ucbe4\uc774\uc5c8\ub2e4.",
+			"offset": 192,
+			"length": 17,
+			"sentiment": "positive",
+			"confidence": {
+				"negative": 6.252479e-06,
+				"positive": 0.99996567,
+				"neutral": 2.8070239e-05
+			},
+			"highlights": [
+				{
+					"offset": 1,
+					"length": 9
+				}
+			]
+		},
+		{
+			"content": "\n\n\ub204\uad6c\uc138\uc694",
+			"offset": 209,
+			"length": 6,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0042775925,
+				"positive": 0.00020379294,
+				"neutral": 0.99551857
+			},
+			"highlights": [
+				{
+					"offset": 2,
+					"length": 4
+				}
+			]
+		},
+		{
+			"content": " \uc774\ub7f0!\uadf8\uac74 \uc6b0\ub9ac \uc5c4\ub9c8\uc600\ub2e4.",
+			"offset": 215,
+			"length": 15,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.00048418515,
+				"positive": 0.00042229344,
+				"neutral": 0.99909353
+			},
+			"highlights": [
+				{
+					"offset": 4,
+					"length": 10
+				}
+			]
+		},
+		{
+			"content": "\n\uc5ec\uc804\ud788 \ud55c\ucabd\ub208\uc774 \uc5c6\ub294\ucc44\ub85c..\n\n\ud558\ub298\uc774..\ubb34\ub108\uc9c0\ub294 \ub4ef \ud588\ub2e4.",
+			"offset": 230,
+			"length": 33,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.99989116,
+				"positive": 6.32142e-05,
+				"neutral": 4.5665285e-05
+			},
+			"highlights": [
+				{
+					"offset": 23,
+					"length": 9
+				}
+			]
+		},
+		{
+			"content": "\n\n\uc5b4\ub9b0 \ub538 \uc544\uc774\ub294 \ubb34\uc11c\uc6cc\uc11c \ub3c4\ub9dd\ucce4\ub2e4.",
+			"offset": 263,
+			"length": 21,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.9982528,
+				"positive": 0.00034023603,
+				"neutral": 0.001406948
+			},
+			"highlights": [
+				{
+					"offset": 2,
+					"length": 14
+				}
+			]
+		},
+		{
+			"content": "\n\uadf8\ub9ac\uace0 \uc544\ub0b4\ub294 \ub204\uad6c\ub0d0\uace0 \ubb3c\uc5c8\ub2e4.",
+			"offset": 284,
+			"length": 18,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0004353858,
+				"positive": 0.00016264293,
+				"neutral": 0.99940205
+			},
+			"highlights": [
+				{
+					"offset": 5,
+					"length": 12
+				}
+			]
+		},
+		{
+			"content": "\n\n\uacb0\ud63c\ud558\uae30 \uc804 \ubd80\uc778\uc5d0\uac8c \uac70\uc9d3\ub9d0\uc744 \ud588\ub2e4.",
+			"offset": 302,
+			"length": 22,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.9988373,
+				"positive": 0.00029543132,
+				"neutral": 0.00086734514
+			},
+			"highlights": [
+				{
+					"offset": 2,
+					"length": 19
+				}
+			]
+		},
+		{
+			"content": "\n\uc5b4\uba38\ub2c8\uac00 \ub3cc\uc544\uac00\uc168\ub2e4\uace0.",
+			"offset": 324,
+			"length": 13,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.98829645,
+				"positive": 0.00032681922,
+				"neutral": 0.011376779
+			},
+			"highlights": [
+				{
+					"offset": 1,
+					"length": 11
+				}
+			]
+		},
+		{
+			"content": "\n\uadf8\ub798\uc11c \ub098\ub294 \ubaa8\ub974\ub294 \uc0ac\ub78c\uc774\ub77c\uace0 \ud588\ub2e4.",
+			"offset": 337,
+			"length": 21,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0011567228,
+				"positive": 0.00021779783,
+				"neutral": 0.9986254
+			},
+			"highlights": [
+				{
+					"offset": 5,
+					"length": 15
+				}
+			]
+		},
+		{
+			"content": "\n\n\uadf8\ub9ac\uace0 \ub204\uad70\ub370 \uc6b0\ub9ac\uc9d1 \uc640\uc11c \uc6b0\ub9ac\uc544\uc774 \uc6b8\ub9ac\ub0d0\uace0 \uc18c\ub9ac\ub97c \ucce4\ub2e4.",
+			"offset": 358,
+			"length": 34,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.9984163,
+				"positive": 0.00014870867,
+				"neutral": 0.0014350722
+			},
+			"highlights": [
+				{
+					"offset": 27,
+					"length": 6
+				}
+			]
+		},
+		{
+			"content": "\n\"\ub2f9\uc7a5 \ub098\uac00\uc694!",
+			"offset": 392,
+			"length": 9,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.99682426,
+				"positive": 0.0003144516,
+				"neutral": 0.002861358
+			},
+			"highlights": [
+				{
+					"offset": 2,
+					"length": 6
+				}
+			]
+		},
+		{
+			"content": " \uaebc\uc9c0\ub77c\uad6c\uc694!\"\n\n\uadf8\ub7ec\uc790 \uc5c4\ub9c8\ub294 \"\uc8c4\uc1a1\ud569\ub2c8\ub2e4, \uc81c\uac00 \uc9d1\uc744 \uc798\ubabb\ucc3e\uc544\uc654\ub098\ubd10\uc694\"\n\uc774 \ub9d0\uc744 \ud558\uace4 \ubb35\ubb35\ud788 \ub208 \uc55e\uc5d0\uc11c \uc0ac\ub77c\uc84c\ub2e4.",
+			"offset": 401,
+			"length": 65,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.0027807327,
+				"positive": 0.00026932385,
+				"neutral": 0.99695
+			},
+			"highlights": [
+				{
+					"offset": 42,
+					"length": 18
+				}
+			]
+		}
+	]
+}
