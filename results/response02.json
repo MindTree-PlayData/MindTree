@@ -9,7 +9,7 @@
 	},
 	"sentences": [
 		{
-			"content": "\ub098\ub294 \ucee4\uc11c \uc131\uacf5\ud558\uaca0\ub2e4\uace0 \ub2e4\uc9d0\uc744 \ud588\ub2e4.",
+			"content": "나는 커서 성공하겠다고 다짐을 했다.",
 			"offset": 0,
 			"length": 20,
 			"sentiment": "neutral",
@@ -26,7 +26,7 @@
 			]
 		},
 		{
-			"content": "\n\ud55c\ucabd \ub208\uc5c6\ub294 \uc5c4\ub9c8\ub3c4 \uc2eb\uace0..\n\uc774\ub807\uac8c \uac00\ub09c\ud55c\uac8c \ub108\ubb34\ub3c4 \uc2eb\uc5c8\uae30 \ub54c\ubb38\uc5d0..\n\ub098\ub294 \uc545\ucc29\uac19\uc774 \uacf5\ubd80\ud588\ub2e4.",
+			"content": "\n한쪽 눈없는 엄마도 싫고..\n이렇게 가난한게 너무도 싫었기 때문에..\n나는 악착같이 공부했다.",
 			"offset": 20,
 			"length": 53,
 			"sentiment": "negative",
@@ -43,7 +43,7 @@
 			]
 		},
 		{
-			"content": "\n\n\uc5c4\ub9c8 \uacc1\uc744 \ub5a0\ub098 \ub098\ub294 \uc11c\uc6b8\uc5d0 \uc62c\ub77c\uc640\n\uacf5\ubd80\ud574\uc11c \ub2f9\ub2f9\ud788 \uc11c\uc6b8\ub300\ub97c..\ud569\uaca9\ud588\ub2e4.",
+			"content": "\n\n엄마 곁을 떠나 나는 서울에 올라와\n공부해서 당당히 서울대를..합격했다.",
 			"offset": 73,
 			"length": 42,
 			"sentiment": "positive",
@@ -60,7 +60,7 @@
 			]
 		},
 		{
-			"content": "\n\n\uacb0\ud63c\uc744 \ud588\ub2e4.",
+			"content": "\n\n결혼을 했다.",
 			"offset": 115,
 			"length": 9,
 			"sentiment": "neutral",
@@ -77,7 +77,7 @@
 			]
 		},
 		{
-			"content": " \ub0b4\uc9d1\ub3c4 \uc0dd\uacbc\ub2e4.",
+			"content": " 내집도 생겼다.",
 			"offset": 124,
 			"length": 9,
 			"sentiment": "neutral",
@@ -94,7 +94,7 @@
 			]
 		},
 		{
-			"content": " \uc544\uc774\ub3c4 \uc0dd\uacbc\ub2e4.",
+			"content": " 아이도 생겼다.",
 			"offset": 133,
 			"length": 9,
 			"sentiment": "neutral",
@@ -111,7 +111,7 @@
 			]
 		},
 		{
-			"content": "\n\uc774\uc81c \ub098\ub294 \uac00\uc815\uc744 \uafb8\uba70 \ud589\ubcf5\ud558\uac8c \uc0b0\ub2e4.",
+			"content": "\n이제 나는 가정을 꾸며 행복하게 산다.",
 			"offset": 142,
 			"length": 22,
 			"sentiment": "positive",
@@ -128,7 +128,7 @@
 			]
 		},
 		{
-			"content": "\n\n\uc5ec\uae30\uc11c\ub294 \uc5c4\ub9c8\uc0dd\uac01\uc774 \ub098\uc9c0 \uc54a\uae30..\ub54c\ubb38\uc5d0 \uc88b\uc558\ub2e4.",
+			"content": "\n\n여기서는 엄마생각이 나지 않기..때문에 좋았다.",
 			"offset": 164,
 			"length": 28,
 			"sentiment": "positive",
@@ -145,7 +145,7 @@
 			]
 		},
 		{
-			"content": "\n\uc774 \ud589\ubcf5\uc774 \uae4a\uc5b4 \uac08\ub54c\ucbe4\uc774\uc5c8\ub2e4.",
+			"content": "\n이 행복이 깊어 갈때쯤이었다.",
 			"offset": 192,
 			"length": 17,
 			"sentiment": "positive",
@@ -162,7 +162,7 @@
 			]
 		},
 		{
-			"content": "\n\n\ub204\uad6c\uc138\uc694",
+			"content": "\n\n누구세요",
 			"offset": 209,
 			"length": 6,
 			"sentiment": "neutral",
@@ -179,7 +179,7 @@
 			]
 		},
 		{
-			"content": " \uc774\ub7f0!\uadf8\uac74 \uc6b0\ub9ac \uc5c4\ub9c8\uc600\ub2e4.",
+			"content": " 이런!그건 우리 엄마였다.",
 			"offset": 215,
 			"length": 15,
 			"sentiment": "neutral",
@@ -196,7 +196,7 @@
 			]
 		},
 		{
-			"content": "\n\uc5ec\uc804\ud788 \ud55c\ucabd\ub208\uc774 \uc5c6\ub294\ucc44\ub85c..\n\n\ud558\ub298\uc774..\ubb34\ub108\uc9c0\ub294 \ub4ef \ud588\ub2e4.",
+			"content": "\n여전히 한쪽눈이 없는채로..\n\n하늘이..무너지는 듯 했다.",
 			"offset": 230,
 			"length": 33,
 			"sentiment": "negative",
@@ -213,7 +213,7 @@
 			]
 		},
 		{
-			"content": "\n\n\uc5b4\ub9b0 \ub538 \uc544\uc774\ub294 \ubb34\uc11c\uc6cc\uc11c \ub3c4\ub9dd\ucce4\ub2e4.",
+			"content": "\n\n어린 딸 아이는 무서워서 도망쳤다.",
 			"offset": 263,
 			"length": 21,
 			"sentiment": "negative",
@@ -230,7 +230,7 @@
 			]
 		},
 		{
-			"content": "\n\uadf8\ub9ac\uace0 \uc544\ub0b4\ub294 \ub204\uad6c\ub0d0\uace0 \ubb3c\uc5c8\ub2e4.",
+			"content": "\n그리고 아내는 누구냐고 물었다.",
 			"offset": 284,
 			"length": 18,
 			"sentiment": "neutral",
@@ -247,7 +247,7 @@
 			]
 		},
 		{
-			"content": "\n\n\uacb0\ud63c\ud558\uae30 \uc804 \ubd80\uc778\uc5d0\uac8c \uac70\uc9d3\ub9d0\uc744 \ud588\ub2e4.",
+			"content": "\n\n결혼하기 전 부인에게 거짓말을 했다.",
 			"offset": 302,
 			"length": 22,
 			"sentiment": "negative",
@@ -264,7 +264,7 @@
 			]
 		},
 		{
-			"content": "\n\uc5b4\uba38\ub2c8\uac00 \ub3cc\uc544\uac00\uc168\ub2e4\uace0.",
+			"content": "\n어머니가 돌아가셨다고.",
 			"offset": 324,
 			"length": 13,
 			"sentiment": "negative",
@@ -281,7 +281,7 @@
 			]
 		},
 		{
-			"content": "\n\uadf8\ub798\uc11c \ub098\ub294 \ubaa8\ub974\ub294 \uc0ac\ub78c\uc774\ub77c\uace0 \ud588\ub2e4.",
+			"content": "\n그래서 나는 모르는 사람이라고 했다.",
 			"offset": 337,
 			"length": 21,
 			"sentiment": "neutral",
@@ -298,7 +298,7 @@
 			]
 		},
 		{
-			"content": "\n\n\uadf8\ub9ac\uace0 \ub204\uad70\ub370 \uc6b0\ub9ac\uc9d1 \uc640\uc11c \uc6b0\ub9ac\uc544\uc774 \uc6b8\ub9ac\ub0d0\uace0 \uc18c\ub9ac\ub97c \ucce4\ub2e4.",
+			"content": "\n\n그리고 누군데 우리집 와서 우리아이 울리냐고 소리를 쳤다.",
 			"offset": 358,
 			"length": 34,
 			"sentiment": "negative",
@@ -315,7 +315,7 @@
 			]
 		},
 		{
-			"content": "\n\"\ub2f9\uc7a5 \ub098\uac00\uc694!",
+			"content": "\n\"당장 나가요!",
 			"offset": 392,
 			"length": 9,
 			"sentiment": "negative",
@@ -332,7 +332,7 @@
 			]
 		},
 		{
-			"content": " \uaebc\uc9c0\ub77c\uad6c\uc694!\"\n\n\uadf8\ub7ec\uc790 \uc5c4\ub9c8\ub294 \"\uc8c4\uc1a1\ud569\ub2c8\ub2e4, \uc81c\uac00 \uc9d1\uc744 \uc798\ubabb\ucc3e\uc544\uc654\ub098\ubd10\uc694\"\n\uc774 \ub9d0\uc744 \ud558\uace4 \ubb35\ubb35\ud788 \ub208 \uc55e\uc5d0\uc11c \uc0ac\ub77c\uc84c\ub2e4.",
+			"content": " 꺼지라구요!\"\n\n그러자 엄마는 \"죄송합니다, 제가 집을 잘못찾아왔나봐요\"\n이 말을 하곤 묵묵히 눈 앞에서 사라졌다.",
 			"offset": 401,
 			"length": 65,
 			"sentiment": "neutral",
