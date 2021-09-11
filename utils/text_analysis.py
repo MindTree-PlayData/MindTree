@@ -12,6 +12,8 @@ from hanspell import spell_checker
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
 
+from request_sentiment import load_response
+
 
 def get_time_str():
     return "[" + str(datetime.now()) + "]"
@@ -115,6 +117,20 @@ def make_word_cloud(word_list):
     plt.show()
 
 
+def word_relations():
+    """연관어 분석. 긍정/부정일때 자주 등장한 단어가 무엇인지 분석함.
+        1. 긍정/부정 별 문장들을 감성분석 결과에서 가져와야 함.
+        2. 가져온 결과에서 sentence들을 붙인다.
+        3. sentence들을 pos tagging + 원하는 품사를 뽑는다.
+
+        :return 리스트
+        이후에 워드클라우드를 그리면 됨.
+        """
+    sentiment_json = load_response()
+    plt.imshow()
+
+    pass
+
 def text_mining():
     user_id = 'donkey'  # 나중에 flask에서 객체화된 id를 받을 것.
     result_file_name = "../results/" + user_id + "_" + "word_list.txt"
@@ -144,10 +160,7 @@ def text_mining():
 
 
 if __name__ == "__main__":
-    # text = request_ocr()
-
     # spell_check(text)
 
     text_mining()
 
-    # sentiment_analysis()
