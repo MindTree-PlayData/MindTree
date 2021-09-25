@@ -23,18 +23,9 @@ def spell_check(input_text):
     print(result.words)
 
 
-def request_ocr():
+def request_ocr(content):
     # Instantiates a client
     client = vision.ImageAnnotatorClient()
-
-    # The name of the image file to annotate
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        '../resources/pc_img.png')
-
-    # Loads the image into memory
-    with io.open(file_name, 'rb') as image_file:
-        content = image_file.read()
 
     image = vision.Image(content=content)
 
@@ -55,6 +46,23 @@ def request_ocr():
     return words_cat
 
 
-if __name__ == "__main__":
-    text = request_ocr()
+def ocr(filepath, user_id):
+    # Loads the image into memory
+    with io.open(filepath, 'rb') as image_file:
+        content = image_file.read()
+    text = request_ocr(content)
     spell_check(text)
+
+    # 결과 저장하기
+    user_path = os.path.join("./results", str(user_id))
+    user_ocr_path = os.path.join(user_path, f"{str(user_id)}_ocr.txt")
+    # print(user_path)
+    # print(user_ocr_path)
+
+    if not os.path.isdir(user_path):
+        os.makedirs(user_path, exist_ok=True)  # 있으면 만들고 없으면 지나감
+
+    with open(user_ocr_path, "w") as ocr_result:
+        ocr_result.write(text)
+
+    return text
