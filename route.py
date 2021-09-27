@@ -15,17 +15,39 @@ app.secret_key = "donkey_secret"  # flash 쓰려면 설정해야함.
 
 @app.route("/", methods=['GET'])
 def home():
+    """ 시작 페이지. 로그인을 할 수 있음."""
+    return render_template('login.html')
+
+
+@app.route("/my_diary", methods=['GET'])
+def my_diary():
+    """ login required,  """
+    return render_template('my_diary.html')
+
+
+@app.route("/upload", methods=['GET'])
+def upload():
+    """ login required,  """
     return render_template('upload.html')
 
 
-@app.route("/result", methods=['GET'])
-def result():
-    """ login required,  """
-    return render_template('index.html')
+@app.route("/analyze", methods=['GET'])
+def analyze():
+    """ login required, 분석된 데이터로 그래프를 만들도록 구현.
+    analyze.html을 렌더 -> html 통해서 javascript 작동 -> /json_data로 데이터 요청 -> 그래프 그림
+
+    => 이 route 에서 '누구' 의 '어느' 일기 데이터에 접근할 것인지 미리 지정해 전달해야 한다."""
+    return render_template('analyze.html')
 
 
-@app.route("/upload", methods=['GET', 'POST'])
-def upload():
+@app.route("/login", methods=['GET'])
+def login():
+    """ login 로직을 수행함. 지금은 임시로 바로 my_diary로 보냄."""
+    return redirect(url_for("my_diary"))
+
+
+@app.route("/upload_file", methods=['GET', 'POST'])
+def upload_file():
     if request.method == "POST":
         # 요청한 파일을 업로드 한다.
         f = request.files['file']  # input 태그의 name 을 받음.
@@ -39,11 +61,12 @@ def upload():
         # request OCR
         ocr_result = ocr(filepath, user_id)
         print(ocr_result)
+
         # text mining
 
         # sentiment analysis
 
-        return render_template("my_diary.html")
+        return redirect(url_for("my_diary"))
 
     else:
         return '실패'
@@ -51,6 +74,7 @@ def upload():
 
 @app.route("/json_data", methods=['GET', 'POST'])
 def json_data():
+    """ """
     with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
               encoding="utf-8") as local_json:
         data = json.load(local_json)

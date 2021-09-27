@@ -60,7 +60,7 @@ def ocr(filepath, user_id):
     # print(user_ocr_path)
 
     if not os.path.isdir(user_path):
-        os.makedirs(user_path, exist_ok=True)  # 있으면 만들고 없으면 지나감
+        os.makedirs(user_path, exist_ok=True)  # 없으면 만들고 있으면 지나감
 
     with open(user_ocr_path, "w") as ocr_result:
         ocr_result.write(text)

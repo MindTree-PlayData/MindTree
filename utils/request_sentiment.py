@@ -77,4 +77,3 @@ if __name__ == "__main__":
     res = request(text_data)
     save_response(res)
     load_response()
-    # test01()

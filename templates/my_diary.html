@@ -11,19 +11,22 @@
 </head>
 <body>
 
-    <h3>내 다이어리</h3>
+    <h3 class="container">내 다이어리</h3>
 
     {% with messages = get_flashed_messages(with_categories = true) %}
         {% if messages %}
             {% for category, message in messages %}
-            <div class="alert-{{ category }}">
+            <div class="alert-{{ category }} container">
                 {{ message }}
             </div>
             {% endfor %}
         {% endif%}
     {% endwith %}
 
-    <a href="/result">결과 확인하기</a>
+<!--   일기가 추가될때마다 추가된 일기가 반영된 일기 목록을 보여주려면
+    DB가 구축되어야 함. -->
+    <a href="/analyze">결과 확인하기</a><br>
+    <a href="/upload">업로드하기</a>
 
 </body>
 </html>
