@@ -1,0 +1,6 @@
+.*
+!.gitignore
+key/
+diaryOcrMain*
+__pycache__
+
