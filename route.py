@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from utils.OCR import ocr
+from utils.text_analysis import text_mining
 import os
 import json
 
@@ -52,17 +53,29 @@ def upload_file():
         # 요청한 파일을 업로드 한다.
         f = request.files['file']  # input 태그의 name 을 받음.
         user_id = request.form.get('id')
-        filename = secure_filename(f.filename)
-        filepath = os.path.join("./static/images/" + str(user_id) + '_' + str(filename))
-        f.save(filepath)
+
+        filename = str(user_id) + '_' + str(secure_filename(f.filename))
+        file_dir = os.path.join("results", str(user_id))
+        file_path = os.path.join(file_dir, filename)
+
+        # 디렉토리 만들기
+        if not os.path.isdir(file_dir):
+            os.makedirs(file_dir, exist_ok=True)
+
+        # 이미지 저장
+        f.save(file_path)
         flash("업로드에 성공하였습니다", "success")
+
+        # # 페이지 넘기기
+        # redirect(url_for("my_diary"))
 
         ### 업로드한 파일을 미리 분석해서 저장해둔다.  ###
         # request OCR
-        ocr_result = ocr(filepath, user_id)
-        print(ocr_result)
+        user_ocr_result = ocr(file_path, file_dir, user_id)
+        print(user_ocr_result)
 
         # text mining
+        text_mining(user_id, user_ocr_result)
 
         # sentiment analysis
 
@@ -74,7 +87,7 @@ def upload_file():
 
 @app.route("/json_data", methods=['GET', 'POST'])
 def json_data():
-    """ """
+    """ returns sample json data for bar graph """
     with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
               encoding="utf-8") as local_json:
         data = json.load(local_json)

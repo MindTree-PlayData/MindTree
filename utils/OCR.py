@@ -33,12 +33,12 @@ def request_ocr(content):
     response_text = client.text_detection(image=image)
     words = response_text.text_annotations
 
-    # 첫번째 결과를 줄바꿈 없이 모두 붙여서 출력한다. #
+    # 첫번째 결과를 줄바꿈 없이 모두 붙여서 출력한다.
     # words[0]는 추출된 모든 텍스트를 모은 정보인데, 그 중 decription이라는 key에 저장된 값이 인식된 텍스트의 문자열이다.
     # 줄바꿈이 있으므로 제외하고 모아준다.
     print("------------아래는 뽑은 텍스트 입니다---------------")
-
     # words_cat = words[0].description.replace("\n", "")
+
     words_cat = words[0].description  # 줄바꿈 없이 해봤음
     print(f'뽑힌 텍스트 \n{words[0].description}')
     # print("\n\n이건 replace한 텍스트\n", words_cat)
@@ -46,23 +46,17 @@ def request_ocr(content):
     return words_cat
 
 
-def ocr(filepath, user_id):
-    # Loads the image into memory
-    with io.open(filepath, 'rb') as image_file:
+def ocr(file_path, file_dir, user_id):
+    # 이미지 파일 ocr 하기
+    with io.open(file_path, 'rb') as image_file:
         content = image_file.read()
     text = request_ocr(content)
     spell_check(text)
 
     # 결과 저장하기
-    user_path = os.path.join("./results", str(user_id))
-    user_ocr_path = os.path.join(user_path, f"{str(user_id)}_ocr.txt")
-    # print(user_path)
-    # print(user_ocr_path)
-
-    if not os.path.isdir(user_path):
-        os.makedirs(user_path, exist_ok=True)  # 없으면 만들고 있으면 지나감
+    user_ocr_path = os.path.join(file_dir, f"{str(user_id)}_ocr.txt")
 
     with open(user_ocr_path, "w") as ocr_result:
         ocr_result.write(text)
 
-    return text
+    return user_ocr_path

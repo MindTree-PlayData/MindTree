@@ -12,7 +12,7 @@ from hanspell import spell_checker
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
 
-from request_sentiment import load_response
+# from request_sentiment import load_response
 
 
 def get_time_str():
@@ -69,18 +69,19 @@ def get_target_word(pos_tagged_results):
     return word_list
 
 
-def get_frequency(word_list):
-    """ list에 있는 단어들의 빈도를 {단어:빈도}의 딕셔너리 형태로 반환한다. """
-    print(get_time_str(), "단어의 빈도를 확인합니다.")
-    word_freq_dict = {}
-    for word in word_list:  # 리스트에 있는 단어를 하나씩 조회함.
-        if word in word_freq_dict:  # dict에 한개라도 있으면 개수를 올림
-            word_freq_dict[word] += 1
-        elif word not in word_freq_dict:  # 한개도 없으면 그 단어 key에 대한 값은 1이 된다.
-            word_freq_dict[word] = 1
-    print(get_time_str(), "단어의 빈도 확인 완료, 딕셔너리를 반환")
-
-    return word_freq_dict
+# def get_frequency(word_list):
+#     """ list에 있는 단어들의 빈도를 {단어:빈도}의 딕셔너리 형태로 반환한다.
+#     필요없음"""
+#     print(get_time_str(), "단어의 빈도를 확인합니다.")
+#     word_freq_dict = {}
+#     for word in word_list:  # 리스트에 있는 단어를 하나씩 조회함.
+#         if word in word_freq_dict:  # dict에 한개라도 있으면 개수를 올림
+#             word_freq_dict[word] += 1
+#         elif word not in word_freq_dict:  # 한개도 없으면 그 단어 key에 대한 값은 1이 된다.
+#             word_freq_dict[word] = 1
+#     print(get_time_str(), "단어의 빈도 확인 완료, 딕셔너리를 반환")
+#
+#     return word_freq_dict
 
 
 def save_result(result_file_name, word_freq):
@@ -110,11 +111,15 @@ def make_word_cloud(word_list):
 
     cloud = wc.generate(word_list_str)
 
+    return cloud
+
+
+
     # word cloud를 출력한다.
-    print(get_time_str(), "Word Cloud를 출력합니다.")
-    plt.imshow(cloud)
-    plt.axis('off')
-    plt.show()
+    # print(get_time_str(), "Word Cloud를 출력합니다.")
+    # plt.imshow(cloud)
+    # plt.axis('off')
+    # plt.show()
 
 
 def word_relations():
@@ -126,41 +131,44 @@ def word_relations():
         :return 리스트
         이후에 워드클라우드를 그리면 됨.
         """
-    sentiment_json = load_response()
-    plt.imshow()
+    # sentiment_json = load_response()
+    # plt.imshow()
 
     pass
 
-def text_mining():
-    user_id = 'donkey'  # 나중에 flask에서 객체화된 id를 받을 것.
-    result_file_name = "../results/" + user_id + "_" + "word_list.txt"
+
+def text_mining(user_id, user_ocr_result):
+    result_file_path = os.path.join("results", str(user_id), user_id + "_" + "word_list.txt")
+    word_cloud_file_path = os.path.join('results', str(user_id), user_id + "_" + "word_cloud.png")
 
     # --- 분석한 리스트가 있으면 그걸 가져옴
-    if os.path.isfile(result_file_name):
-        with open(result_file_name, "r") as word_list:
-            make_word_cloud(word_list)
+    if os.path.isfile(result_file_path):
+        # 워드클라우드 만들기
+        with open(result_file_path, "r") as word_list:
+            cloud = make_word_cloud(word_list)
+            # 저장하기
+            cloud.to_file(word_cloud_file_path)
+
 
     # --- 분석한 리스트가 없으면 pos tagging을 실시함.
     else:
         # 1. POS tagging 한다.
         # 원래는 OCR 결과로 텍스트 분석을 해야하는데 일단은 샘플 텍스트로 실시한다.
-        with open("../data/sample_text.txt", "r") as sample_text:
-            print(type(sample_text))
-            pos_tag_results = get_pos_tag(sample_text.read())
+        with open(user_ocr_result, "r") as target_text:
+            print(type(target_text))
+            pos_tag_results = get_pos_tag(target_text.read())
 
         # 2. 특정 품사를 가진 단어만 뽑아 list로 만든다.
         word_list = get_target_word(pos_tag_results)
 
         # 2-1. 단어 list를 파일로 저장한다.
-        save_list(result_file_name, word_list)
+        save_list(result_file_path, word_list)
 
-        # 3. 워드 클라우드를 만들어 출력한다.
-        make_word_cloud(word_list)
+        # 3. 워드 클라우드를 만든다
+        cloud = make_word_cloud(word_list)
+
+        # 3-1 워드클라우드를 저장한다.
+        cloud.to_file(word_cloud_file_path)
+
     print(get_time_str(), "종료합니다...")
-
-
-if __name__ == "__main__":
-    # spell_check(text)
-
-    text_mining()
 
