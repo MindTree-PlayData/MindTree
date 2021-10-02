@@ -13,21 +13,25 @@ def get_time_str():
 
 
 def spell_check(input_text):
+    """ 맞춤법을 체크한다.
+    - spell_checker 처리 결과는
+    original, checked, words 등을 출력할 수 있다.
+
+    :return : 맞춤법 체크한 단어 str """
 
     result = spell_checker.check(input_text)
 
-    print(type(result))
-    print(get_time_str(), "\n\noriginal")
-    print(result.original)
-    print(get_time_str(), "\n\nchecked")
+    print(get_time_str(), "checked\n")
     print(result.checked)
-    print(get_time_str(), "\n\nwords")
-    print(result.words)
 
     return result.checked
 
 
 def request_ocr(content):
+    """ 이미지를 받아서 Google OCR 요청을 보내고 결과를 받는다.
+    :param content: 이미지
+    :return OCR 결과 텍스트 """
+
     # Instantiates a client
     client = vision.ImageAnnotatorClient()
 
@@ -37,20 +41,23 @@ def request_ocr(content):
     response_text = client.text_detection(image=image)
     words = response_text.text_annotations
 
-    # 첫번째 결과를 줄바꿈 없이 모두 붙여서 출력한다.
-    # words[0]는 추출된 모든 텍스트를 모은 정보인데, 그 중 decription이라는 key에 저장된 값이 인식된 텍스트의 문자열이다.
-    # 줄바꿈이 있으므로 제외하고 모아준다.
+    # words[0]는 추출된 모든 텍스트.
+    # 그 중 description 이라는 key 에 저장된 값이 인식된 텍스트의 문자열이다.
     print("------------아래는 뽑은 텍스트 입니다---------------")
-    # words_cat = words[0].description.replace("\n", "")
+    words_cat = words[0].description
 
-    words_cat = words[0].description  # 줄바꿈 없이 해봤음
-    print(f'뽑힌 텍스트 \n{words[0].description}')
-    # print("\n\n이건 replace한 텍스트\n", words_cat)
+    print(f'뽑힌 텍스트 확인'
+          f' \n{words[0].description}')
 
     return words_cat
 
 
 def ocr(file_path, file_dir, user_id):
+    """ OCR main function
+    1. 이미지 파일 OCR 처리 + 맞춤법 체크
+    2. 결과 저장
+    :return OCR 결과 텍스트 """
+
     # 이미지 파일 ocr 하기
     with io.open(file_path, 'rb') as image_file:
         content = image_file.read()
@@ -59,7 +66,6 @@ def ocr(file_path, file_dir, user_id):
 
     # 결과 저장하기
     user_ocr_path = os.path.join(file_dir, f"{str(user_id)}_ocr.txt")
-
     with open(user_ocr_path, "w") as ocr_result:
         ocr_result.write(text_checked)
 

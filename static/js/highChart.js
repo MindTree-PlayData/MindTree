@@ -4,11 +4,8 @@
 const URL = "http://127.0.0.1:5000/json_data";
 console.log(userData)
 
-
-// getJSON을 안쓰는 함수로 수정 필요. 지금 정상적으로 userData 사용 가능
 $(document).ready(function() {
-    $.getJSON(URL, function(data) {
-
+    $(function(){
         // 받아온 데이터에서 필요한 부분을 가져옴
         let sentiment = userData.document.confidence
         console.log(sentiment);
@@ -26,7 +23,7 @@ $(document).ready(function() {
         //     pieChart.series[j].addPoint(sentimentArray[j])
         // };
 
-    })
+    });
 
     let barChart = new Highcharts.chart({
         chart: {
@@ -64,10 +61,6 @@ $(document).ready(function() {
             data: []
         }]
     });
-
-
-
-
 
     // let pieChart = new Highcharts.chart('container2', {
     //     chart: {
@@ -108,5 +101,6 @@ $(document).ready(function() {
     //         data:[]
     //     }]
     // });
+
 });
 

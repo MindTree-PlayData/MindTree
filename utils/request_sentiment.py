@@ -18,12 +18,17 @@ def read_text():
 
 
 def request(text_data):
-    """ - url: 요청보낼 url
-        - headers: post요청 헤더에 담아야 할 정보.
-            여기서는 key-id, secret key, content type을 담아야 한다.
-        - json: body 에 담을 컨텐츠. 분석할 내용에 해당. str타입이어야 한다.
-        - .json() 은 응답받은 객체를 json으로 변환해준다.
-            그대로 두면 어떤 파이썬 객체로 반환되는 듯하다. """
+    """
+    네이버 감성분석 API를 이용해 텍스트 데이터의 감성분석을 수행한다.
+    :param text_data : 감성분석 할 텍스트 데이터 str
+
+    :args for request
+    - url: 요청보낼 url
+    - headers: post요청 헤더에 담아야 할 정보.
+        여기서는 key-id, secret key, content type을 담아야 한다.
+    - json: body 에 담을 컨텐츠. 분석할 내용에 해당. str타입이어야 한다.
+    - .json() 은 응답받은 객체를 json으로 변환해준다.
+        그대로 두면 어떤 파이썬 객체로 반환되는 듯하다. """
 
     res = requests.post(url=url,
                         headers=headers,

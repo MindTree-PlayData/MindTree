@@ -2,12 +2,6 @@ import json
 import os
 from datetime import datetime
 
-# word cloud 그리기
-import matplotlib.pyplot as plt
-
-# Imports the Google Cloud client library
-from hanspell import spell_checker
-
 # 형태소 분석
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
@@ -48,29 +42,10 @@ def get_target_word(pos_tagged_results):
 
     print(get_time_str(), f"{len(pos_tagged_results)}중에 {len(word_list)}개를 추출하였습니다.")
 
-    # 단어의 빈도를 출력한다.
-    # word_frequency = get_frequency(word_list)
-    # print(get_time_str(), f"단어의 빈도를 출력합니다. \n{word_frequency}\n")
-
     # 단어의 리스트를 출력한다.
-    # print(get_time_str(), f"단어의 리스트를 출력합니다. \n{word_list}\n")
+    print(get_time_str(), f"단어의 리스트를 출력합니다. \n{word_list}\n")
 
     return word_list
-
-
-def get_frequency(word_list):
-    """ list에 있는 단어들의 빈도를 {단어:빈도}의 딕셔너리 형태로 반환한다.
-    필요없음"""
-    print(get_time_str(), "단어의 빈도를 확인합니다.")
-    word_freq_dict = {}
-    for word in word_list:  # 리스트에 있는 단어를 하나씩 조회함.
-        if word in word_freq_dict:  # dict에 한개라도 있으면 개수를 올림
-            word_freq_dict[word] += 1
-        elif word not in word_freq_dict:  # 한개도 없으면 그 단어 key에 대한 값은 1이 된다.
-            word_freq_dict[word] = 1
-    print(get_time_str(), "단어의 빈도 확인 완료, 딕셔너리를 반환")
-
-    return word_freq_dict
 
 
 def save_result(result_file_name, word_freq):
@@ -88,7 +63,7 @@ def save_list(result_file_name, target_list):
 
 
 def make_word_cloud(word_list):
-    """ 단어의 list를 받아서 word cloud를 만들고, 출력한다."""
+    """ 단어의 list를 받아서 word cloud를 만들고, 반환한다."""
 
     # word cloud에 넣기 위해 str형태로 반환
     word_list_str = ",".join(word_list)
@@ -114,7 +89,6 @@ def word_relations():
         """
     # sentiment_json = load_response()
     # plt.imshow()
-
     pass
 
 
