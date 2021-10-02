@@ -1,12 +1,16 @@
 
 // 그냥 로컬디스크의 파일을 주소로 주면 에러가 난다. flask 로 로컬 서버를 만들어주고 거기서 데이터를 반환받아야 한다.
-const URL = "http://127.0.0.1:5000/json_data";
 
+const URL = "http://127.0.0.1:5000/json_data";
+console.log(userData)
+
+
+// getJSON을 안쓰는 함수로 수정 필요. 지금 정상적으로 userData 사용 가능
 $(document).ready(function() {
-    $.getJSON(URL, function(data){
+    $.getJSON(URL, function(data) {
 
         // 받아온 데이터에서 필요한 부분을 가져옴
-        let sentiment = data.document.confidence
+        let sentiment = userData.document.confidence
         console.log(sentiment);
 
         //for 문 돌리기 위해 array 로 만듬

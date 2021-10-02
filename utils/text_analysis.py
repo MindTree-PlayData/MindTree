@@ -19,17 +19,6 @@ def get_time_str():
     return "[" + str(datetime.now()) + "]"
 
 
-def spell_check(input_text):
-    result = spell_checker.check(input_text)
-    print(type(result))
-    print(get_time_str(), "\n\noriginal")
-    print(result.original)
-    print(get_time_str(), "\n\nchecked")
-    print(result.checked)
-    print(get_time_str(), "\n\nwords")
-    print(result.words)
-
-
 def get_pos_tag(target_text):
     """ pos tagging -> 원하는 품사에 해당하는 단어만 뽑아내기 """
 
@@ -60,28 +49,28 @@ def get_target_word(pos_tagged_results):
     print(get_time_str(), f"{len(pos_tagged_results)}중에 {len(word_list)}개를 추출하였습니다.")
 
     # 단어의 빈도를 출력한다.
-    word_frequency = get_frequency(word_list)
-    print(get_time_str(), f"단어의 빈도를 출력합니다. \n{word_frequency}\n")
+    # word_frequency = get_frequency(word_list)
+    # print(get_time_str(), f"단어의 빈도를 출력합니다. \n{word_frequency}\n")
 
     # 단어의 리스트를 출력한다.
-    print(get_time_str(), f"단어의 리스트를 출력합니다. \n{word_list}\n")
+    # print(get_time_str(), f"단어의 리스트를 출력합니다. \n{word_list}\n")
 
     return word_list
 
 
-# def get_frequency(word_list):
-#     """ list에 있는 단어들의 빈도를 {단어:빈도}의 딕셔너리 형태로 반환한다.
-#     필요없음"""
-#     print(get_time_str(), "단어의 빈도를 확인합니다.")
-#     word_freq_dict = {}
-#     for word in word_list:  # 리스트에 있는 단어를 하나씩 조회함.
-#         if word in word_freq_dict:  # dict에 한개라도 있으면 개수를 올림
-#             word_freq_dict[word] += 1
-#         elif word not in word_freq_dict:  # 한개도 없으면 그 단어 key에 대한 값은 1이 된다.
-#             word_freq_dict[word] = 1
-#     print(get_time_str(), "단어의 빈도 확인 완료, 딕셔너리를 반환")
-#
-#     return word_freq_dict
+def get_frequency(word_list):
+    """ list에 있는 단어들의 빈도를 {단어:빈도}의 딕셔너리 형태로 반환한다.
+    필요없음"""
+    print(get_time_str(), "단어의 빈도를 확인합니다.")
+    word_freq_dict = {}
+    for word in word_list:  # 리스트에 있는 단어를 하나씩 조회함.
+        if word in word_freq_dict:  # dict에 한개라도 있으면 개수를 올림
+            word_freq_dict[word] += 1
+        elif word not in word_freq_dict:  # 한개도 없으면 그 단어 key에 대한 값은 1이 된다.
+            word_freq_dict[word] = 1
+    print(get_time_str(), "단어의 빈도 확인 완료, 딕셔너리를 반환")
+
+    return word_freq_dict
 
 
 def save_result(result_file_name, word_freq):
@@ -112,14 +101,6 @@ def make_word_cloud(word_list):
     cloud = wc.generate(word_list_str)
 
     return cloud
-
-
-
-    # word cloud를 출력한다.
-    # print(get_time_str(), "Word Cloud를 출력합니다.")
-    # plt.imshow(cloud)
-    # plt.axis('off')
-    # plt.show()
 
 
 def word_relations():

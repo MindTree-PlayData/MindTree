@@ -3,6 +3,5 @@
 key/
 diaryOcrMain*
 __pycache__
-etc/
-data/
-
+/etc
+/data

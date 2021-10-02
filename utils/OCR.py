@@ -13,7 +13,9 @@ def get_time_str():
 
 
 def spell_check(input_text):
+
     result = spell_checker.check(input_text)
+
     print(type(result))
     print(get_time_str(), "\n\noriginal")
     print(result.original)
@@ -21,6 +23,8 @@ def spell_check(input_text):
     print(result.checked)
     print(get_time_str(), "\n\nwords")
     print(result.words)
+
+    return result.checked
 
 
 def request_ocr(content):
@@ -51,12 +55,12 @@ def ocr(file_path, file_dir, user_id):
     with io.open(file_path, 'rb') as image_file:
         content = image_file.read()
     text = request_ocr(content)
-    spell_check(text)
+    text_checked = spell_check(text)
 
     # 결과 저장하기
     user_ocr_path = os.path.join(file_dir, f"{str(user_id)}_ocr.txt")
 
     with open(user_ocr_path, "w") as ocr_result:
-        ocr_result.write(text)
+        ocr_result.write(text_checked)
 
     return user_ocr_path

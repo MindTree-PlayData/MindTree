@@ -35,10 +35,18 @@ def upload():
 @app.route("/analyze", methods=['GET'])
 def analyze():
     """ login required, 분석된 데이터로 그래프를 만들도록 구현.
-    analyze.html을 렌더 -> html 통해서 javascript 작동 -> /json_data로 데이터 요청 -> 그래프 그림
+    => 이 route 에서 '누구' 의 '어느' 일기 데이터에 접근할 것인지 미리 지정해 전달해야 한다.
+    - 방법
+    analyze.html을 렌더 -> 렌더할 때 그래프에 들어갈 json data 전달 -> js 상에서 {{ userData }}로 받아 그래프를 그림
 
-    => 이 route 에서 '누구' 의 '어느' 일기 데이터에 접근할 것인지 미리 지정해 전달해야 한다."""
-    return render_template('analyze.html')
+    - 변수명
+
+    """
+    with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
+              encoding="utf-8") as local_json:
+        data = json.load(local_json)
+
+    return render_template('analyze.html', user_data=data)
 
 
 @app.route("/login", methods=['GET'])
@@ -66,9 +74,6 @@ def upload_file():
         f.save(file_path)
         flash("업로드에 성공하였습니다", "success")
 
-        # # 페이지 넘기기
-        # redirect(url_for("my_diary"))
-
         ### 업로드한 파일을 미리 분석해서 저장해둔다.  ###
         # request OCR
         user_ocr_result = ocr(file_path, file_dir, user_id)
@@ -91,7 +96,6 @@ def json_data():
     with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
               encoding="utf-8") as local_json:
         data = json.load(local_json)
-    print(data)
     return data
 
 
