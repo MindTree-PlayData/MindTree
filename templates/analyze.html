@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
 
     <title>Document</title>
 </head>
@@ -14,7 +15,9 @@
     <figure class="highcharts-figure">
 
         <div id="container"></div>
-        <div id="container2"></div>
+        <div id="container2" class="header-center">
+            <img src="{{ url_for('get_file', filename=image_path) }}" alt="">
+        </div>
 
     </figure>
 

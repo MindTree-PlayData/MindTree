@@ -11,7 +11,7 @@ headers = {'X-NCP-APIGW-API-KEY-ID': os.environ.get("X_NCP_APIGW_API_KEY_ID"),
 
 
 def read_text(user_id):
-    """ 대상 id의 텍스트를 읽어온다. """
+    """ 대상 id의 텍스트(ocr 결과)를 읽어온다. """
     text_path = os.path.join('results', str(user_id), str(user_id) + "_ocr.txt")
     with open(text_path, "r") as t:
         text_data = t.read()

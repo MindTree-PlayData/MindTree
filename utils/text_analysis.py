@@ -92,9 +92,10 @@ def word_relations():
     pass
 
 
-def text_mining(user_id, user_ocr_result):
+def text_mining(user_id):
     result_file_path = os.path.join("results", str(user_id), user_id + "_" + "word_list.txt")
     word_cloud_file_path = os.path.join('results', str(user_id), user_id + "_" + "word_cloud.png")
+    user_ocr_path = os.path.join("results", str(user_id), f"{str(user_id)}_ocr.txt")
 
     # --- 분석한 리스트가 있으면 그걸 가져옴
     if os.path.isfile(result_file_path):
@@ -109,7 +110,7 @@ def text_mining(user_id, user_ocr_result):
     else:
         # 1. POS tagging 한다.
         # 원래는 OCR 결과로 텍스트 분석을 해야하는데 일단은 샘플 텍스트로 실시한다.
-        with open(user_ocr_result, "r") as target_text:
+        with open(user_ocr_path, "r") as target_text:
             print(type(target_text))
             pos_tag_results = get_pos_tag(target_text.read())
 

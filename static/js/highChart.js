@@ -1,7 +1,5 @@
 
-// 그냥 로컬디스크의 파일을 주소로 주면 에러가 난다. flask 로 로컬 서버를 만들어주고 거기서 데이터를 반환받아야 한다.
-
-const URL = "http://127.0.0.1:5000/json_data";
+// 변수 받을 수 있는지 확인.
 console.log(userData)
 
 $(document).ready(function() {
@@ -24,6 +22,8 @@ $(document).ready(function() {
         // };
 
     });
+
+    // --------- Stacked bar chart -----------
 
     let barChart = new Highcharts.chart({
         chart: {
@@ -61,6 +61,8 @@ $(document).ready(function() {
             data: []
         }]
     });
+
+    // ----------- Pie Chart -------------
 
     // let pieChart = new Highcharts.chart('container2', {
     //     chart: {
