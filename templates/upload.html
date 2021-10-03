@@ -12,11 +12,13 @@
 
 <body>
     <header class="headerbox">
-        <h3 class="header-center"> 업로드 하기 </h3>
+        <h2 class="header-center"> 업로드 하기 </h2>
     </header>
 
     <div class="container" style="background-color: antiquewhite">
         <form class="container" action="/upload_file" method="post" enctype="multipart/form-data">
+            <p>- 아이디를 직접 써서 결과를 확인하세요 <br>
+                (로그인 기능이 구현되면 로그인 정보로 처리할 예정)</p>
             id: <input type="text" name="id"><br><br>
             file: <input type="file" name="file"><br><br>
             <input type="submit">

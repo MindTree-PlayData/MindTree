@@ -10,9 +10,11 @@ headers = {'X-NCP-APIGW-API-KEY-ID': os.environ.get("X_NCP_APIGW_API_KEY_ID"),
            }
 
 
-def read_text():
-    with open("../data/sample_text02.txt", "r") as sample_text:
-        text_data = sample_text.read()
+def read_text(user_id):
+    """ 대상 id의 텍스트를 읽어온다. """
+    text_path = os.path.join('results', str(user_id), str(user_id) + "_ocr.txt")
+    with open(text_path, "r") as t:
+        text_data = t.read()
     print(type(text_data))  # 스트링인 것을 확인
     return text_data
 
@@ -48,37 +50,42 @@ def request(text_data):
     return res_json
 
 
-def save_response(res):
+def save_response(res, user_id):
     """
     *** 계속 요청하면 횟수가 깎이므로 json 파일로 저장한다. ***
     :param res: Clova Sentiment analysis 반응 json 자료
 
     * 수정계획: 파일 이름을 user_id + text 정보 + [날짜정보] 를 포함하도록 함수를 구성할 것.
     """
-    with open("../results/response02.json", "w", encoding='utf-8') as file:
-        json.dump(res, file, indent='\t', ensure_ascii=False)
+    sentiment_path = os.path.join('results', str(user_id), str(user_id) + "_sentiment.json")
+    with open(sentiment_path, "w", encoding='utf-8') as f:
+        json.dump(res, f, indent='\t', ensure_ascii=False)
 
 
-def load_response():
-    """ 1. 저장된 json 파일을 가져온다.
-        2. 반응 json 파일을 출력한다."""
+# def load_response():
+#     """ 1. 저장된 json 파일을 가져온다.
+#         2. 반응 json 파일을 출력한다."""
+#
+#     with open("../results/response02.json", "r") as response:
+#         response_json = json.load(response)
+#         # print(response_json)
+#
+#         for idx, sentence in enumerate(response_json['sentences']):
+#             print(f"\n{idx + 1}번")
+#             print(f"{sentence['content']}")
+#             print(f"{sentence['sentiment']}")
+#             print(f"{sentence['confidence']}")
+#             print(f"{sentence['highlights']}")
+#
+#     return response_json
 
-    with open("../results/response02.json", "r") as response:
-        response_json = json.load(response)
-        # print(response_json)
 
-        for idx, sentence in enumerate(response_json['sentences']):
-            print(f"\n{idx + 1}번")
-            print(f"{sentence['content']}")
-            print(f"{sentence['sentiment']}")
-            print(f"{sentence['confidence']}")
-            print(f"{sentence['highlights']}")
-
-    return response_json
+def sentiment_analysis(user_id):
+    text_data = read_text(user_id)
+    res = request(text_data)
+    save_response(res, user_id)
+    # load_response()
 
 
 if __name__ == "__main__":
-    text_data = read_text()
-    res = request(text_data)
-    save_response(res)
-    load_response()
+    sentiment_analysis()

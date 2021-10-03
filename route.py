@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from utils.OCR import ocr
 from utils.text_analysis import text_mining
+from utils.request_sentiment import sentiment_analysis
 import os
 import json
 
@@ -27,15 +28,18 @@ def upload():
     return render_template('upload.html')
 
 
-@app.route("/analyze", methods=['GET'])
+@app.route("/analyze", methods=['GET', 'POST'])
 def analyze():
     """ login required, 분석된 데이터로 그래프를 만들도록 구현.
     => 이 route 에서 '누구' 의 '어느' 일기 데이터에 접근할 것인지 미리 지정해 전달해야 한다.
     - 방법
     analyze.html을 렌더 -> 렌더할 때 그래프에 들어갈 json data 전달 -> js 상에서 {{ userData }}로 받아 그래프를 그림
     """
-    # 유저 개인의 감정분석 json 파일을 가져오도록 수정할 것.
-    with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
+
+    # 추후 로그인 시스템이 구축되면 세션 id를 받을 수 있도록 수정.
+    user_id = request.form.get('id')
+    sentiment_path = os.path.join('results', str(user_id), str(user_id) + "_sentiment.json")
+    with open(sentiment_path, "r",
               encoding="utf-8") as local_json:
         data = json.load(local_json)
 
@@ -50,14 +54,18 @@ def login():
 
 @app.route("/upload_file", methods=['GET', 'POST'])
 def upload_file():
-    """ 요청한 파일을 업로드 하고 my_diary로 리다이렉트 한다.
-     - OCR, text mining, sentiment analysis를 수행하도록 처리한다.
+    """
+    1. 요청한 파일을 업로드 하고 my_diary로 리다이렉트 한다.
+    2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
         위 처리는 백엔드에서 따로 이루어질 수 있도록 구현한다.
+        (현재는 순차적으로 모두 분석이 이루어지고 난 후에 다음 페이지로 넘어감. 수정대상.)
 
     :return my_diary 페이지로 리다이렉트 """
     if request.method == "POST":
         # 요청한 파일을 업로드 한다.
         f = request.files['file']  # input 태그의 name 을 받음.
+
+        # id 는 추후 로그인 시스템이 구현되면 세션에서 받아올 예정.
         user_id = request.form.get('id')
 
         # 경로 변수 정의
@@ -82,6 +90,7 @@ def upload_file():
         text_mining(user_id, user_ocr_result)
 
         # sentiment analysis
+        sentiment_analysis(user_id)
 
         return redirect(url_for("my_diary"))
 
@@ -89,13 +98,13 @@ def upload_file():
         return '실패'
 
 
-@app.route("/json_data", methods=['GET', 'POST'])
-def json_data():
-    """ returns sample json data for bar graph """
-    with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
-              encoding="utf-8") as local_json:
-        data = json.load(local_json)
-    return data
+# @app.route("/json_data", methods=['GET', 'POST'])
+# def json_data():
+#     """ (삭제예정) returns sample json data for bar graph """
+#     with open("/Users/motive/Data_Study/Projects/MindTree/results/response02.json", "r",
+#               encoding="utf-8") as local_json:
+#         data = json.load(local_json)
+#     return data
 
 
 if __name__ == "__main__":

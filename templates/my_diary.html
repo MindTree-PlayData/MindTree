@@ -11,8 +11,9 @@
 </head>
 <body>
 
-    <h3 class="header-center">내 다이어리</h3>
+    <h2 class="header-center">내 다이어리</h2>
 
+<!--    이 flash 메시지는 css 작업하면 예쁘다. -->
     {% with messages = get_flashed_messages(with_categories = true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -25,7 +26,14 @@
 
 <!--   일기가 추가될때마다 추가된 일기가 반영된 일기 목록을 보여주려면
     DB가 구축되어야 함. -->
-    <a href="/analyze">결과 확인하기</a><br>
+    <div class="container" style="background-color: powderblue">
+        <form class="container" action="/analyze" method="post" enctype="multipart/form-data">
+            <p>- 아이디를 직접 써서 업로드 하세요 <br>
+            (로그인 기능이 구현되면 로그인 정보로 처리할 예정)</p>
+            id: <input type="text" name="id"><br><br>
+            <input type="submit" value="결과 확인하기" >
+        </form>
+    </div><br>
     <a href="/upload">업로드하기</a>
 
 </body>
