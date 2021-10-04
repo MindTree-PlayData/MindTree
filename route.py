@@ -31,7 +31,7 @@ def upload():
 @app.route("/analyze", methods=['GET', 'POST'])
 def analyze():
     """ login required,
-    - 방법
+    - 구현 방법
     analyze.html을 렌더 -> 렌더할 때 그래프에 들어갈 json data 전달 -> js 상에서 {{ userData }}로 받아 그래프를 그림
 
     -- analyze 1:
@@ -57,7 +57,12 @@ def analyze():
 
 @app.route("/results/<path:filename>", methods=['GET'])
 def get_file(filename):
-    # word cloud가 저장된 미디어 폴더에 접근한다. (results폴더)
+    """ word cloud가 저장된 미디어 폴더에 접근한다. (results폴더)
+
+    :param filename: results 폴더 아래부터의 이미지 경로
+
+    :return: 지정된 directory의 파일에 접근한다.
+    """
     media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
     print(media_folder)
     return send_from_directory(media_folder, filename)
@@ -74,8 +79,9 @@ def upload_file():
     """
     1. 요청한 파일을 업로드 하고 my_diary로 리다이렉트 한다.
     2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
+        << 수정예정 >>
         위 처리는 백엔드에서 따로 이루어질 수 있도록 구현한다.
-        (현재는 순차적으로 모두 분석이 이루어지고 난 후에 다음 페이지로 넘어감. 수정대상.) """
+        (현재는 순차적으로 모두 분석이 이루어지고 난 후에 다음 페이지로 넘어감.)"""
 
     if request.method == "POST":
         # 요청한 파일을 업로드 한다.

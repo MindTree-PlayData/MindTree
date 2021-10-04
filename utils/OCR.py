@@ -46,9 +46,6 @@ def request_ocr(content):
     print("------------아래는 뽑은 텍스트 입니다---------------")
     words_cat = words[0].description
 
-    print(f'뽑힌 텍스트 확인'
-          f' \n{words[0].description}')
-
     return words_cat
 
 
