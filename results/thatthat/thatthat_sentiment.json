@@ -1,0 +1,97 @@
+{
+	"document": {
+		"sentiment": "negative",
+		"confidence": {
+			"negative": 79.932655,
+			"positive": 0.009313342,
+			"neutral": 20.058031
+		}
+	},
+	"sentences": [
+		{
+			"content": "4 일기 한 달 절린지 시작.",
+			"offset": 0,
+			"length": 16,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.001502383,
+				"positive": 0.00043734265,
+				"neutral": 0.9980603
+			},
+			"highlights": [
+				{
+					"offset": 0,
+					"length": 15
+				}
+			]
+		},
+		{
+			"content": "16O LATEFRI늘 목이를 열망하지 안 늘 실패하실 자,APR둘래 선비가 을 늘부터 한 달 동안일기 써보라고 하셨는데",
+			"offset": 16,
+			"length": 67,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.00018207055,
+				"positive": 0.0001095606,
+				"neutral": 0.99970835
+			},
+			"highlights": [
+				{
+					"offset": 53,
+					"length": 14
+				}
+			]
+		},
+		{
+			"content": " n.M 야지 서야지 가다가 역시 그냥이루고 자 버졌다.",
+			"offset": 83,
+			"length": 31,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.99931014,
+				"positive": 0.0002260145,
+				"neutral": 0.0004638879
+			},
+			"highlights": [
+				{
+					"offset": 4,
+					"length": 25
+				}
+			]
+		},
+		{
+			"content": " 습관을 한꺼번에바꾸는 건 힘든 일 or다",
+			"offset": 114,
+			"length": 23,
+			"sentiment": "negative",
+			"confidence": {
+				"negative": 0.98889214,
+				"positive": 0.0006027315,
+				"neutral": 0.010505085
+			},
+			"highlights": [
+				{
+					"offset": 15,
+					"length": 8
+				}
+			]
+		},
+		{
+			"content": " 그 T아이패드 두고 와서 회사 다녀온!",
+			"offset": 137,
+			"length": 22,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 1.1535642e-05,
+				"positive": 2.1352156e-05,
+				"neutral": 0.9999671
+			},
+			"highlights": [
+				{
+					"offset": 15,
+					"length": 6
+				}
+			]
+		}
+	]
+}
