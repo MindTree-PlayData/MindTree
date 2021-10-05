@@ -1,11 +1,18 @@
 import requests
-import json
 import os
+import json
+
+# 실행 경로에 따라 달라질 수 있어서 파일 경로를 기준으로 찾아가게 했음
+key_path = os.path.join(os.path.dirname(__file__), "../key/keys.json")
+with open(key_path, "r") as keys:
+    n_key = json.load(keys)
+
 
 # 요청 정보
 url = 'https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze'
-headers = {'X-NCP-APIGW-API-KEY-ID': os.environ.get("X_NCP_APIGW_API_KEY_ID"),
-           'X-NCP-APIGW-API-KEY': os.environ.get("X_NCP_APIGW_API_KEY"),
+
+headers = {'X-NCP-APIGW-API-KEY-ID': n_key["NAVER_API_KEY_ID"],
+           'X-NCP-APIGW-API-KEY': n_key["NAVER_API_KEY"],
            'Content-Type': 'application/json; charset=utf-8'
            }
 
@@ -84,7 +91,7 @@ def sentiment_analysis(user_id):
     text_data = read_text(user_id)
     res = request(text_data)
     save_response(res, user_id)
-    # load_response()
+
 
 
 if __name__ == "__main__":
