@@ -3,11 +3,18 @@ from werkzeug.utils import secure_filename
 from utils.OCR import ocr
 from utils.text_analysis import text_mining
 from utils.request_sentiment import sentiment_analysis
+from flask_sqlalchemy import SQLAlchemy
 import os
 import json
+import threading
 
 app = Flask(__name__)
-app.secret_key = "donkey_secret"  # flash 쓰려면 설정해야함.
+app.config['SECRET_KEY'] = "donkey_secret"  # flash 쓰려면 설정해야함.
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy()
+db.init_app(app)
 
 
 @app.route("/", methods=['GET'])
@@ -89,6 +96,7 @@ def upload_file():
 
         # id 는 추후 로그인 시스템이 구현되면 세션에서 받아올 예정.
         user_id = request.form.get('id')
+        print("user_id: ", user_id)
 
         # 경로 변수 정의
         filename = str(user_id) + '_' + str(secure_filename(f.filename))
@@ -104,16 +112,20 @@ def upload_file():
         flash("업로드에 성공하였습니다", "success")
 
         ### 업로드한 파일을 미리 분석해서 저장해둔다.  ###
-        # 쓰레드를 나눠서 처리할 예정.
+        t1 = threading.Thread(target=ocr, args=[file_path, file_dir, user_id])
+        t2 = threading.Thread(target=text_mining, args=[user_id])
+        t3 = threading.Thread(target=sentiment_analysis, args=[user_id])
 
         # request OCR
-        ocr(file_path, file_dir, user_id)
+        t1.start()
+        t1.join()
 
         # text mining
-        text_mining(user_id)
+        t2.start()
 
         # sentiment analysis
-        sentiment_analysis(user_id)
+        t3.start()
+
 
         return redirect(url_for("my_diary"))
 
