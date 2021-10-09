@@ -1,20 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
-from werkzeug.utils import secure_filename
-from utils.OCR import ocr
-from utils.text_analysis import text_mining
-from utils.request_sentiment import sentiment_analysis
-from flask_sqlalchemy import SQLAlchemy
-import os
 import json
+import os
 import threading
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = "donkey_secret"  # flash 쓰려면 설정해야함.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from werkzeug.utils import secure_filename
 
-db = SQLAlchemy()
-db.init_app(app)
+from mindtree.utils.OCR import ocr
+from mindtree.utils.request_sentiment import sentiment_analysis
+from mindtree.utils.text_analysis import text_mining
+
+from mindtree import app
 
 
 @app.route("/", methods=['GET'])
@@ -51,7 +46,7 @@ def analyze():
 
     # -- analyze 1: 감성분석 bar graph
     user_id = request.form.get('id')  # 추후 로그인 시스템이 구축되면 세션 id를 받을 수 있도록 수정.
-    sentiment_path = os.path.join('results', str(user_id), str(user_id) + "_sentiment.json")
+    sentiment_path = os.path.join('mindtree/results', str(user_id), str(user_id) + "_sentiment.json")
     with open(sentiment_path, "r",
               encoding="utf-8") as local_json:
         data = json.load(local_json)
@@ -70,7 +65,7 @@ def get_file(filename):
 
     :return: 지정된 directory의 파일에 접근한다.
     """
-    media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+    media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mindtree/results')
     print(media_folder)
     return send_from_directory(media_folder, filename)
 
@@ -100,7 +95,7 @@ def upload_file():
 
         # 경로 변수 정의
         filename = str(user_id) + '_' + str(secure_filename(f.filename))
-        file_dir = os.path.join("results", str(user_id))
+        file_dir = os.path.join("mindtree/results", str(user_id))
         file_path = os.path.join(file_dir, filename)
 
         # 디렉토리 만들기
@@ -131,7 +126,3 @@ def upload_file():
 
     else:
         return '실패'
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

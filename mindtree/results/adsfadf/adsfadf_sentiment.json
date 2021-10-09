@@ -1,0 +1,63 @@
+{
+	"document": {
+		"sentiment": "neutral",
+		"confidence": {
+			"negative": 0.025425754,
+			"positive": 0.02064172,
+			"neutral": 99.95393
+		}
+	},
+	"sentences": [
+		{
+			"content": "PAGE(金)我 la1231D.너는.......",
+			"offset": 0,
+			"length": 26,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.00039763862,
+				"positive": 0.00018054129,
+				"neutral": 0.99942183
+			},
+			"highlights": [
+				{
+					"offset": 0,
+					"length": 16
+				}
+			]
+		},
+		{
+			"content": "모든 사간들2년이.. 있다.",
+			"offset": 26,
+			"length": 15,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.00021465024,
+				"positive": 0.00027541586,
+				"neutral": 0.99951005
+			},
+			"highlights": [
+				{
+					"offset": 0,
+					"length": 9
+				}
+			]
+		},
+		{
+			"content": "收, d4",
+			"offset": 41,
+			"length": 5,
+			"sentiment": "neutral",
+			"confidence": {
+				"negative": 0.00015048383,
+				"positive": 0.00016329446,
+				"neutral": 0.99968624
+			},
+			"highlights": [
+				{
+					"offset": 0,
+					"length": 1
+				}
+			]
+		}
+	]
+}

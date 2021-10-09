@@ -3,7 +3,7 @@ import os
 import json
 
 # 실행 경로에 따라 달라질 수 있어서 파일 경로를 기준으로 찾아가게 했음
-key_path = os.path.join(os.path.dirname(__file__), "../key/keys.json")
+key_path = os.path.join(os.path.dirname(__file__), "../../key/keys.json")
 with open(key_path, "r") as keys:
     n_key = json.load(keys)
 
