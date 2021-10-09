@@ -19,7 +19,8 @@ headers = {'X-NCP-APIGW-API-KEY-ID': n_key["NAVER_API_KEY_ID"],
 
 def read_text(user_id):
     """ 대상 id의 텍스트(ocr 결과)를 읽어온다. """
-    text_path = os.path.join('results', str(user_id), str(user_id) + "_ocr.txt")
+    print(os.path.dirname(__file__))
+    text_path = os.path.join(os.path.dirname(__file__), '../results', str(user_id), str(user_id) + "_ocr.txt")
     with open(text_path, "r") as t:
         text_data = t.read()
     print(type(text_data))  # 스트링인 것을 확인
@@ -64,7 +65,7 @@ def save_response(res, user_id):
 
     * 수정계획: 파일 이름을 user_id + text 정보 + [날짜정보] 를 포함하도록 함수를 구성할 것.
     """
-    sentiment_path = os.path.join('results', str(user_id), str(user_id) + "_sentiment.json")
+    sentiment_path = os.path.join(os.path.dirname(__file__), '../results', str(user_id), str(user_id) + "_sentiment.json")
     with open(sentiment_path, "w", encoding='utf-8') as f:
         json.dump(res, f, indent='\t', ensure_ascii=False)
 

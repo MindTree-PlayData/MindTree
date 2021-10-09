@@ -93,9 +93,9 @@ def word_relations():
 
 
 def text_mining(user_id):
-    result_file_path = os.path.join("results", str(user_id), user_id + "_" + "word_list.txt")
-    word_cloud_file_path = os.path.join('results', str(user_id), user_id + "_" + "word_cloud.png")
-    user_ocr_path = os.path.join("results", str(user_id), f"{str(user_id)}_ocr.txt")
+    result_file_path = os.path.join(os.path.dirname(__file__), "../results", str(user_id), user_id + "_" + "word_list.txt")
+    word_cloud_file_path = os.path.join(os.path.dirname(__file__), '../results', str(user_id), user_id + "_" + "word_cloud.png")
+    user_ocr_path = os.path.join(os.path.dirname(__file__), "../results", str(user_id), f"{str(user_id)}_ocr.txt")
 
     # --- 분석한 리스트가 있으면 그걸 가져옴
     if os.path.isfile(result_file_path):

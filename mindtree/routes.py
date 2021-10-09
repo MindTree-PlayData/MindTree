@@ -46,6 +46,7 @@ def analyze():
 
     # -- analyze 1: 감성분석 bar graph
     user_id = request.form.get('id')  # 추후 로그인 시스템이 구축되면 세션 id를 받을 수 있도록 수정.
+    print("user_id: ", user_id)
     sentiment_path = os.path.join('mindtree/results', str(user_id), str(user_id) + "_sentiment.json")
     with open(sentiment_path, "r",
               encoding="utf-8") as local_json:
@@ -65,8 +66,8 @@ def get_file(filename):
 
     :return: 지정된 directory의 파일에 접근한다.
     """
-    media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mindtree/results')
-    print(media_folder)
+    media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+    print("media_folder", media_folder)
     return send_from_directory(media_folder, filename)
 
 
