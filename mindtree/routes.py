@@ -36,6 +36,10 @@ def analyze():
     - 구현 방법
     analyze.html을 렌더 -> 렌더할 때 그래프에 들어갈 json data 전달 -> js 상에서 {{ userData }}로 받아 그래프를 그림
 
+    :var user_id: str.
+    :var sentiment_path: sentiment analysis 파일 저장 경로
+    :var sentiment_json: json. sentiment analysis 결과 파일
+
     -- analyze 1:
         감성분석 bar graph. json 파일을 전달한다.
     -- analyze 2:
@@ -50,12 +54,12 @@ def analyze():
     sentiment_path = os.path.join('mindtree/results', str(user_id), str(user_id) + "_sentiment.json")
     with open(sentiment_path, "r",
               encoding="utf-8") as local_json:
-        data = json.load(local_json)
+        sentiment_json = json.load(local_json)
 
     # -- analyze 2: word cloud
     image_path = os.path.join(str(user_id), str(user_id) + "_word_cloud.png")
 
-    return render_template('analyze.html', user_data=data, image_path=image_path)
+    return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
 
 
 @app.route("/results/<path:filename>", methods=['GET'])
@@ -63,7 +67,6 @@ def get_file(filename):
     """ word cloud가 저장된 미디어 폴더에 접근한다. (results폴더)
 
     :param filename: results 폴더 아래부터의 이미지 경로
-
     :return: 지정된 directory의 파일에 접근한다.
     """
     media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
@@ -82,9 +85,7 @@ def upload_file():
     """
     1. 요청한 파일을 업로드 하고 my_diary로 리다이렉트 한다.
     2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
-        << 수정예정 >>
-        위 처리는 백엔드에서 따로 이루어질 수 있도록 구현한다.
-        (현재는 순차적으로 모두 분석이 이루어지고 난 후에 다음 페이지로 넘어감.)"""
+    """
 
     if request.method == "POST":
         # 요청한 파일을 업로드 한다.
@@ -121,7 +122,6 @@ def upload_file():
 
         # sentiment analysis
         t3.start()
-
 
         return redirect(url_for("my_diary"))
 

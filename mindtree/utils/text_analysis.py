@@ -6,15 +6,15 @@ from datetime import datetime
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
 
-# from request_sentiment import load_response
-
 
 def get_time_str():
     return "[" + str(datetime.now()) + "]"
 
 
 def get_pos_tag(target_text):
-    """ pos tagging -> 원하는 품사에 해당하는 단어만 뽑아내기 """
+    """ pos tagging
+    :param target_text: 입력 텍스트(OCR 결과)
+    :return dictionary (pos tagging 결과)"""
 
     # 1. pos tagger initialization
     print(get_time_str(), "=== step 3 ===")
@@ -33,7 +33,12 @@ def get_pos_tag(target_text):
 
 
 def get_target_word(pos_tagged_results):
-    # 2. 원하는 품사에 해당하는 단어만 뽑아내기
+    """
+    원하는 품사에 해당하는 단어를 뽑아 리스트로 반환한다.
+    :param pos_tagged_results:
+    :return: list
+    """
+
     word_list = []
 
     for pos in pos_tagged_results:
@@ -48,38 +53,43 @@ def get_target_word(pos_tagged_results):
     return word_list
 
 
-def save_result(result_file_name, word_freq):
-    with open(result_file_name, "w") as json_file:
-        json.dump(word_freq, json_file, ensure_ascii=False)
-
-
 def save_list(result_file_name, target_list):
-    """ 단어의 리스트를 저장한다.
-        - result_file_name : 파일 이름
-        - target_list : 저장하고자 하는 list """
+    """
+    단어의 리스트를 저장한다. -> 이 단어 리스트로 word cloud를 만들 예정.
+
+    :param result_file_name : 파일 이름
+    :param target_list : 저장하고자 하는 list
+    :return None
+    """
 
     with open(result_file_name, "w") as list_file:
-        list_file.write(f"{target_list}")
+        list_file.write(target_list)
 
 
 def make_word_cloud(word_list):
-    """ 단어의 list를 받아서 word cloud를 만들고, 반환한다."""
+    """
+    단어의 list를 받아서 word cloud를 만들고, WordCloud 객체를 반환한다.
+
+    :param word_list: list
+    :return: WordCloud object
+    """
 
     # word cloud에 넣기 위해 str형태로 반환
     word_list_str = ",".join(word_list)
 
-    # word cloud를 만든다.
+    # word cloud 객체 생성
     wc = WordCloud(background_color="white", max_font_size=100,
                    font_path='/Users/motive/Library/Fonts/D2Coding-Ver1.3.2-20180524-all.ttc',
                    max_words=10)
 
+    # word cloud 생성.
     cloud = wc.generate(word_list_str)
 
     return cloud
 
 
 def word_relations():
-    """연관어 분석. 긍정/부정일때 자주 등장한 단어가 무엇인지 분석함.
+    """ 연관어 분석. 긍정/부정일때 자주 등장한 단어가 무엇인지 분석함.
         1. 긍정/부정 별 문장들을 감성분석 결과에서 가져와야 함.
         2. 가져온 결과에서 sentence들을 붙인다.
         3. sentence들을 pos tagging + 원하는 품사를 뽑는다.
@@ -87,15 +97,26 @@ def word_relations():
         :return 리스트
         이후에 워드클라우드를 그리면 됨.
         """
-    # sentiment_json = load_response()
-    # plt.imshow()
     pass
 
 
 def text_mining(user_id):
+    """
+    텍스트 분석 main function.
+    - pos tagging, 원하는 품사의 단어를 추출
+    - word cloud를 그리고, 저장한다.
+
+    :param user_id: str, user의 id
+    :var user_ocr_path:
+    :var result_file_path:
+    :var word_cloud_file_path:
+    :return: None
+    """
+
+    # 경로 변수 정의
+    user_ocr_path = os.path.join(os.path.dirname(__file__), "../results", str(user_id), f"{str(user_id)}_ocr.txt")
     result_file_path = os.path.join(os.path.dirname(__file__), "../results", str(user_id), user_id + "_" + "word_list.txt")
     word_cloud_file_path = os.path.join(os.path.dirname(__file__), '../results', str(user_id), user_id + "_" + "word_cloud.png")
-    user_ocr_path = os.path.join(os.path.dirname(__file__), "../results", str(user_id), f"{str(user_id)}_ocr.txt")
 
     # --- 분석한 리스트가 있으면 그걸 가져옴
     if os.path.isfile(result_file_path):

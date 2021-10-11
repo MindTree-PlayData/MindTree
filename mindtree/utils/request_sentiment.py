@@ -8,7 +8,7 @@ with open(key_path, "r") as keys:
     n_key = json.load(keys)
 
 
-# 요청 정보
+# Naver sentiment API 요청 정보
 url = 'https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze'
 
 headers = {'X-NCP-APIGW-API-KEY-ID': n_key["NAVER_API_KEY_ID"],
@@ -18,11 +18,17 @@ headers = {'X-NCP-APIGW-API-KEY-ID': n_key["NAVER_API_KEY_ID"],
 
 
 def read_text(user_id):
-    """ 대상 id의 텍스트(ocr 결과)를 읽어온다. """
+    """ 대상 id의 텍스트(ocr 결과)를 읽어온다.
+    :param user_id: str
+
+    :return 분석을 위한 일기 text 데이터
+    :rtype str
+    """
     print(os.path.dirname(__file__))
     text_path = os.path.join(os.path.dirname(__file__), '../results', str(user_id), str(user_id) + "_ocr.txt")
     with open(text_path, "r") as t:
         text_data = t.read()
+
     print(type(text_data))  # 스트링인 것을 확인
     return text_data
 
@@ -32,13 +38,14 @@ def request(text_data):
     네이버 감성분석 API를 이용해 텍스트 데이터의 감성분석을 수행한다.
     :param text_data : 감성분석 할 텍스트 데이터 str
 
-    :args for request
-    - url: 요청보낼 url
-    - headers: post요청 헤더에 담아야 할 정보.
+    -- args for request --
+    :arg url: 요청보낼 url
+    :arg headers: post요청 헤더에 담아야 할 정보.
         여기서는 key-id, secret key, content type을 담아야 한다.
-    - json: body 에 담을 컨텐츠. 분석할 내용에 해당. str타입이어야 한다.
-    - .json() 은 응답받은 객체를 json으로 변환해준다.
-        그대로 두면 어떤 파이썬 객체로 반환되는 듯하다. """
+    :arg json: body 에 담을 컨텐츠. 분석할 내용에 해당. str타입이어야 한다.
+
+    :return sentiment API 분석 결과
+    """
 
     res = requests.post(url=url,
                         headers=headers,
@@ -60,8 +67,9 @@ def request(text_data):
 
 def save_response(res, user_id):
     """
-    *** 계속 요청하면 횟수가 깎이므로 json 파일로 저장한다. ***
+    감성 분석 결과를 파일로 저장한다.
     :param res: Clova Sentiment analysis 반응 json 자료
+    :param user_id: str
 
     * 수정계획: 파일 이름을 user_id + text 정보 + [날짜정보] 를 포함하도록 함수를 구성할 것.
     """
@@ -70,29 +78,15 @@ def save_response(res, user_id):
         json.dump(res, f, indent='\t', ensure_ascii=False)
 
 
-# def load_response():
-#     """ 1. 저장된 json 파일을 가져온다.
-#         2. 반응 json 파일을 출력한다."""
-#
-#     with open("../results/response02.json", "r") as response:
-#         response_json = json.load(response)
-#         # print(response_json)
-#
-#         for idx, sentence in enumerate(response_json['sentences']):
-#             print(f"\n{idx + 1}번")
-#             print(f"{sentence['content']}")
-#             print(f"{sentence['sentiment']}")
-#             print(f"{sentence['confidence']}")
-#             print(f"{sentence['highlights']}")
-#
-#     return response_json
-
-
 def sentiment_analysis(user_id):
+    """
+    감성 분석 main function
+    :param user_id: str
+    :return: None
+    """
     text_data = read_text(user_id)
     res = request(text_data)
     save_response(res, user_id)
-
 
 
 if __name__ == "__main__":
