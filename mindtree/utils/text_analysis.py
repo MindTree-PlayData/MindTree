@@ -1,12 +1,11 @@
 import os
-from utils import get_time_str
+from .util import get_time_str
+from mindtree import USER_BASE_PATH
+
 
 # 형태소 분석
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
-
-USER_BASE_PATH = '/Users/motive/Data_Study/Projects/MindTree/mindtree/results/'
-user_id = 'toptoptop'
 
 
 class TextAnalysis:
@@ -130,7 +129,3 @@ class TextAnalysis:
             print(get_time_str(), "word cloud 저장 완료")
 
         print(get_time_str(), "Text Analysis 완료...")
-
-
-tm = TextAnalysis()
-tm.text_mining(user_id)

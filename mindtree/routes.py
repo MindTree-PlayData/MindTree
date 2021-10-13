@@ -1,13 +1,14 @@
 import json
 import os
-import threading
-
+from concurrent import futures
+from threading import Thread
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
-from mindtree.utils.OCR import ocr
-from mindtree.utils.request_sentiment import sentiment_analysis
-from mindtree.utils.text_analysis import text_mining
+from mindtree.thread import analysis_threading
+from mindtree.utils.OCR import OCR
+from mindtree.utils.request_sentiment import SentimentAnalysis
+from mindtree.utils.text_analysis import TextAnalysis
 
 from mindtree import app
 
@@ -109,21 +110,13 @@ def upload_file():
         flash("업로드에 성공하였습니다", "success")
 
         ### 업로드한 파일을 미리 분석해서 저장해둔다.  ###
-        t1 = threading.Thread(target=ocr, args=[file_path, file_dir, user_id])
-        t2 = threading.Thread(target=text_mining, args=[user_id])
-        t3 = threading.Thread(target=sentiment_analysis, args=[user_id])
-
-        # request OCR
+        t1 = Thread(target=analysis_threading, args=[user_id])
         t1.start()
-        t1.join()
-
-        # text mining
-        t2.start()
-
-        # sentiment analysis
-        t3.start()
 
         return redirect(url_for("my_diary"))
 
     else:
         return '실패'
+
+
+

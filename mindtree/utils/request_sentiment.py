@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+from mindtree import USER_BASE_PATH
 
 USER_BASE_PATH = '/Users/motive/Data_Study/Projects/MindTree/mindtree/results/'
 user_id = 'toptoptop'
@@ -59,6 +60,3 @@ class SentimentAnalysis:
         self.request()
         self.save_response()
 
-
-sa = SentimentAnalysis()
-sa.sentiment_analysis(user_id)
