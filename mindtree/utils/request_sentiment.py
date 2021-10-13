@@ -3,8 +3,6 @@ import os
 import json
 from mindtree import USER_BASE_PATH
 
-USER_BASE_PATH = '/Users/motive/Data_Study/Projects/MindTree/mindtree/results/'
-user_id = 'toptoptop'
 
 key_path = os.path.join(os.path.dirname(__file__), "../../key/keys.json")
 with open(key_path, "r") as keys:
