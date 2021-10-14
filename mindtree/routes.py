@@ -1,16 +1,12 @@
 import json
 import os
-from concurrent import futures
 from threading import Thread
+
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
-from mindtree.thread import Worker
-from mindtree.utils.OCR import OCR
-from mindtree.utils.request_sentiment import SentimentAnalysis
-from mindtree.utils.text_analysis import TextAnalysis
-
 from mindtree import app
+from mindtree.thread import worker
 
 
 @app.route("/", methods=['GET'])
@@ -87,7 +83,6 @@ def upload_file():
     1. 요청한 파일을 업로드 하고 my_diary로 리다이렉트 한다.
     2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
     """
-
     if request.method == "POST":
         # 요청한 파일을 업로드 한다.
         f = request.files['file']  # input 태그의 name 을 받음.
@@ -109,10 +104,19 @@ def upload_file():
         f.save(file_path)
         flash("업로드에 성공하였습니다", "success")
 
-        ### 업로드한 파일을 미리 분석해서 저장해둔다.  ###
-        worker = Worker()
-        t1 = Thread(target=worker.analysis_threading, args=[user_id])
-        t1.start()
+        """ ** 업로드한 파일을 미리 분석해서 저장해둔다 **
+        1. 1번이상 분석했다면, worker에 각 분석기가 초기화 되어 있으므로, 바로 분석함.
+        2. 안되어있으면 초기화 후 분석 진행.
+        단, app이 debug모드이기 때문에 reloading될 때마다 다시 초기화해야한다.
+        """
+
+        if worker.is_initialized():
+            t1 = Thread(target=worker.analysis, args=[user_id])
+            t1.start()
+        else:
+            t2 = Thread(target=worker.init_and_analyze, args=[user_id])
+            t2.start()
+
 
         return redirect(url_for("my_diary"))
 
