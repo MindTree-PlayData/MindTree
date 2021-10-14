@@ -1,6 +1,8 @@
-import requests
-import os
 import json
+import os
+
+import requests
+
 from mindtree import APP_PATH, USER_BASE_PATH
 from .util import get_time_str
 

@@ -1,12 +1,12 @@
 import io
 import os
-from mindtree import USER_BASE_PATH
-from .util import get_time_str
-
-from hanspell import spell_checker
 
 # Imports the Google Cloud client library
 from google.cloud import vision
+from hanspell import spell_checker
+
+from mindtree import USER_BASE_PATH
+from .util import get_time_str
 
 
 class OCR:
