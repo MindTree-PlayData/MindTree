@@ -14,3 +14,7 @@ userid = "id"
 useremail = "useremail"
 userpw = "pw"
 text = "this is test text"
+sentiment = "neutral"
+positive = 0.3
+neutral = 0.4
+negative = 0.3
