@@ -5,7 +5,7 @@ from threading import Thread
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
-from mindtree.thread import analysis_threading
+from mindtree.thread import Worker
 from mindtree.utils.OCR import OCR
 from mindtree.utils.request_sentiment import SentimentAnalysis
 from mindtree.utils.text_analysis import TextAnalysis
@@ -110,7 +110,8 @@ def upload_file():
         flash("업로드에 성공하였습니다", "success")
 
         ### 업로드한 파일을 미리 분석해서 저장해둔다.  ###
-        t1 = Thread(target=analysis_threading, args=[user_id])
+        worker = Worker()
+        t1 = Thread(target=worker.analysis_threading, args=[user_id])
         t1.start()
 
         return redirect(url_for("my_diary"))
