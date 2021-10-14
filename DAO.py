@@ -1,8 +1,26 @@
 # Data Access Object
+# 데이터호출객체
 import os
 import json
 import datetime
 import VO
+
+class DATA_OBJECT:
+    def __init__(self):
+        self.data = {}
+
+    def create(self):
+        pass
+
+    def read(self):
+        pass
+
+    def update(self):
+        pass
+
+    def delete(self):
+        pass
+
 
 # 디렉토리생성함수정의
 def createFolder(directory):
@@ -16,7 +34,7 @@ def createFolder(directory):
 createFolder('.\MindTree\diaries')
 
 # 기능변수설정
-file_path = VO.file_path
+diary_path = VO.diary_path
 userid = VO.userid
 userpw = VO.userpw
 useremail = VO.useremail
@@ -35,12 +53,10 @@ json_data[f"{userid}"]["userdiary"]["diarydate"] = f"{diary_date}"
 json_data[f"{userid}"]["userdiary"]["diarydata"] = f"{diary_data}"
 
 # json_data를 파일로 저장
-with open(file_path, 'w') as json_file:
+with open(diary_path, 'w') as json_file:
     json.dump(json_data, json_file, indent="\t")
 
 # json_data를 파일로부터 호출
-with open(file_path, "r") as json_file:
+with open(diary_path, "r") as json_file:
     json_data = json.load(json_file)
 # print(json_data)
-
-# 데이터버킷생성
