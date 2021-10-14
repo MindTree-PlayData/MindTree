@@ -7,13 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" type="text/css">
 
-    <title>Document</title>
+    <title>DiaryList</title>
 </head>
 <body>
 
     <h2 class="header-bar">내 다이어리</h2>
 
-<!--    이 flash 메시지는 css 작업하면 예쁘다. -->
+<!-- 이 flash 메시지는 css 작업하면 예쁘다. -->
     {% with messages = get_flashed_messages(with_categories = true) %}
         {% if messages %}
             {% for category, message in messages %}
