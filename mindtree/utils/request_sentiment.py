@@ -1,10 +1,10 @@
 import requests
 import os
 import json
-from mindtree import USER_BASE_PATH
+from mindtree import APP_PATH, USER_BASE_PATH
+from .util import get_time_str
 
-
-key_path = os.path.join(os.path.dirname(__file__), "../../key/keys.json")
+key_path = os.path.join(APP_PATH, "../key/keys.json")
 with open(key_path, "r") as keys:
     n_key = json.load(keys)
 
@@ -28,6 +28,7 @@ class SentimentAnalysis:
 
         self.res = ''  # post 요청 후 반응 객체
         self.json_response = ''  # response 객체의 json 데이터
+        print(get_time_str(), "SentimentAnalysis initialized...")
 
     def init_user_path(self, user_id) -> None:
         self.text_path = os.path.join(USER_BASE_PATH, str(user_id), str(user_id) + "_ocr.txt")
@@ -36,25 +37,28 @@ class SentimentAnalysis:
     def request(self):
         self.res = requests.post(url=self.url,
                                  headers=self.headers,
-                                 json={"image_content": self.ocr_text_data}
+                                 json={"content": self.ocr_text_data}
                                  )
         self.json_response = self.res.json()
 
         if self.res.status_code == 200:
             return self.json_response
         else:
-            print(f"request error!{self.res.status_code}")
-
-        return self.json_response
+            print(f"{get_time_str()} SentimentAnalysis: request error! {self.res.status_code}")
+            return None
 
     def save_response(self) -> None:
         with open(self.sentiment_path, "w", encoding='utf-8') as f:
             json.dump(self.json_response, f, indent='\t', ensure_ascii=False)
+            print(get_time_str(), "SentimentAnalysis: 감성분석 저장 완료")
 
     def sentiment_analysis(self, user_id: str):
         self.init_user_path(user_id)
+
         with open(self.text_path, "r") as t:
             self.ocr_text_data = t.read()
-        self.request()
-        self.save_response()
+
+        if self.request():
+            self.save_response()
+
 

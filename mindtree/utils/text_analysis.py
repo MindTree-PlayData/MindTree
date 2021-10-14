@@ -12,10 +12,10 @@ class TextAnalysis:
 
     def __init__(self):
         # pos tagger initialization
-        print(get_time_str(), "pos tagger initializing....")
+        print(get_time_str(), "TextAnalysis: pos tagger initializing....")
         self.kkma = Kkma()
         self.kkma.pos("시작")
-        print(get_time_str(), "pos tagger initialized...")
+        print(get_time_str(), "TextAnalysis: pos tagger initialized...")
 
         # WordCloud 객체 initialization
         self.wc = WordCloud(background_color="white", max_font_size=100,
@@ -31,6 +31,8 @@ class TextAnalysis:
         self.pos_tagged_results: dict = {}
         self.word_list: list = []
 
+        print(get_time_str(), "TextAnalysis: initialized...")
+
     def init_user_path(self, user_id: str) -> None:
         """ 유저 id를 받아 경로 변수를 설정한다. """
         self.word_cloud_file_path = os.path.join(USER_BASE_PATH, str(user_id), user_id + "_" + "word_cloud.png")
@@ -42,10 +44,10 @@ class TextAnalysis:
         :param target_text: 입력 텍스트(OCR 결과)
         :return pos tagging 결과 """
 
-        print(get_time_str(), "pos tagging 시작...")
+        print(get_time_str(), "TextAnalysis: pos tagging 시작...")
         self.pos_tagged_results = self.kkma.pos(target_text)
-        print(get_time_str(), f"pos tagging 결과를 출력합니다.\n{self.pos_tagged_results}")
-        print(get_time_str(), "pos tagging 완료...")
+        # print(get_time_str(), f"pos tagging 결과를 출력합니다.\n{self.pos_tagged_results}")
+        print(get_time_str(), "TextAnalysis: pos tagging 완료...")
 
         return self.pos_tagged_results
 
@@ -56,8 +58,8 @@ class TextAnalysis:
         for pos in self.pos_tagged_results:
             if pos[1][0] in {"I", "M", "N", "O", "U", "V"}:
                 self.word_list.append(pos[0])
-        print(get_time_str(), f"{len(self.pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
-        print(get_time_str(), f"단어의 리스트를 출력합니다. \n{self.word_list}\n")
+        print(get_time_str(), f"TextAnalysis: {len(self.pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
+        # print(get_time_str(), f"단어의 리스트를 출력합니다. \n{self.word_list}\n")
 
         return self.word_list
 
@@ -70,7 +72,7 @@ class TextAnalysis:
 
         with open(self.word_list_file_path, "w") as list_file:
             list_file.write(_word_list_str)
-            print(get_time_str(), "단어 리스트 저장 완료")
+            print(get_time_str(), "TextAnalysis: 단어 리스트 저장 완료")
 
     def make_word_cloud(self, word_list=None) -> object:
         """
@@ -104,7 +106,7 @@ class TextAnalysis:
                 cloud = self.make_word_cloud(word_list)
                 # 저장하기
                 cloud.to_file(self.word_cloud_file_path)
-                print(get_time_str(), "word cloud 저장 완료")
+                print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
 
 
         # --- 분석한 리스트가 없으면 pos tagging을 실시함.
@@ -126,6 +128,6 @@ class TextAnalysis:
 
             # 3-1 워드클라우드를 저장한다.
             cloud.to_file(self.word_cloud_file_path)
-            print(get_time_str(), "word cloud 저장 완료")
+            print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
 
         print(get_time_str(), "Text Analysis 완료...")

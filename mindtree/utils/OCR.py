@@ -22,6 +22,7 @@ class OCR:
     def __init__(self):
         # GOOGLE VISION API 객체 initiation
         self.client = vision.ImageAnnotatorClient()
+        print(get_time_str(), "OCR initialized....")
 
     def init_user_path(self, user_id):
         self.image_path = os.path.join(USER_BASE_PATH, user_id, user_id + "_pc_img.png")
