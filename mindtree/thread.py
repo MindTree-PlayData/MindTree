@@ -19,4 +19,3 @@ def analysis_threading(user_id):
         f3_m = executor.submit(f3.result().sentiment_analysis, user_id)
 
     return None
-
