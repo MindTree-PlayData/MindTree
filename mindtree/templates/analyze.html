@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
 
-    <title>Document</title>
+    <title>Results</title>
 </head>
 
 <body>
@@ -29,13 +29,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-
     <script>
         // 'static/js/**.js' 파일에서 변수를 사용하기 위해서는 여기서 정의해둬야 한다.
         let userData = {{ user_data | tojson }}
     </script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/highChart.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js')}}"></script>
 
 </body>
 </html>

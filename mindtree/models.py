@@ -24,4 +24,3 @@ class Post(db.Model):
     def __repr__(self):
         return f"User('{self.id}', '{self.user_id}', '{self.pub_date}', '{self.ocr_text}'," \
                f" '{self.sentiment}', '{self.word_cloud_path}')"
-
