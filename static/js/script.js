@@ -1,4 +1,5 @@
 // Charts from Chart.js
+var sentiment = [0.3,0.4,0.3]
 // bar chart
 new Chart(document.getElementById("bar-chart"), {
     type: 'bar',
@@ -8,7 +9,7 @@ new Chart(document.getElementById("bar-chart"), {
         {
           label: "Sentiment",
           backgroundColor: ["#028000", "#808000","#800000"],
-          data: [0.3,0.4,0.3]
+          data: sentiment
         }
       ]
     },
@@ -34,7 +35,7 @@ new Chart(document.getElementById("doughnut-chart"), {
         {
           label: "Sentiment",
           backgroundColor: ["#028000", "#808000","#800000"],
-          data: [0.3,0.4,0.3]
+          data: sentiment
         }
       ]
     },
@@ -47,7 +48,7 @@ new Chart(document.getElementById("doughnut-chart"), {
     }
 });
 
-// rader chart
+// radar chart
 new Chart(document.getElementById("radar-chart"), {
     type: 'radar',
     data: {
@@ -60,7 +61,7 @@ new Chart(document.getElementById("radar-chart"), {
           borderColor: "rgba(179,181,198,1)",
           pointBorderColor: "#fff",
           pointBackgroundColor: "rgba(179,181,198,1)",
-          data: [0.3,0.4,0.3]
+          data: sentiment
         }
       ]
     },
@@ -69,6 +70,14 @@ new Chart(document.getElementById("radar-chart"), {
       title: {
         display: true,
         text: 'your sentiment statement'
+      },
+      scale: {
+        ticks: {
+          display: true,
+          beginAtZero: true,
+          max: 1,
+          stepSize: 0.1
+        }
       }
     }
 });
