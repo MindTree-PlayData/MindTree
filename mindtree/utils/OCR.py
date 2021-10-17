@@ -5,7 +5,8 @@ import os
 from google.cloud import vision
 from hanspell import spell_checker
 
-from mindtree import USER_BASE_PATH
+from mindtree import USER_BASE_PATH, db
+from mindtree.models import Post
 from .util import get_time_str
 
 
@@ -45,6 +46,7 @@ class OCR:
         """ OCR 결과를 저장한다."""
         with open(self.save_path, "w") as ocr_result:
             ocr_result.write(self.ocr_text_spell_checked)
+
 
     def ocr_main(self, user_id: str):
         """ ocr 실행 메인 함수 """

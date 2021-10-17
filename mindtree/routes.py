@@ -3,16 +3,19 @@ import os
 from threading import Thread
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
 
-from mindtree import app
+from mindtree import app, db, bcrypt
+from mindtree.models import User, Post
+from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
 
 
-@app.route("/", methods=['GET'])
-def home():
-    """ 시작 페이지. 로그인을 할 수 있음."""
-    return render_template('login.html')
+# @app.route("/", methods=['GET'])
+# def home():
+#     """ 시작 페이지. 로그인을 할 수 있음."""
+#     return render_template('login.html')
 
 
 @app.route("/my_diary", methods=['GET'])
@@ -25,6 +28,58 @@ def my_diary():
 def upload():
     """ login required,  """
     return render_template('upload.html')
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('my_diary'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash("계정이 생성되었습니다. 로그인할 수 있습니다.", 'success')  # username으로 들어온 인풋을 data로 받을 수 있다.
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route("/",  methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    print('form = LoginForm()')
+    if form.validate_on_submit():
+        print('form.validate_on_submit()')
+        user = User.query.filter_by(email=form.email.data).first()
+
+        # db의 password와 form의 password를 비교하여 True, False를 반환함
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            print('user and bcrypt.check_password_hash(user.password, form.password.data)')
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
+            '''
+            예를 들어 /account 페이지에 접속했다가 로그인이 되어있지 않아서 /login으로 리디렉트 된 경우,
+            주소가 http://127.0.0.1:5000/login?next=%2Faccount 과 같이 나온다.
+            이 때 login에 성공하면, /home이 아니라 /account로 리디렉트 되도록 설정하는 것이다.
+            '''
+            return redirect(next_page) if next_page else redirect(url_for('my_diary'))
+        else:
+            flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
+    return render_template('login.html', title='login', form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+@app.route("/login2", methods=['GET'])
+def login2():
+    """ login 로직을 수행함. 지금은 임시로 바로 my_diary로 보냄."""
+    return redirect(url_for("my_diary"))
 
 
 @app.route("/analyze", methods=['GET', 'POST'])
@@ -71,12 +126,6 @@ def get_file(filename):
     return send_from_directory(media_folder, filename)
 
 
-@app.route("/login", methods=['GET'])
-def login():
-    """ login 로직을 수행함. 지금은 임시로 바로 my_diary로 보냄."""
-    return redirect(url_for("my_diary"))
-
-
 @app.route("/upload_file", methods=['GET', 'POST'])
 def upload_file():
     """
@@ -102,6 +151,11 @@ def upload_file():
 
         # 이미지 저장
         f.save(file_path)
+
+        # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
+        # post = Post(ocr_text="", sentiment={}, word_cloud="", authur=current_user)
+        # db.session.add(post)
+        # db.session.commit()
         flash("업로드에 성공하였습니다", "success")
 
         """ ** 업로드한 파일을 미리 분석해서 저장해둔다 **
@@ -116,7 +170,6 @@ def upload_file():
         else:
             t2 = Thread(target=worker.init_and_analyze, args=[user_id])
             t2.start()
-
 
         return redirect(url_for("my_diary"))
 
