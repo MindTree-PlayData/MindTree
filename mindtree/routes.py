@@ -153,9 +153,10 @@ def upload_file():
         f.save(file_path)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
-        # post = Post(ocr_text="", sentiment={}, word_cloud="", authur=current_user)
-        # db.session.add(post)
-        # db.session.commit()
+        post = Post(ocr_text="", sentiment={}, word_cloud="", author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        post_id = post.id
         flash("업로드에 성공하였습니다", "success")
 
         """ ** 업로드한 파일을 미리 분석해서 저장해둔다 **
@@ -165,10 +166,10 @@ def upload_file():
         """
 
         if worker.is_initialized():
-            t1 = Thread(target=worker.analysis, args=[user_id])
+            t1 = Thread(target=worker.analysis, args=[user_id, post_id])
             t1.start()
         else:
-            t2 = Thread(target=worker.init_and_analyze, args=[user_id])
+            t2 = Thread(target=worker.init_and_analyze, args=[user_id, post_id])
             t2.start()
 
         return redirect(url_for("my_diary"))

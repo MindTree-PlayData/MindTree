@@ -42,20 +42,23 @@ class OCR:
 
         return self.ocr_text_spell_checked
 
-    def save_file(self):
+    def save_file(self, post_id):
         """ OCR 결과를 저장한다."""
         with open(self.save_path, "w") as ocr_result:
             ocr_result.write(self.ocr_text_spell_checked)
+        post = Post.query.get_or_404(post_id)
+        post.ocr_text = self.ocr_text_spell_checked
+        db.session.commit()
 
-
-    def ocr_main(self, user_id: str):
+    def ocr_main(self, user_id: str, post_id):
         """ ocr 실행 메인 함수 """
+        print("OCR.ocr_main", user_id, post_id)
         self.init_user_path(user_id=user_id)
         with io.open(self.image_path, 'rb') as image_file:
             image_content = image_file.read()
             print(type(image_content))
         self.ocr_request(image_content)
         self.spell_check(self.ocr_text)
-        self.save_file()
+        self.save_file(post_id)
 
         print(get_time_str(), "OCR 완료")
