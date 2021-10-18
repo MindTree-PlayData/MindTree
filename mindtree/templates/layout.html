@@ -23,7 +23,7 @@
 
 {# nav bar 시작 #}
 <div class="container-sm ">
-    <nav class="navbar navbar-light border-bottom">
+    <nav class="navbar navbar-light border-bottom mt-1">
         <ul class="nav">
             <li class="nav-item">
                 <a href="{{ url_for('login') }}" class="nav-link"> 홈으로</a>
@@ -45,13 +45,13 @@
             {% endif %}
 
             {% if current_user.is_authenticated %}
-            <li><a href="{{ url_for('logout') }}" class="nav-link">로그아웃</a></li>
-            <li class="navbar-text">
-                안녕하세요. {{ current_user.username }}님
+            <li><a href="{{ url_for('logout') }}" class="nav-link"> 로그아웃 </a></li>
+            <li class="navbar-text ms-3">
+                안녕하세요.<b> {{ current_user.username }} </b> 님
             </li>
             {% else %}
-            <li class="navbar-text">
-                <p> Anonymous User 로 접속중입니다.</p>
+            <li class="navbar-text ms-3">
+                Anonymous User 로 접속중입니다.
             </li>
             {% endif %}
         </ul>

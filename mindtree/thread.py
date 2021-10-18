@@ -5,6 +5,8 @@ from .utils.request_sentiment import SentimentAnalysis
 from .utils.text_analysis import TextAnalysis
 from .utils.util import get_time_str
 
+from mindtree import db
+from mindtree.models import Post
 
 class Worker:
 
@@ -69,6 +71,11 @@ class Worker:
                     continue
                 else:
                     f.cancel()
+
+        # 분석이 끝난 후 db에 완료 했음을 저장.
+        post = Post.query.get(post_id)
+        post.completed = True
+        db.session.commit()
 
         return None
 

@@ -4,8 +4,8 @@ from threading import Thread
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, current_user, logout_user
+from flask_babel import gettext
 from werkzeug.utils import secure_filename
-
 from mindtree import app, db, bcrypt, USER_BASE_PATH
 from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
@@ -58,11 +58,7 @@ def login():
             print('user and bcrypt.check_password_hash(user.password, form.password.data)')
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
-            '''
-            예를 들어 /account 페이지에 접속했다가 로그인이 되어있지 않아서 /login으로 리디렉트 된 경우,
-            주소가 http://127.0.0.1:5000/login?next=%2Faccount 과 같이 나온다.
-            이 때 login에 성공하면, /home이 아니라 /account로 리디렉트 되도록 설정하는 것이다.
-            '''
+
             return redirect(next_page) if next_page else redirect(url_for('my_diary'))
         else:
             flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
@@ -112,6 +108,7 @@ def upload_file():
     2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
     """
     if request.method == "POST":
+        title = request.form.get('title')
         # 요청한 파일을 업로드 한다.
         f = request.files['file']  # input 태그의 name 을 받음.
         print("f", f.filename)
@@ -121,7 +118,7 @@ def upload_file():
         print("user_id: ", user_id)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
-        post = Post(ocr_text="", sentiment={}, word_cloud="", author=current_user)
+        post = Post(title="", ocr_text=title, sentiment={}, word_cloud="", author=current_user)
         db.session.add(post)
         db.session.commit()
         post_id: int = post.id
@@ -157,3 +154,11 @@ def upload_file():
 
     else:
         return '실패'
+
+
+@app.template_filter('datetime')
+def _jinja2_filter_datetime(date, fmt=None):
+    if fmt:
+        return date.strftime(fmt)
+    else:
+        return date.strftime('%Y년 %m월 %d일')

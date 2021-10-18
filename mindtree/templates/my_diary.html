@@ -28,10 +28,15 @@
         <tbody>
         {% for post in posts %}
             <tr>
-                <th scope="row">{{ post.post_id }}</th>
+                <th scope="row">{{ post.id }}</th>
                 <td>{{ post.author.username }}</td>
-                <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date }}</a></td>
-                <td> 업로드 상태 표시 예정 </td>
+                {% if post.completed %}
+                <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
+                <td style="color: #1e2125"> 분석 완료 </td>
+                {% else %}
+                <td>{{ post.pub_date }}</td>
+                <td style="color: #6c757d"> 분석중... </td>
+                {% endif %}
 
             </tr>
         {% endfor %}
