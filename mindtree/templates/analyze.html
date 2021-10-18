@@ -1,25 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+{% extends "layout.html" %}
+{% block content %}
 
-    <title>Results</title>
-</head>
-
-<body>
-
+    <div class="container align-content-center">
     <figure class="highcharts-figure">
 
-        <div id="container"></div>
-        <div id="container2" class="header-center">
-            <img src="{{ url_for('get_file', filename=image_path) }}" alt="">
-        </div>
-
+{# 그래프 1 시작 #}
+        <div id="container" class="align-self-center"></div>
+{# 그래프 1 끝 #}
+{# 워드클라우드 시작 #}
+        <div id="container2" class="align-content-sm-end"><img src="{{ url_for('get_file', filename=image_path) }}" alt="" class="img-fluid rounded mx-auto d-block"></div>
+{# 워드클라우드 끝#}
     </figure>
+    </div>
+
+
+
+
+
+
+
+
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
@@ -35,6 +35,5 @@
     </script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js')}}"></script>
+{% endblock %}
 
-</body>
-</html>

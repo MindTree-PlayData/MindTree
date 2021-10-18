@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="head-center">
-    <h1>로그인</h1>
     <div class="content-section">
     <form method="POST" action="" class="container">
         {{ form.hidden_tag() }}
@@ -27,17 +25,6 @@
 {#                <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>#}
 {#            </small>#}
         </div>
-    </form>
-        <br>
-        <hr>
-        <br>
-    <form action="/login2" class="container">
-            <label for="userid"><b>사용자ID</b></label><br>
-            <input type="text" id="username" name="username" placeholder="ID" required><br><br>
-            <label for="password"><b>비밀번호</b></label><br>
-            <input type="password" id="password" name="password" placeholder="password" required><br><br>
-            <button type="submit" class="sign-in" id="submit">로그인</button>
-            <button type="button" class="sign-in" id="cancel">취소</button>
     </form>
     </div>
 

@@ -6,22 +6,39 @@ from flask import render_template, request, redirect, url_for, flash, send_from_
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
 
-from mindtree import app, db, bcrypt
+from mindtree import app, db, bcrypt, USER_BASE_PATH
 from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
 
 
-# @app.route("/", methods=['GET'])
-# def home():
-#     """ 시작 페이지. 로그인을 할 수 있음."""
-#     return render_template('login.html')
-
-
 @app.route("/my_diary", methods=['GET'])
 def my_diary():
     """ login required,  """
-    return render_template('my_diary.html')
+    username = current_user.username
+    posts = Post.query.filter_by(author=current_user).all()
+    print("my_diary(): ", username)
+    # print("my_diary: ", posts)  # post 쿼리 확인.
+
+    return render_template('my_diary.html', posts=posts)
+
+
+@app.route('/analyze/<int:post_id>')
+def analyze(post_id):
+    """
+    - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """
+
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user_id
+    username = User.query.get(user_id).username
+
+    sentiment_json = post.sentiment  # 감성분석 json 데이터
+    word_cloud = post.word_cloud  # 워드클라우드 파일 이름
+
+    image_path = os.path.join(str(username), word_cloud)
+    print(image_path)
+
+    return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
 
 
 @app.route("/upload", methods=['GET'])
@@ -73,45 +90,7 @@ def login():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('home'))
-
-
-@app.route("/login2", methods=['GET'])
-def login2():
-    """ login 로직을 수행함. 지금은 임시로 바로 my_diary로 보냄."""
-    return redirect(url_for("my_diary"))
-
-
-@app.route("/analyze", methods=['GET', 'POST'])
-def analyze():
-    """ login required,
-    - 구현 방법
-    analyze.html을 렌더 -> 렌더할 때 그래프에 들어갈 json data 전달 -> js 상에서 {{ userData }}로 받아 그래프를 그림
-
-    :var user_id: str.
-    :var sentiment_path: sentiment analysis 파일 저장 경로
-    :var sentiment_json: json. sentiment analysis 결과 파일
-
-    -- analyze 1:
-        감성분석 bar graph. json 파일을 전달한다.
-    -- analyze 2:
-        word cloud. results 폴더 아래에 이미지 경로를 전달한다.
-        - word_cloud 경로: results/<user_id>/<user_id>_word_cloud.png 이다.
-        - 이때 results/ 가 media_folder로 정의되어 있다.
-        - 따라서 이때 이미지가 저장된 경로에 접근하려면 <user_id>/<user_id>_word_cloud.png 를 전달하면 된다. """
-
-    # -- analyze 1: 감성분석 bar graph
-    user_id = request.form.get('id')  # 추후 로그인 시스템이 구축되면 세션 id를 받을 수 있도록 수정.
-    print("user_id: ", user_id)
-    sentiment_path = os.path.join('mindtree/results', str(user_id), str(user_id) + "_sentiment.json")
-    with open(sentiment_path, "r",
-              encoding="utf-8") as local_json:
-        sentiment_json = json.load(local_json)
-
-    # -- analyze 2: word cloud
-    image_path = os.path.join(str(user_id), str(user_id) + "_word_cloud.png")
-
-    return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
+    return redirect(url_for('login'))
 
 
 @app.route("/results/<path:filename>", methods=['GET'])
@@ -135,14 +114,21 @@ def upload_file():
     if request.method == "POST":
         # 요청한 파일을 업로드 한다.
         f = request.files['file']  # input 태그의 name 을 받음.
+        print("f", f.filename)
 
-        # id 는 추후 로그인 시스템이 구현되면 세션에서 받아올 예정.
-        user_id = request.form.get('id')
+        # 현재 로그인된 유저의 username을 가져온다.
+        user_id: str = current_user.username
         print("user_id: ", user_id)
 
+        # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
+        post = Post(ocr_text="", sentiment={}, word_cloud="", author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        post_id: int = post.id
+
         # 경로 변수 정의
-        filename = str(user_id) + '_' + str(secure_filename(f.filename))
-        file_dir = os.path.join("mindtree/results", str(user_id))
+        filename = f"{user_id}_{str(post_id)}.png"
+        file_dir = os.path.join(USER_BASE_PATH, user_id)
         file_path = os.path.join(file_dir, filename)
 
         # 디렉토리 만들기
@@ -152,11 +138,6 @@ def upload_file():
         # 이미지 저장
         f.save(file_path)
 
-        # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
-        post = Post(ocr_text="", sentiment={}, word_cloud="", author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        post_id = post.id
         flash("업로드에 성공하였습니다", "success")
 
         """ ** 업로드한 파일을 미리 분석해서 저장해둔다 **

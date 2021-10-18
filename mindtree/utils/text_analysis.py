@@ -35,11 +35,11 @@ class TextAnalysis:
 
     def init_user_path(self, user_id: str, post_id) -> None:
         """ 유저 id를 받아 경로 변수를 설정한다. """
-        self.word_cloud_file_path = os.path.join(USER_BASE_PATH, str(user_id), user_id + "_" + str(post_id) +
+        self.word_cloud_file_path = os.path.join(USER_BASE_PATH, str(user_id), f"{user_id}_{str(post_id)}" +
                                                  "_word_cloud.png")
-        self.word_list_file_path = os.path.join(USER_BASE_PATH, str(user_id), user_id + "_" + str(post_id) +
+        self.word_list_file_path = os.path.join(USER_BASE_PATH, str(user_id), f"{user_id}_{str(post_id)}" +
                                                 "_word_list.txt")
-        self.ocr_text_path = os.path.join(USER_BASE_PATH, str(user_id), f"{str(user_id)}_ocr.txt")
+        self.ocr_text_path = os.path.join(USER_BASE_PATH, str(user_id), f"{user_id}_{str(post_id)}_ocr.txt")
 
     def get_pos_tag(self, target_text: str) -> dict:
         """ pos tagging
@@ -58,7 +58,7 @@ class TextAnalysis:
         원하는 품사에 해당하는 단어를 뽑아 리스트로 반환한다.
         """
         for pos in self.pos_tagged_results:
-            if pos[1][0] in {"I", "M", "N", "O", "U", "V"}:
+            if pos[1][0] in {"N", "V"}:
                 self.word_list.append(pos[0])
         print(get_time_str(), f"TextAnalysis: {len(self.pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
         # print(get_time_str(), f"단어의 리스트를 출력합니다. \n{self.word_list}\n")
@@ -109,7 +109,7 @@ class TextAnalysis:
                 # 저장하기
                 cloud.to_file(self.word_cloud_file_path)
                 post = Post.query.get_or_404(post_id)
-                post.word_cloud = user_id + "_" + str(post_id) + "_word_cloud.png"
+                post.word_cloud = f"{user_id}_{str(post_id)}_word_cloud.png"
                 db.session.commit()
                 print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
 
@@ -117,11 +117,6 @@ class TextAnalysis:
         # --- 분석한 리스트가 없으면 pos tagging을 실시함.
         else:
             # 1. POS tagging 한다.
-            # 원래는 OCR 결과로 텍스트 분석을 해야하는데 일단은 샘플 텍스트로 실시한다.
-            # with open(self.ocr_text_path, "r") as target_text:
-            #     print(type(target_text))
-            #     self.pos_tagged_results = self.get_pos_tag(target_text.read())
-
             # ocr text db에서 가져오기
             ocr_text = Post.query.get(post_id).ocr_text
             self.pos_tagged_results = self.get_pos_tag(ocr_text)
@@ -137,8 +132,11 @@ class TextAnalysis:
 
             # 3-1 워드클라우드를 저장한다.
             cloud.to_file(self.word_cloud_file_path)
+
+            # 3-2 워드 클라우드 이미지 파일명을 DB에 저장한다.
+            # post_id가 있으면 알수 있는 형식이기 때문에 삭제 또는 다른방식을 대체 예정
             post = Post.query.get_or_404(post_id)
-            post.word_cloud = user_id + "_" + str(post_id) + "_word_cloud.png"
+            post.word_cloud = f"{user_id}_{str(post_id)}_word_cloud.png"
             db.session.commit()
             print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
 
