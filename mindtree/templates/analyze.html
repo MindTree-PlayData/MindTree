@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
 
-    <div class="container align-content-center">
+    <div class="container align-content-center mt-5">
     <figure class="highcharts-figure">
 
 {# 그래프 1 시작 #}
         <div id="container" class="align-self-center"></div>
 {# 그래프 1 끝 #}
 {# 워드클라우드 시작 #}
-        <div id="container2" class="align-content-sm-end"><img src="{{ url_for('get_file', filename=image_path) }}" alt="" class="img-fluid rounded mx-auto d-block"></div>
+        <div id="container2" class="mt-5"><img src="{{ url_for('get_file', filename=image_path) }}" alt="" class="img-fluid rounded mx-auto d-block"></div>
 {# 워드클라우드 끝#}
     </figure>
     </div>

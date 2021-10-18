@@ -21,8 +21,8 @@
 </head>
 
 <body>
-<div class="container">
-    <nav>
+<div class="container-sm ">
+    <nav class="navbar navbar-light border-bottom">
         <ul class="nav">
             <li class="nav-item">
                 <a href="{{ url_for('login') }}" class="nav-link"> 홈으로</a>
@@ -45,9 +45,12 @@
 
             {% if current_user.is_authenticated %}
             <li><a href="{{ url_for('logout') }}" class="nav-link">로그아웃</a></li>
-
             <li class="navbar-text">
                 안녕하세요. {{ current_user.username }}님
+            </li>
+            {% else %}
+            <li class="navbar-text">
+                <p>Anonymous User 로 접속중입니다.</p>
             </li>
             {% endif %}
         </ul>
