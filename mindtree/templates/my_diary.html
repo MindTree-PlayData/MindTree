@@ -2,8 +2,17 @@
 
 {% block content %}
 <div class="container mt-4 mb-3">
-    <h2 class="header-bar">내 다이어리</h2>
+    <div class="row g-1">
+        <h2 class="header-bar col">내 다이어리</h2>
+
+        {# 업로드 링크 버튼 시작 #}
+        <div class="col-md-1">
+            <a class="btn btn-primary" href="/upload" role="button">업로드하기</a>
+        </div>
+        {# 업로드 링크 버튼 끝 #}
+    </div>
 </div>
+
 
 {#    작성 게시글 목록 시작 #}
 <div class="container">
@@ -31,10 +40,5 @@
 </div>
 {#    작성 게시글 목록 끝 #}
 
-{# 업로드 링크 버튼 시작 #}
-    <div class="container mb-5">
-        <a class="btn btn-primary" href="/upload" role="button">업로드하기</a>
-    </div>
-{# 업로드 링크 버튼 끝 #}
 {% endblock %}
 
