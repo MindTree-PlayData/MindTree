@@ -8,7 +8,7 @@ new Chart(document.getElementById("bar-chart"), {
       datasets: [
         {
           label: "Sentiment",
-          backgroundColor: ["#028000", "#808000","#800000"],
+          backgroundColor: ["#59ff64", "#fff759","#ff5959"],
           data: sentiment
         }
       ]
@@ -34,7 +34,7 @@ new Chart(document.getElementById("doughnut-chart"), {
       datasets: [
         {
           label: "Sentiment",
-          backgroundColor: ["#028000", "#808000","#800000"],
+          backgroundColor: ["#59ff64", "#fff759","#ff5959"],
           data: sentiment
         }
       ]
