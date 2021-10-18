@@ -19,31 +19,13 @@ def my_diary():
     posts = Post.query.filter_by(author=current_user).all()
     print("my_diary(): ", username)
     # print("my_diary: ", posts)  # post 쿼리 확인.
-
     return render_template('my_diary.html', posts=posts)
-
-
-@app.route('/analyze/<int:post_id>')
-def analyze(post_id):
-    """
-    - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """
-
-    post = Post.query.get_or_404(post_id)
-    user_id = post.user_id
-    username = User.query.get(user_id).username
-
-    sentiment_json = post.sentiment  # 감성분석 json 데이터
-    word_cloud = post.word_cloud  # 워드클라우드 파일 이름
-
-    image_path = os.path.join(str(username), word_cloud)
-    print(image_path)
-
-    return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
 
 
 @app.route("/upload", methods=['GET'])
 def upload():
     """ login required,  """
+    user = current_user.get_id()
     return render_template('upload.html')
 
 
@@ -91,6 +73,24 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.route('/analyze/<int:post_id>')
+def analyze(post_id):
+    """
+    - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """
+
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user_id
+    username = User.query.get(user_id).username
+
+    sentiment_json = post.sentiment  # 감성분석 json 데이터
+    word_cloud = post.word_cloud  # 워드클라우드 파일 이름
+
+    image_path = os.path.join(str(username), word_cloud)
+    print(image_path)
+
+    return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
 
 
 @app.route("/results/<path:filename>", methods=['GET'])
