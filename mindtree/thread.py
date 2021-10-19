@@ -1,15 +1,15 @@
 from concurrent import futures
 
-from .utils.OCR import OCR
-from .utils.request_sentiment import SentimentAnalysis
-from .utils.text_analysis import TextAnalysis
-from .utils.util import get_time_str
+from .modules.OCR import OCR
+from .modules.request_sentiment import SentimentAnalysis
+from .modules.text_analysis import TextAnalysis
+from .modules.util import get_time_str
 
 from mindtree import db
 from mindtree.models import Post
 
-class Worker:
 
+class Worker:
     def __init__(self):
         self._ocr = None
         self._text_analyzer = None
