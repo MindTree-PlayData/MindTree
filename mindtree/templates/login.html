@@ -1,24 +1,49 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../static/css/style2.css">
-    <title>Document</title>
-</head>
-<body>
-    <div class="head-center">
-    <h1>로그인</h1>
-    <form action="/login" class="container">
-        <label for="userid"><b>사용자ID</b></label><br>
-        <input type="text" id="username" name="username" placeholder="ID" required><br><br>
-        <label for="password"><b>비밀번호</b></label><br>
-        <input type="password" id="password" name="password" placeholder="password" required><br><br>
-        <button type="submit" class="sign-in" id="submit">로그인</button>
-        <button type="button" class="sign-in" id="cancel">취소</button>
-    </form>
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section container-fluid">
+        <div class="row">
+            <div class="col"></div>  {# <- 빈 컨테이너 #}
+            
+            {% if current_user.is_authenticated %}
+
+                <div class="col mt-5">
+                    <p class="text-center h3 text-muted mb-3"> 내 다이어리 보기 </p>
+                <a href="{{ url_for('my_diary') }}"><img src="{{ url_for('static', filename='images/main_book.png') }}" class="img-fluid" alt=""></a>
+                </div>
+
+            {% else %}
+                
+            <div class="col" style="min-width: 500px">
+            <form method="POST" action="" class="container-fluid">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                <legend class="border-bottom mb-4 mt-5">Log In</legend>
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label")}}
+
+                            {{ form.email(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="form-control-label")}}
+                            {{ form.password(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-check">
+                            {{ form.remember(class="form-check-input") }}
+                            {{ form.remember.label(class="form-check-label") }}
+                        </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+        {#            <small class="text-muted ml-2">#}
+        {#                <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>#}
+        {#            </small>#}
+                </div>
+            </form>
+            </div>
+            {% endif %}
+
+            <div class="col"></div> {# <- 빈 컨테이너 #}
+        </div>
     </div>
-</body>
-</html>
+
+{% endblock %}

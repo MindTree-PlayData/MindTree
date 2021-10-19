@@ -5,6 +5,8 @@ from .utils.request_sentiment import SentimentAnalysis
 from .utils.text_analysis import TextAnalysis
 from .utils.util import get_time_str
 
+from mindtree import db
+from mindtree.models import Post
 
 class Worker:
 
@@ -18,10 +20,10 @@ class Worker:
         self.sentiment_analyzer = None
         self.initialized = False
 
-    def init_and_analyze(self, user_id):
+    def init_and_analyze(self, user_id, post_id):
         """main function"""
         self.init_analyzers()
-        self.analysis(user_id)
+        self.analysis(user_id, post_id)
 
     def is_initialized(self):
         print(f"{get_time_str()} is worker initialied? ----- {self.initialized}")
@@ -42,10 +44,11 @@ class Worker:
                     self.sentiment_analyzer = self._sentiment_analyzer.result()
                 self.initialized = True
 
-    def analysis(self, user_id):
+    def analysis(self, user_id, post_id):
+        print("thread.analysis", user_id, post_id)
         with futures.ThreadPoolExecutor() as executor:
             # 1. OCR 시작. 끝날때까지 기다린다.
-            f1_m = executor.submit(self.ocr.ocr_main, user_id)
+            f1_m = executor.submit(self.ocr.ocr_main, user_id, post_id)
             futures.wait([f1_m])
 
             # 1-2. 완료 로그찍기
@@ -56,8 +59,8 @@ class Worker:
                 f1_m.cancel()
 
             # 2. 감성분석, 텍스트 분석 모두 실행.
-            f2_m = executor.submit(self.text_analyzer.text_mining, user_id)
-            f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, user_id)
+            f2_m = executor.submit(self.text_analyzer.text_mining, user_id, post_id)
+            f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, user_id, post_id)
 
             # 2-2. 완료되면 로그찍기
             i = 2
@@ -68,6 +71,11 @@ class Worker:
                     continue
                 else:
                     f.cancel()
+
+        # 분석이 끝난 후 db에 완료 했음을 저장.
+        post = Post.query.get(post_id)
+        post.completed = True
+        db.session.commit()
 
         return None
 

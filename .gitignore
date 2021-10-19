@@ -6,3 +6,6 @@ __pycache__
 /etc
 /data
 key.zip
+/mindtree/results
+/mindtree/utils/*_class*
+*.yml
