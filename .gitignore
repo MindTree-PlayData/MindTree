@@ -5,4 +5,5 @@ diaryOcrMain*
 __pycache__
 /etc
 /data
+*/results
 key.zip
