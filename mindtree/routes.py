@@ -5,7 +5,7 @@ from threading import Thread
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
-from mindtree import app
+from mindtree import app, USER_BASE_PATH
 from mindtree.thread import worker
 
 
@@ -48,7 +48,7 @@ def analyze():
     # -- analyze 1: 감성분석 bar graph
     user_id = request.form.get('id')  # 추후 로그인 시스템이 구축되면 세션 id를 받을 수 있도록 수정.
     print("user_id: ", user_id)
-    sentiment_path = os.path.join('mindtree/results', str(user_id), str(user_id) + "_sentiment.json")
+    sentiment_path = os.path.join(USER_BASE_PATH, str(user_id), str(user_id) + "_sentiment.json")
     with open(sentiment_path, "r",
               encoding="utf-8") as local_json:
         sentiment_json = json.load(local_json)
