@@ -6,62 +6,84 @@ from google.cloud import vision
 from hanspell import spell_checker
 
 from flask_login import current_user
-from mindtree import USER_BASE_PATH, db
+from mindtree import db
+from mindtree.utils.VO import VO
 from mindtree.models import Post
-from .util import get_time_str
+from util import get_time_str
 
 
-class OCR:
-    print("OCR", current_user)
+class OCR(VO):
+
     # 빈 경로 변수 설정
-    image_path = ''
-    save_path = ''
+    image_path: str = ''
+    save_path: str = ''
+
+    # 빈 post_id를 설정.
+    post_id: int = None
 
     # 빈 text 변수 설정
     ocr_text: str = ''
     ocr_text_spell_checked: str = ''
 
+    image_content: bytes = ''
+
     def __init__(self):
+        super().__init__()
+
         # GOOGLE VISION API 객체 initiation
         self.client = vision.ImageAnnotatorClient()
         print(get_time_str(), "OCR initialized....")
 
-    def init_user_path(self, user_id: str, post_id: int):
-        self.image_path = os.path.join(USER_BASE_PATH, user_id, f"{user_id}_{str(post_id)}.png")
-        self.save_path = os.path.join(USER_BASE_PATH, user_id, f"{user_id}_{str(post_id)}_ocr.txt")
-
-    def ocr_request(self, image_content: bytes):
-        _image = vision.Image(content=image_content)
+    def ocr_request(self):
+        _image = vision.Image(content=self.image_content)
         _ocr_response = self.client.text_detection(image=_image)
         text_annotations = _ocr_response.text_annotations
 
         self.ocr_text = text_annotations[0].description
-        return self.ocr_text
 
-    def spell_check(self, input_text):
-        self.ocr_text_spell_checked = spell_checker.check(input_text).checked
+    def spell_check(self):
+        self.ocr_text_spell_checked = spell_checker.check(self.ocr_text).checked
 
-        return self.ocr_text_spell_checked
-
-    def save_file(self, post_id):
+    def save_file(self):
         """ OCR 결과를 저장한다."""
         with open(self.save_path, "w") as ocr_result:
             ocr_result.write(self.ocr_text_spell_checked)
-        post = Post.query.get_or_404(post_id)
+
+        # DB에 OCR 결과 텍스트를 저장한다.
+        post = Post.query.get_or_404(self.post_id)
         post.ocr_text = self.ocr_text_spell_checked
         db.session.commit()
 
-    def ocr_main(self, user_id: str, post_id: int):
+    def ocr_main(self, post_id: int):
         """ ocr 실행 메인 함수 """
-        print("OCR.ocr_main", user_id, post_id)
-        self.init_user_path(user_id=user_id, post_id=post_id)
+        print("OCR.ocr_main", post_id)
+        # post_id를 설정한다.
+        # OCR 객체가 Post 에 대한 쿼리를 할 때 사용된다.
+        self.post_id = post_id
 
+        # 유저의 경로 변수를 저장한다.
+        self.image_path = super().get_user_diary_file_path(post_id)
+        self.save_path = super().get_user_ocr_file_path(post_id)
+
+        # 이미지 파일을 가져온다.
         with io.open(self.image_path, 'rb') as image_file:
-            image_content = image_file.read()
-            print(type(image_content))
+            self.image_content = image_file.read()
+            print(type(self.image_content))
 
-        self.ocr_request(image_content)
-        self.spell_check(self.ocr_text)
-        self.save_file(post_id)
+        # GOOGLE VISION API 사용하여 OCR 실시.
+        self.ocr_request()
+
+        # 스펠링 체크
+        self.spell_check()
+
+        # 저장
+        self.save_file()
 
         print(get_time_str(), "OCR 완료")
+
+
+if __name__ == '__main__':
+    """  
+    $ python mindtree/modules/OCR.py """
+    ocr = OCR()
+    ocr.ocr_main(2)

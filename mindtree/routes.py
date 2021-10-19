@@ -5,7 +5,7 @@ from threading import Thread
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
-from mindtree import app, db, bcrypt, USER_BASE_PATH
+from mindtree import app, db, bcrypt
 from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
