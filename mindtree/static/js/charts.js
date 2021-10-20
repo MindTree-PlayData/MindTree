@@ -1,16 +1,16 @@
 
 // 변수 받을 수 있는지 확인.
-console.log(userData)
+// console.log(userData)
 
 $(document).ready(function() {
     $(function(){
         // 받아온 데이터에서 필요한 부분을 가져옴
         let sentiment = userData.document.confidence
-        console.log(sentiment);
+        // console.log(sentiment);
 
         //for 문 돌리기 위해 array 로 만듬
         let sentimentArray = Object.values(sentiment)
-        console.log(sentimentArray)
+        // console.log(sentimentArray)
 
         for (let i=0; i<3; i++){
             barChart.series[i].addPoint(sentimentArray[i])
@@ -31,7 +31,7 @@ $(document).ready(function() {
             type: 'bar'
         },
         title: {
-            text: 'Stacked bar chart'
+            text: '감성분석 결과입니다.'
         },
         xAxis: {
             categories: ['Sentiments']
