@@ -1,8 +1,7 @@
 import os
-from util import get_time_str
-from mindtree import db
+from mindtree.modules.util import get_time_str
 from mindtree.models import Post
-from WordCloudModule import WCModule
+from mindtree.modules.WordCloudModule import WCModule
 
 # 형태소 분석
 from konlpy.tag import Kkma
@@ -11,14 +10,13 @@ from konlpy.tag import Kkma
 class TextAnalysis(WCModule):
 
     def __init__(self):
-        """ WCModule에서 WordCloud 객체, VO를 초기화하여 이 클래스에서 사용한다. """
+        """ WCModule에서 WordCloud 객체와, DTO를 이 클래스에서 사용한다. """
         super().__init__()
 
         # pos tagger initialization
         print(get_time_str(), "TextAnalysis: pos tagger initializing....")
         self.kkma = Kkma()
         self.kkma.pos("시작")
-        print(get_time_str(), "TextAnalysis: pos tagger initialized...")
 
         # 빈 경로 변수 설정
         #   __init__ 에 post_id를 넣어 바로 정할 수도 있지만,
@@ -50,7 +48,6 @@ class TextAnalysis(WCModule):
 
                 # 로컬에 워드클라우드 파일 저장, DB에 워드클라우드 파일 이름 저장.
                 super().make_word_cloud(word_list, post_id)
-                print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
 
         # --- 분석한 리스트가 없으면 pos tagging을 실시함.
         else:
