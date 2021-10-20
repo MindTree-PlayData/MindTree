@@ -8,7 +8,7 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.modules.util import get_time_str
 
-key_path = os.path.join(APP_PATH, "../key/keys.json")
+key_path = os.path.join(APP_PATH, "key", "keys.json")
 with open(key_path, "r") as keys:
     n_key = json.load(keys)
 

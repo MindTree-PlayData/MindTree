@@ -34,13 +34,16 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('my_diary'))
     form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash("계정이 생성되었습니다. 로그인할 수 있습니다.", 'success')  # username으로 들어온 인풋을 data로 받을 수 있다.
-        return redirect(url_for('login'))
+    if request.method == "POST":
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+            flash("계정이 생성되었습니다. 로그인할 수 있습니다.", 'success')  # username으로 들어온 인풋을 data로 받을 수 있다.
+            return redirect(url_for('login'))
+        else:
+            flash("입력정보가 적절하지 않습니다. 다시 시도해주세요", 'danger')  # username으로 들어온 인풋을 data로 받을 수 있다.
     return render_template('register.html', title='Register', form=form)
 
 
@@ -49,19 +52,22 @@ def register():
 def login():
     form = LoginForm()
     print('form = LoginForm()')
-    if form.validate_on_submit():
-        print('form.validate_on_submit()')
-        user = User.query.filter_by(email=form.email.data).first()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            print('form.validate_on_submit()')
+            user = User.query.filter_by(email=form.email.data).first()
 
-        # db의 password와 form의 password를 비교하여 True, False를 반환함
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            print('user and bcrypt.check_password_hash(user.password, form.password.data)')
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
+            # db의 password와 form의 password를 비교하여 True, False를 반환함
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                print('user and bcrypt.check_password_hash(user.password, form.password.data)')
+                login_user(user, remember=form.remember.data)
+                next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
 
-            return redirect(next_page) if next_page else redirect(url_for('my_diary'))
+                return redirect(next_page) if next_page else redirect(url_for('my_diary'))
+            else:
+                flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
         else:
-            flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
+            flash('로그인 실패. 유저 정보를 찾지 못했습니다.', 'danger')
     return render_template('login.html', title='login', form=form)
 
 
