@@ -21,7 +21,6 @@ class DATA_OBJECT:
     def delete(self):
         pass
 
-
 # 디렉토리생성함수정의
 def createFolder(directory):
     try:
