@@ -79,6 +79,5 @@ class Worker:
 
         return None
 
-
 # 외부에서 바로 불러서 사용할 수 있도록 여기에 선언해둠.
 worker = Worker()

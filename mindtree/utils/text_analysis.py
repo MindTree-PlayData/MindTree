@@ -7,7 +7,6 @@ from mindtree.models import Post
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
 
-
 class TextAnalysis:
 
     def __init__(self):
@@ -87,7 +86,7 @@ class TextAnalysis:
         else:
             _word_list_str = ",".join(self.word_list)
 
-        # word cloud 생성.
+        # word cloud 생성
         cloud = self.wc.generate(_word_list_str)
         return cloud
 
@@ -112,7 +111,6 @@ class TextAnalysis:
                 post.word_cloud = f"{user_id}_{str(post_id)}_word_cloud.png"
                 db.session.commit()
                 print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
-
 
         # --- 분석한 리스트가 없으면 pos tagging을 실시함.
         else:
