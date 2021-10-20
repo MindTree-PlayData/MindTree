@@ -4,9 +4,9 @@ from threading import Thread
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, current_user, logout_user
-from flask_babel import gettext
 from werkzeug.utils import secure_filename
-from mindtree import app, db, bcrypt, USER_BASE_PATH
+from mindtree import app, db, bcrypt
+from mindtree.utils.DTO import PathDTO
 from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
@@ -108,14 +108,10 @@ def upload_file():
     2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
     """
     if request.method == "POST":
-        title = request.form.get('title')
-        # 요청한 파일을 업로드 한다.
-        f = request.files['file']  # input 태그의 name 을 받음.
-        print("f", f.filename)
 
-        # 현재 로그인된 유저의 username을 가져온다.
-        user_id: str = current_user.username
-        print("user_id: ", user_id)
+        title = request.form.get('title')
+        f = request.files['file']  # input 태그의 name 을 받음.
+        print("[upload_file] f, title", f.filename, title)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
         post = Post(title="", ocr_text=title, sentiment={}, word_cloud="", author=current_user)
@@ -124,8 +120,9 @@ def upload_file():
         post_id: int = post.id
 
         # 경로 변수 정의
-        filename = f"{user_id}_{str(post_id)}.png"
-        file_dir = os.path.join(USER_BASE_PATH, user_id)
+        path = PathDTO()
+        filename = path.get_user_diary_file_name(post_id)
+        file_dir = path.get_user_media_path(post_id)
         file_path = os.path.join(file_dir, filename)
 
         # 디렉토리 만들기
@@ -144,10 +141,10 @@ def upload_file():
         """
 
         if worker.is_initialized():
-            t1 = Thread(target=worker.analysis, args=[user_id, post_id])
+            t1 = Thread(target=worker.analysis, args=[post_id])
             t1.start()
         else:
-            t2 = Thread(target=worker.init_and_analyze, args=[user_id, post_id])
+            t2 = Thread(target=worker.init_and_analyze, args=[post_id])
             t2.start()
 
         return redirect(url_for("my_diary"))

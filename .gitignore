@@ -7,5 +7,5 @@ __pycache__
 /data
 key.zip
 /mindtree/results
-/mindtree/utils/*_class*
+/mindtree/modules/*_class*
 *.yml
