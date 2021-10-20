@@ -3,8 +3,9 @@ import os
 
 import requests
 
-from mindtree import APP_PATH, USER_BASE_PATH, db
+from mindtree import APP_PATH, db
 from mindtree.models import Post
+from mindtree.utils.VO import VO
 from .util import get_time_str
 
 key_path = os.path.join(APP_PATH, "../key/keys.json")
@@ -12,7 +13,7 @@ with open(key_path, "r") as keys:
     n_key = json.load(keys)
 
 
-class SentimentAnalysis:
+class SentimentAnalysis(VO):
     # Naver sentiment API 요청 정보
     url = 'https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze'
 
@@ -33,10 +34,6 @@ class SentimentAnalysis:
         self.json_response = ''  # response 객체의 json 데이터
         print(get_time_str(), "SentimentAnalysis initialized...")
 
-    def init_user_path(self, user_id, post_id) -> None:
-        self.text_path = os.path.join(USER_BASE_PATH, str(user_id), f"{str(user_id)}_{str(post_id)}_ocr.txt")
-        self.sentiment_path = os.path.join(USER_BASE_PATH, str(user_id), f"{str(user_id)}_{str(post_id)}_sentiment.json")
-
     def request(self):
         self.res = requests.post(url=self.url,
                                  headers=self.headers,
@@ -51,19 +48,21 @@ class SentimentAnalysis:
             return None
 
     def save_response(self, post_id: int) -> None:
+        # sentiment 로컬 저장
         with open(self.sentiment_path, "w", encoding='utf-8') as f:
             json.dump(self.json_response, f, indent='\t', ensure_ascii=False)
             print(get_time_str(), "SentimentAnalysis: 감성분석 저장 완료")
 
+        # sentiment DB 저장
         post = Post.query.get_or_404(post_id)
         post.sentiment = self.json_response
         db.session.commit()
 
-    def sentiment_analysis(self, user_id: str, post_id: int):
-        self.init_user_path(user_id, post_id)
+    def sentiment_analysis(self, post_id: int):
 
-        # with open(self.text_path, "r") as t:
-        #     self.ocr_text_data = t.read()
+        # 경로를 설정한다.
+        self.text_path = super().get_user_ocr_file_path(post_id)  # 굳이 안해도됨. DB에 저장되어 있기 때문.
+        self.sentiment_path = super().get_user_sentiment_path(post_id)
 
         # ocr text db에서 가져오기
         ocr_text = Post.query.get(post_id).ocr_text
@@ -73,3 +72,6 @@ class SentimentAnalysis:
             self.save_response(post_id)
 
 
+if __name__ == '__main__':
+    sa = SentimentAnalysis()
+    sa.sentiment_analysis(2)
