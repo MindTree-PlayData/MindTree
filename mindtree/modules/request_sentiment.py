@@ -5,7 +5,7 @@ import requests
 
 from mindtree import APP_PATH, db
 from mindtree.models import Post
-from mindtree.utils.VO import VO
+from mindtree.utils.DTO import PathDTO
 from .util import get_time_str
 
 key_path = os.path.join(APP_PATH, "../key/keys.json")
@@ -13,7 +13,7 @@ with open(key_path, "r") as keys:
     n_key = json.load(keys)
 
 
-class SentimentAnalysis(VO):
+class SentimentAnalysis(PathDTO):
     # Naver sentiment API 요청 정보
     url = 'https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze'
 
