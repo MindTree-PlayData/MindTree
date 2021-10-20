@@ -1,18 +1,16 @@
 import io
-import os
 
 # Imports the Google Cloud client library
 from google.cloud import vision
 from hanspell import spell_checker
 
-from flask_login import current_user
 from mindtree import db
-from mindtree.utils.VO import VO
+from mindtree.utils.DTO import PathDTO
 from mindtree.models import Post
 from util import get_time_str
 
 
-class OCR(VO):
+class OCR(PathDTO):
 
     # 빈 경로 변수 설정
     image_path: str = ''

@@ -2,11 +2,11 @@ from wordcloud import WordCloud
 
 from mindtree import db
 from mindtree.models import Post
-from mindtree.utils.VO import VO
+from mindtree.utils.DTO import PathDTO
 from util import get_time_str
 
 
-class WCModule(VO):
+class WCModule(PathDTO):
 
     def __init__(self):
         super().__init__()
