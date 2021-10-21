@@ -1,16 +1,16 @@
 import os
 from mindtree.modules.util import get_time_str
 from mindtree.models import Post
-from mindtree.modules.WordCloudModule import WCModule
+from mindtree.modules.WordCloud import CreateWordCloud
 
 # 형태소 분석
 from konlpy.tag import Kkma
 
 
-class TextAnalysis(WCModule):
+class TextAnalysis(CreateWordCloud):
 
     def __init__(self):
-        """ WCModule에서 WordCloud 객체와, DTO를 이 클래스에서 사용한다. """
+        """ CreateWordCloud에서 WordCloud 객체와, DTO를 이 클래스에서 사용한다. """
         super().__init__()
 
         # pos tagger initialization

@@ -84,8 +84,7 @@ new Chart(document.getElementById("radar-chart"), {
         ticks: {
           display: true,
           beginAtZero: true,
-          max: 1,
-          stepSize: 0.1
+          max: 1
         }
       }
     }

@@ -22,4 +22,3 @@ mail = Mail(app)
 
 
 from mindtree import routes
-
