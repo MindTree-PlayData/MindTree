@@ -2,7 +2,6 @@ import os
 from mindtree.config import PathConfig
 from mindtree.models import Post, User
 
-
 class PathDTO(PathConfig):
 
     def __init__(self):
@@ -32,13 +31,11 @@ class PathDTO(PathConfig):
     def get_user_ocr_file_path(self, post_id: int):
         self._set_user_variables(post_id)
         self._set_user_path()
-
         return os.path.join(self._user_path, f"{self._username}_{str(post_id)}_ocr.txt")
 
     def get_user_word_list_path(self, post_id: int):
         self._set_user_variables(post_id)
         self._set_user_path()
-
         return os.path.join(self._user_path, f"{self._username}_{str(post_id)}_word_list.txt")
 
     def get_user_word_cloud_path(self, post_id: int):
@@ -56,10 +53,9 @@ class PathDTO(PathConfig):
         self._set_user_path()
         return os.path.join(self._user_path, f"{str(self._username)}_{str(post_id)}_sentiment.json")
 
-
 if __name__ == '__main__':
     """ 유닛 테스트 방법:
-    MindTree (루트경로에서) 
+    MindTree (루트경로에서)
     $ python mindtree/utils/DTO.py  """
     vo = PathDTO()
-    print(vo.get_user_word_cloud_path(2))  # post_id가 2인 word cloud 저장 경로를 가져온다.
+    print(vo.get_user_word_cloud_path(2)) # post_id가 2인 word cloud 저장 경로를 가져온다.

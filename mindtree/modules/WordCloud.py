@@ -5,7 +5,6 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from util import get_time_str
 
-
 class WCModule(PathDTO):
 
     def __init__(self):
@@ -14,7 +13,6 @@ class WCModule(PathDTO):
         # WordCloud 객체 initialization
         self.wc = WordCloud(background_color="white", max_font_size=100,
                             max_words=10)
-
         self.word_list: str = ''
         self.cloud: object = None
 
@@ -26,7 +24,6 @@ class WCModule(PathDTO):
         self.save_word_cloud(post_id)
 
     def set_user_word_cloud_object(self, word_list: list):
-
         # word cloud에 넣기 위해 str형태로 반환
         if word_list:
             _word_list_str: str = ",".join(word_list)
@@ -45,4 +42,3 @@ class WCModule(PathDTO):
         post.word_cloud = super().get_user_word_cloud_file_name(post_id)
         db.session.commit()
         print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
-

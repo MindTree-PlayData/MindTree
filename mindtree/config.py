@@ -1,6 +1,5 @@
 import os
 
-
 class Config:
     SECRET_KEY = "donkey_secret"  # flash 쓰려면 설정해야함.
     SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'

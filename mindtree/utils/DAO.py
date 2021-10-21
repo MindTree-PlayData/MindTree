@@ -1,6 +1,10 @@
+from flask_sqlalchemy import SQLAlchemy
+from mindtree import db
 
 class User:
     def createUser():
+        db.session.add(user)
+        db.session.commit()
         pass
     def searchUser():
         pass
@@ -16,17 +20,8 @@ class Post:
         pass
     def updatePost():
         pass
-    def 
-    """ SQL Alchemy가 쿼리를 할 수 있도록 해주기 때문에 구현할 필요가 없음. """
-
-
-
-
-
-
-
-    def __init__(self):
+    def deletePost():
         pass
 
-    def get_username(self):
-        pass
+def __init__(self):
+    pass

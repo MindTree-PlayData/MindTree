@@ -71,7 +71,6 @@ class SentimentAnalysis(PathDTO):
         if self.request():
             self.save_response(post_id)
 
-
 if __name__ == '__main__':
     sa = SentimentAnalysis()
     sa.sentiment_analysis(2)

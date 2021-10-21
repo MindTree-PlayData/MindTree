@@ -10,7 +10,6 @@ from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
 
-
 @app.route("/my_diary", methods=['GET'])
 def my_diary():
     """ login required,  """
@@ -38,7 +37,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        flash("계정이 생성되었습니다. 로그인할 수 있습니다.", 'success')  # username으로 들어온 인풋을 data로 받을 수 있다.
+        flash("계정이 생성되었습니다. 로그인할 수 있습니다.", 'success') # username으로 들어온 인풋을 data로 받을 수 있다.
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -73,7 +72,8 @@ def logout():
 @app.route('/analyze/<int:post_id>')
 def analyze(post_id):
     """
-    - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """
+    - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기
+    """
 
     post = Post.query.get_or_404(post_id)
     user_id = post.user_id
@@ -90,8 +90,8 @@ def analyze(post_id):
 
 @app.route("/results/<path:filename>", methods=['GET'])
 def get_file(filename):
-    """ word cloud가 저장된 미디어 폴더에 접근한다. (results폴더)
-
+    """
+    word cloud가 저장된 미디어 폴더에 접근한다. (results폴더)
     :param filename: results 폴더 아래부터의 이미지 경로
     :return: 지정된 directory의 파일에 접근한다.
     """
@@ -153,7 +153,6 @@ def upload_file():
 
     else:
         return '실패'
-
 
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):

@@ -16,7 +16,6 @@ $(document).ready(function() {
             barChart.series[i].addPoint(sentimentArray[i])
         }
 
-
         // for (let j=0; j<3; j++){
         //     pieChart.series[j].addPoint(sentimentArray[j])
         // };
