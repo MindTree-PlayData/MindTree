@@ -3,58 +3,94 @@ import os
 from threading import Thread
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
-
-from mindtree import app
+from mindtree import app, db, bcrypt
+from mindtree.utils.DTO import PathDTO
+from mindtree.models import User, Post
+from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
-
-
-@app.route("/", methods=['GET'])
-def home():
-    """ 시작 페이지. 로그인을 할 수 있음."""
-    return render_template('login.html')
 
 
 @app.route("/my_diary", methods=['GET'])
 def my_diary():
     """ login required,  """
-    return render_template('my_diary.html')
+    username = current_user.username
+    posts = Post.query.filter_by(author=current_user).all()
+    print("my_diary(): ", username)
+    # print("my_diary: ", posts)  # post 쿼리 확인.
+    return render_template('my_diary.html', posts=posts)
 
 
 @app.route("/upload", methods=['GET'])
 def upload():
     """ login required,  """
+    user = current_user.get_id()
     return render_template('upload.html')
 
 
-@app.route("/analyze", methods=['GET', 'POST'])
-def analyze():
-    """ login required,
-    - 구현 방법
-    analyze.html을 렌더 -> 렌더할 때 그래프에 들어갈 json data 전달 -> js 상에서 {{ userData }}로 받아 그래프를 그림
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('my_diary'))
+    form = RegistrationForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+            flash("계정이 생성되었습니다. 로그인할 수 있습니다.", 'success')  # username으로 들어온 인풋을 data로 받을 수 있다.
+            return redirect(url_for('login'))
+        else:
+            flash("입력정보가 적절하지 않습니다. 다시 시도해주세요", 'danger')  # username으로 들어온 인풋을 data로 받을 수 있다.
+    return render_template('register.html', title='Register', form=form)
 
-    :var user_id: str.
-    :var sentiment_path: sentiment analysis 파일 저장 경로
-    :var sentiment_json: json. sentiment analysis 결과 파일
 
-    -- analyze 1:
-        감성분석 bar graph. json 파일을 전달한다.
-    -- analyze 2:
-        word cloud. results 폴더 아래에 이미지 경로를 전달한다.
-        - word_cloud 경로: results/<user_id>/<user_id>_word_cloud.png 이다.
-        - 이때 results/ 가 media_folder로 정의되어 있다.
-        - 따라서 이때 이미지가 저장된 경로에 접근하려면 <user_id>/<user_id>_word_cloud.png 를 전달하면 된다. """
+@app.route("/",  methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    print('form = LoginForm()')
+    if request.method == "POST":
+        if form.validate_on_submit():
+            print('form.validate_on_submit()')
+            user = User.query.filter_by(email=form.email.data).first()
 
-    # -- analyze 1: 감성분석 bar graph
-    user_id = request.form.get('id')  # 추후 로그인 시스템이 구축되면 세션 id를 받을 수 있도록 수정.
-    print("user_id: ", user_id)
-    sentiment_path = os.path.join('mindtree/results', str(user_id), str(user_id) + "_sentiment.json")
-    with open(sentiment_path, "r",
-              encoding="utf-8") as local_json:
-        sentiment_json = json.load(local_json)
+            # db의 password와 form의 password를 비교하여 True, False를 반환함
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                print('user and bcrypt.check_password_hash(user.password, form.password.data)')
+                login_user(user, remember=form.remember.data)
+                next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
 
-    # -- analyze 2: word cloud
-    image_path = os.path.join(str(user_id), str(user_id) + "_word_cloud.png")
+                return redirect(next_page) if next_page else redirect(url_for('my_diary'))
+            else:
+                flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
+        else:
+            flash('로그인 실패. 유저 정보를 찾지 못했습니다.', 'danger')
+    return render_template('login.html', title='login', form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+@app.route('/analyze/<int:post_id>')
+def analyze(post_id):
+    """
+    - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """
+
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user_id
+    username = User.query.get(user_id).username
+
+    sentiment_json = post.sentiment  # 감성분석 json 데이터
+    word_cloud = post.word_cloud  # 워드클라우드 파일 이름
+
+    image_path = os.path.join(str(username), word_cloud)
+    print(image_path)
 
     return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
 
@@ -71,12 +107,6 @@ def get_file(filename):
     return send_from_directory(media_folder, filename)
 
 
-@app.route("/login", methods=['GET'])
-def login():
-    """ login 로직을 수행함. 지금은 임시로 바로 my_diary로 보냄."""
-    return redirect(url_for("my_diary"))
-
-
 @app.route("/upload_file", methods=['GET', 'POST'])
 def upload_file():
     """
@@ -84,16 +114,21 @@ def upload_file():
     2. OCR, text mining, sentiment analysis를 수행하도록 처리한다.
     """
     if request.method == "POST":
-        # 요청한 파일을 업로드 한다.
-        f = request.files['file']  # input 태그의 name 을 받음.
 
-        # id 는 추후 로그인 시스템이 구현되면 세션에서 받아올 예정.
-        user_id = request.form.get('id')
-        print("user_id: ", user_id)
+        title = request.form.get('title')
+        f = request.files['file']  # input 태그의 name 을 받음.
+        print("[upload_file] f, title", f.filename, title)
+
+        # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
+        post = Post(title="", ocr_text=title, sentiment={}, word_cloud="", author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        post_id: int = post.id
 
         # 경로 변수 정의
-        filename = str(user_id) + '_' + str(secure_filename(f.filename))
-        file_dir = os.path.join("mindtree/results", str(user_id))
+        path = PathDTO()
+        filename = path.get_user_diary_file_name(post_id)
+        file_dir = path.get_user_media_path(post_id)
         file_path = os.path.join(file_dir, filename)
 
         # 디렉토리 만들기
@@ -102,6 +137,7 @@ def upload_file():
 
         # 이미지 저장
         f.save(file_path)
+
         flash("업로드에 성공하였습니다", "success")
 
         """ ** 업로드한 파일을 미리 분석해서 저장해둔다 **
@@ -111,14 +147,21 @@ def upload_file():
         """
 
         if worker.is_initialized():
-            t1 = Thread(target=worker.analysis, args=[user_id])
+            t1 = Thread(target=worker.analysis, args=[post_id])
             t1.start()
         else:
-            t2 = Thread(target=worker.init_and_analyze, args=[user_id])
+            t2 = Thread(target=worker.init_and_analyze, args=[post_id])
             t2.start()
-
 
         return redirect(url_for("my_diary"))
 
     else:
         return '실패'
+
+
+@app.template_filter('datetime')
+def _jinja2_filter_datetime(date, fmt=None):
+    if fmt:
+        return date.strftime(fmt)
+    else:
+        return date.strftime('%Y년 %m월 %d일')

@@ -1,80 +1,46 @@
-<!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" type="text/css">
+{% extends "layout.html" %}
 
-    <title>DiaryList</title>
-</head>
-<body>
+{% block content %}
+<div class="container mt-4 mb-3">
+    <div class="row g-1">
+        <h2 class="header-bar col">내 다이어리</h2>
 
-    <h2 class="header-bar">내 다이어리</h2>
+        {# 업로드 링크 버튼 시작 #}
+        <div class="col-md-1">
+            <a class="btn btn-primary" href="/upload" role="button">업로드하기</a>
+        </div>
+        {# 업로드 링크 버튼 끝 #}
+    </div>
+</div>
 
-<!-- 이 flash 메시지는 css 작업하면 예쁘다. -->
-    {% with messages = get_flashed_messages(with_categories = true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }} container">
-                {{ message }}
-            </div>
-            {% endfor %}
-        {% endif%}
-    {% endwith %}
-
-
-<!--   일기가 추가될때마다 추가된 일기가 반영된 일기 목록을 보여주려면
-    DB가 구축되어야 함. -->
-    <table class="table container">
+{# 작성 게시글 목록 시작 #}
+<div class="container">
+    <table class="table">
         <thead>
         <tr>
-            <th class="col">#</th>
-            <th class="col">작성자</th>
-            <th class="col">제목</th>
+            <th scope="col">#</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일자</th>
+            <th scope="col">상태</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row"> 1 </th>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row"> 2 </th>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row"> 3 </th>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+        {% for post in posts %}
+            <tr>
+                <th scope="row">{{ post.id }}</th>
+                <td>{{ post.author.username }}</td>
+                {% if post.completed %}
+                <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
+                <td style="color: #1e2125"> 분석 완료 </td>
+                {% else %}
+                <td>{{ post.pub_date }}</td>
+                <td style="color: #6c757d"> 분석중... </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
+</div>
+{#    작성 게시글 목록 끝 #}
 
-    <div class="form">
-        <form class="container" action="/analyze" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                - 아이디를 직접 써서 결과를 확인하세요 <br>
-                (로그인 기능이 구현되면 로그인 정보로 처리할 예정)
-            </div>
-            <div class="mb-3">
-                <label for="id" class="form-label">ID</label>
-                <input class="form-control" type="text" name="id"><br><br>
-            </div>
-            <button type="submit" class="btn btn-primary">분석결과 확인하기</button>
-        </form>
-    </div><br>
-    <div class="container">
-        <a class="btn btn-primary" href="/upload" role="button">업로드하기</a>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}

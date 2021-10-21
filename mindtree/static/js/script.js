@@ -1,5 +1,14 @@
 // Charts from Chart.js
-var sentiment = [0.3,0.4,0.3]
+// var sentiment = [0.3,0.4,0.3]
+
+// 단순 변수만 선언해서 Array 타입의 데이터로 만들면
+// 아래 차트의 data에 넣으면 된다.
+let sentiment2 = userData.document.confidence
+    console.log(sentiment2)
+let sentimentArray = Object.values(sentiment2)
+    console.log(sentimentArray)
+
+
 // bar chart
 new Chart(document.getElementById("bar-chart"), {
     type: 'bar',
@@ -9,7 +18,7 @@ new Chart(document.getElementById("bar-chart"), {
         {
           label: "Sentiment",
           backgroundColor: ["#59ff64", "#fff759","#ff5959"],
-          data: sentiment
+          data: sentimentArray
         }
       ]
     },
@@ -35,7 +44,7 @@ new Chart(document.getElementById("doughnut-chart"), {
         {
           label: "Sentiment",
           backgroundColor: ["#59ff64", "#fff759","#ff5959"],
-          data: sentiment
+          data: sentimentArray
         }
       ]
     },
@@ -61,7 +70,7 @@ new Chart(document.getElementById("radar-chart"), {
           borderColor: "rgba(179,181,198,1)",
           pointBorderColor: "#fff",
           pointBackgroundColor: "rgba(179,181,198,1)",
-          data: sentiment
+          data: sentimentArray
         }
       ]
     },

@@ -1,13 +1,15 @@
 from concurrent import futures
 
-from .utils.OCR import OCR
-from .utils.request_sentiment import SentimentAnalysis
-from .utils.text_analysis import TextAnalysis
-from .utils.util import get_time_str
+from mindtree.modules.OCR import OCR
+from mindtree.modules.request_sentiment import SentimentAnalysis
+from mindtree.modules.text_analysis import TextAnalysis
+from mindtree.modules.util import get_time_str
+
+from mindtree import db
+from mindtree.models import Post
 
 
-class Worker:
-
+class ThreadedAnalysis:
     def __init__(self):
         self._ocr = None
         self._text_analyzer = None
@@ -18,16 +20,16 @@ class Worker:
         self.sentiment_analyzer = None
         self.initialized = False
 
-    def init_and_analyze(self, user_id):
+    def init_and_analyze(self, post_id: int):
         """main function"""
-        self.init_analyzers()
-        self.analysis(user_id)
+        self._init_analyzers()
+        self.analysis(post_id)
 
     def is_initialized(self):
         print(f"{get_time_str()} is worker initialied? ----- {self.initialized}")
         return self.initialized
 
-    def init_analyzers(self):
+    def _init_analyzers(self):
         with futures.ThreadPoolExecutor() as executor:
             # 각 객체를 초기화한다.
             self._ocr = executor.submit(OCR)
@@ -42,10 +44,11 @@ class Worker:
                     self.sentiment_analyzer = self._sentiment_analyzer.result()
                 self.initialized = True
 
-    def analysis(self, user_id):
+    def analysis(self, post_id):
+        print("thread.analysis", post_id)
         with futures.ThreadPoolExecutor() as executor:
             # 1. OCR 시작. 끝날때까지 기다린다.
-            f1_m = executor.submit(self.ocr.ocr_main, user_id)
+            f1_m = executor.submit(self.ocr.ocr_main, post_id)
             futures.wait([f1_m])
 
             # 1-2. 완료 로그찍기
@@ -56,8 +59,8 @@ class Worker:
                 f1_m.cancel()
 
             # 2. 감성분석, 텍스트 분석 모두 실행.
-            f2_m = executor.submit(self.text_analyzer.text_mining, user_id)
-            f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, user_id)
+            f2_m = executor.submit(self.text_analyzer.text_analysis, post_id)
+            f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, post_id)
 
             # 2-2. 완료되면 로그찍기
             i = 2
@@ -69,8 +72,14 @@ class Worker:
                 else:
                     f.cancel()
 
-        return None
+        # 분석이 끝난 후 db에 완료 했음을 저장.
+        post = Post.query.get(post_id)
+        post.completed = True
+        db.session.commit()
 
 
 # 외부에서 바로 불러서 사용할 수 있도록 여기에 선언해둠.
-worker = Worker()
+worker = ThreadedAnalysis()
+
+if __name__ == '__main__':
+    pass

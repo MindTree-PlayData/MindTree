@@ -1,27 +1,32 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+{% extends "layout.html" %}
+{% block content %}
 
-    <title>Results</title>
-</head>
+    <div class="container mt-5">
 
-<body>
+        {# 그래프 1 시작 #}
+        <canvas class='report m-3' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>
 
-    <figure class="highcharts-figure">
+{#        (삭제예정) #}
+{#        <figure class="highcharts-figure">#}
+{#            <div id="container" class="mt-3 mb-3"></div>#}
+{#        </figure>#}
 
-        <div id="container"></div>
-        <div id="container2" class="header-center">
-            <img src="{{ url_for('get_file', filename=image_path) }}" alt="">
-        </div>
+        {# 그래프 1 끝 #}
 
-    </figure>
+        {# 워드클라우드 시작 #}
+        <div id="container2" class="mt-5"><img src="{{ url_for('get_file', filename=image_path) }}" alt="실패" class="img-fluid rounded mx-auto d-block"></div>
+        {# 워드클라우드 끝#}
+    </div>
 
-    <div class='report'>
+
+
+
+
+
+
+
+    <hr>
+    <div class='report container mt-5'>
         <h1>Results</h1><br>
         <canvas class='report' id="bar-chart" width="500vw" height="500vh"></canvas><br><br>
         <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>
@@ -41,11 +46,10 @@
         let userData = {{ user_data | tojson }}
     </script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js')}}"></script>
+{#    (삭제예정) #}
+{#    <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js')}}"></script>#}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
-    <script type="text/javascript" src="\MindTree\static\js\script.js"></script>
-    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script>
+{% endblock %}
 
-
-</body>
-</html>
