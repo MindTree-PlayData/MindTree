@@ -4,6 +4,7 @@
 // 단순 변수만 선언해서 Array 타입의 데이터로 만들면
 // 아래 차트의 data에 넣으면 된다.
 let sentiment2 = userData.document.confidence
+    console.log(sentiment2)
 let sentimentArray = Object.values(sentiment2)
     console.log(sentimentArray)
 

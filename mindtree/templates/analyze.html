@@ -14,7 +14,7 @@
         {# 그래프 1 끝 #}
 
         {# 워드클라우드 시작 #}
-        <div id="container2" class="mt-5"><img src="{{ url_for('get_file', filename=image_path) }}" alt="" class="img-fluid rounded mx-auto d-block"></div>
+        <div id="container2" class="mt-5"><img src="{{ url_for('get_file', filename=image_path) }}" alt="실패" class="img-fluid rounded mx-auto d-block"></div>
         {# 워드클라우드 끝#}
     </div>
 
@@ -28,9 +28,9 @@
     <hr>
     <div class='report container mt-5'>
         <h1>Results</h1><br>
-{#        <canvas class='report' id="bar-chart" width="500vw" height="500vh"></canvas><br><br>#}
-{#        <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>#}
-{#        <canvas class='report' id="radar-chart" width="500vw" height="500vh"></canvas><br><br>#}
+        <canvas class='report' id="bar-chart" width="500vw" height="500vh"></canvas><br><br>
+        <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>
+        <canvas class='report' id="radar-chart" width="500vw" height="500vh"></canvas><br><br>
     </div>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
