@@ -97,8 +97,7 @@ def analyze(post_id):
 
 @app.route("/results/<path:filename>", methods=['GET'])
 def get_file(filename):
-    """ word cloud가 저장된 미디어 폴더에 접근한다. (results폴더)
-
+    """ word cloud가 저장된 미디어 폴더에 접근(results폴더)
     :param filename: results 폴더 아래부터의 이미지 경로
     :return: 지정된 directory의 파일에 접근한다.
     """
