@@ -15,7 +15,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(APP_PATH, "key", "fu
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'routes.login'
+login_manager.login_view = 'login'
 mail = Mail(app)
 
 

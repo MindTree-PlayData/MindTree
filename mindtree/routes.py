@@ -3,7 +3,7 @@ from threading import Thread
 from concurrent import futures
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from mindtree import app, db, bcrypt
 from mindtree.utils.DTO import PathDTO
@@ -22,8 +22,8 @@ with futures.ThreadPoolExecutor() as executor:
 
 
 @app.route("/my_diary", methods=['GET'])
+@login_required
 def my_diary():
-    """ login required,  """
     username = current_user.username
     posts = Post.query.filter_by(author=current_user).all()
     print("[my_diary] username: ", username)
@@ -31,8 +31,8 @@ def my_diary():
 
 
 @app.route("/upload", methods=['GET'])
+@login_required
 def upload():
-    """ login required,  """
     return render_template('upload.html')
 
 
@@ -84,6 +84,7 @@ def logout():
 
 
 @app.route('/analyze/<int:post_id>')
+@login_required
 def analyze(post_id):
     """
     - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """

@@ -31,3 +31,9 @@
 .highcharts-data-table tr:hover {
     background: #f1f7ff;
 }
+
+.alert-message {
+    color:#664d03;
+    background-color:#fff3cd;
+    border-color:#ffecb5
+}
