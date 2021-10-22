@@ -37,6 +37,7 @@ class TextAnalysis(CreateWordCloud):
         - word cloud를 그리고, 저장한다. """
 
         # Post_id 정보를 이용하여 경로변수를 설정한다.
+        print("[text_analysis] post_id: ", post_id)
         self.word_list_file_path = super().get_user_word_list_path(post_id)
         self.ocr_text_path = super().get_user_ocr_file_path(post_id)
 
@@ -60,10 +61,10 @@ class TextAnalysis(CreateWordCloud):
             self._get_target_words()
 
             # 2-1. 단어 list를 파일로 저장한다.
-            self._save_list()
+            if self._save_list():
 
-            # 3. 워드 클라우드를 만들어 저장한다.
-            super().make_word_cloud(self.word_list, post_id)
+                # 3. 워드 클라우드를 만들어 저장한다.
+                super().make_word_cloud(self.word_list, post_id)
 
         print(get_time_str(), "Text Analysis 완료...")
 
@@ -91,6 +92,8 @@ class TextAnalysis(CreateWordCloud):
         with open(self.word_list_file_path, "w") as list_file:
             list_file.write(_word_list_str)
             print(get_time_str(), "TextAnalysis: 단어 리스트 저장 완료")
+
+        return True
 
 
 # 동기 로컬 폰트

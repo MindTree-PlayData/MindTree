@@ -1,5 +1,5 @@
 from wordcloud import WordCloud
-
+import os
 from mindtree import db
 from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
@@ -12,8 +12,9 @@ class CreateWordCloud(PathDTO):
         super().__init__()
 
         # WordCloud 객체 initialization
-        self.wc = WordCloud(font_path="MindTree/fonts/NanumSquareRoundB.ttf",
+        self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
                             background_color="white", max_font_size=100, max_words=10)
+        print("[CreateWordCloud] os.getcwd(): ", os.getcwd())
         self.word_list: str = ''
         self.cloud: object = None
 
@@ -30,6 +31,7 @@ class CreateWordCloud(PathDTO):
         if word_list:
             _word_list_str: str = ",".join(word_list)
         else:
+            print("word_list가 없습니다.")
             _word_list_str = ",".join(self.word_list)
 
         # word cloud 생성
@@ -40,8 +42,12 @@ class CreateWordCloud(PathDTO):
         self.cloud.to_file(super().get_user_word_cloud_path(post_id))
 
         # 워드 클라우드 이미지 파일명을 DB에 저장
-        post = Post.query.get_or_404(post_id)
-        post.word_cloud = super().get_user_word_cloud_file_name(post_id)
-        db.session.commit()
-        print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
+        if post_id:
+            print("[_save_word_cloud] post_id: ", post_id)
+            post = Post.query.get_or_404(post_id)
+            post.word_cloud = super().get_user_word_cloud_file_name(post_id)
+            db.session.commit()
+            print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
+        else:
+            print("게시물을 찾을 수 없습니다.")
 

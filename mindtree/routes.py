@@ -12,6 +12,8 @@ from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import worker
 
+path = PathDTO()  # 경로를 찾을 때 사용한다.
+
 
 @app.route("/my_diary", methods=['GET'])
 def my_diary():
@@ -84,27 +86,20 @@ def analyze(post_id):
     - 해당 포스트 아이디로 쿼리 후 결과가 없으면 보내지 않게 하기 """
 
     post = Post.query.get_or_404(post_id)
-    user_id = post.user_id
-    username = User.query.get(user_id).username
 
-    sentiment_json = post.sentiment  # 감성분석 json 데이터
-    word_cloud = post.word_cloud  # 워드클라우드 파일 이름
-
-    image_path = f"{str(username)}/{word_cloud}"
-    print(image_path)
-
-    return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
+    return render_template('analyze.html', post=post)
 
 
-@app.route("/results/<path:filename>", methods=['GET'])
-def get_file(filename):
+@app.route("/results/<path:post_id>", methods=['GET'])
+def get_word_cloud_file(post_id):
     """ word cloud가 저장된 미디어 폴더에 접근(results폴더)
-    :param filename: results 폴더 아래부터의 이미지 경로
+    :param post_id: 포스트 id
     :return: 지정된 directory의 파일에 접근한다.
     """
-    media_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
-    print("media_folder", media_folder)
-    return send_from_directory(media_folder, filename)
+    filepath = path.get_user_word_cloud_file_name(post_id)
+
+    print("media_folder", filepath)
+    return send_from_directory(path.get_user_media_path(post_id), filepath)
 
 
 @app.route("/upload_file", methods=['GET', 'POST'])
@@ -126,7 +121,6 @@ def upload_file():
         post_id: int = post.id
 
         # 경로 변수 정의
-        path = PathDTO()
         filename = path.get_user_diary_file_name(post_id)
         file_dir = path.get_user_media_path(post_id)
         file_path = os.path.join(file_dir, filename)

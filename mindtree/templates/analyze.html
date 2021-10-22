@@ -8,7 +8,8 @@
         <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>
         <canvas class='report' id="radar-chart" width="500vw" height="500vh"></canvas><br><br>
         {# 워드클라우드 #}
-        <img src="{{ url_for('get_file', filename=image_path) }}" alt="wordcloud" class="img-fluid rounded mx-auto d-block"><br><br>
+{#        <img src="{{ url_for('get_file', filename=image_path) }}" alt="wordcloud" class="img-fluid rounded mx-auto d-block"><br><br>#}
+        <img src="{{ url_for('get_word_cloud_file', post_id=post.id )}}" alt="wordcloud" class="img-fluid rounded mx-auto d-block"><br><br>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -16,7 +17,7 @@
 
     <script>
         // 'static/js/**.js' 파일에서 변수를 사용하기 위해서는 여기서 정의해둬야 한다.
-        let userData = {{ user_data | tojson }}
+        let userData = {{ post.sentiment | tojson }}
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>

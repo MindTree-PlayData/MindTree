@@ -7,11 +7,9 @@ from flask_mail import Mail
 from mindtree.config import Config
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "donkey_secret"  # flash 쓰려면 설정해야함.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(Config)
 
-APP_PATH = os.path.dirname(__file__)
+APP_PATH = os.path.dirname(__file__)  # 소문자 mindtree 경로를 의미함.
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(APP_PATH, "key", "future-glider-321504-4b3a509617f3.json")
 
 db = SQLAlchemy(app)

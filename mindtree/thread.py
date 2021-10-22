@@ -42,6 +42,7 @@ class ThreadedAnalysis:
                     self.ocr = self._ocr.result()
                     self.text_analyzer = self._text_analyzer.result()
                     self.sentiment_analyzer = self._sentiment_analyzer.result()
+        # for f in futures.as_completed([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
                 self.initialized = True
 
     def analysis(self, post_id):
