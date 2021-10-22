@@ -96,9 +96,6 @@ class TextAnalysis(CreateWordCloud):
         return True
 
 
-# 동기 로컬 폰트
-# font_path='/Users/motive/Library/Fonts/D2Coding-Ver1.3.2-20180524-all.ttc',
-
 if __name__ == '__main__':
     ta = TextAnalysis()
     ta.text_analysis(2)

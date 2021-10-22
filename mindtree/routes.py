@@ -1,7 +1,6 @@
-import json
 import os
 from threading import Thread
-from urllib.parse import unquote
+from concurrent import futures
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, current_user, logout_user
@@ -10,9 +9,16 @@ from mindtree import app, db, bcrypt
 from mindtree.utils.DTO import PathDTO
 from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
-from mindtree.thread import worker
+from mindtree.thread import ThreadedAnalysis
 
 path = PathDTO()  # 경로를 찾을 때 사용한다.
+
+with futures.ThreadPoolExecutor() as executor:
+    """ analyzer를 로드합니다. 
+    쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다. 
+    쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
+    _analyzer = ThreadedAnalysis()
+    analyzer = executor.submit(_analyzer.init_analyzers).result()
 
 
 @app.route("/my_diary", methods=['GET'])
@@ -20,15 +26,13 @@ def my_diary():
     """ login required,  """
     username = current_user.username
     posts = Post.query.filter_by(author=current_user).all()
-    print("my_diary(): ", username)
-    # print("my_diary: ", posts)  # post 쿼리 확인.
+    print("[my_diary] username: ", username)
     return render_template('my_diary.html', posts=posts)
 
 
 @app.route("/upload", methods=['GET'])
 def upload():
     """ login required,  """
-    user = current_user.get_id()
     return render_template('upload.html')
 
 
@@ -54,23 +58,22 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    print('form = LoginForm()')
     if request.method == "POST":
         if form.validate_on_submit():
-            print('form.validate_on_submit()')
-            user = User.query.filter_by(email=form.email.data).first()
+            try:
+                user = User.query.filter_by(email=form.email.data).first()
+                # db의 password와 form의 password를 비교하여 True, False를 반환함
+                if user and bcrypt.check_password_hash(user.password, form.password.data):
+                    login_user(user, remember=form.remember.data)
+                    next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
 
-            # db의 password와 form의 password를 비교하여 True, False를 반환함
-            if user and bcrypt.check_password_hash(user.password, form.password.data):
-                print('user and bcrypt.check_password_hash(user.password, form.password.data)')
-                login_user(user, remember=form.remember.data)
-                next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
-
-                return redirect(next_page) if next_page else redirect(url_for('my_diary'))
-            else:
-                flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
+                    return redirect(next_page) if next_page else redirect(url_for('my_diary'))
+                else:
+                    flash('로그인 실패. email 또는 password를 다시 확인해 주세요.', 'danger')
+            except Exception as e:
+                print("[login] 쿼리 실패", e)
         else:
-            flash('로그인 실패. 유저 정보를 찾지 못했습니다.', 'danger')
+            flash('입력정보가 올바르지 않습니다.', 'danger')
     return render_template('login.html', title='login', form=form)
 
 
@@ -96,10 +99,9 @@ def get_word_cloud_file(post_id):
     :param post_id: 포스트 id
     :return: 지정된 directory의 파일에 접근한다.
     """
-    filepath = path.get_user_word_cloud_file_name(post_id)
-
-    print("media_folder", filepath)
-    return send_from_directory(path.get_user_media_path(post_id), filepath)
+    word_cloud_file_name = path.get_user_word_cloud_file_name(post_id)
+    print("[get_word_cloud_file] word_cloud_file_name: ", word_cloud_file_name)
+    return send_from_directory(path.get_user_media_path(post_id), word_cloud_file_name)
 
 
 @app.route("/upload_file", methods=['GET', 'POST'])
@@ -112,7 +114,7 @@ def upload_file():
 
         title = request.form.get('title')
         f = request.files['file']  # input 태그의 name 을 받음.
-        print("[upload_file] f, title", f.filename, title)
+        print("[upload_file] f.filename, title", f.filename, title)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
         post = Post(title="", ocr_text=title, sentiment={}, word_cloud="", author=current_user)
@@ -140,11 +142,11 @@ def upload_file():
         단, app이 debug모드이기 때문에 reloading될 때마다 다시 초기화해야한다.
         """
 
-        if worker.is_initialized():
-            t1 = Thread(target=worker.analysis, args=[post_id])
+        if analyzer.is_initialized():
+            t1 = Thread(target=analyzer.analysis, args=[post_id])
             t1.start()
         else:
-            t2 = Thread(target=worker.init_and_analyze, args=[post_id])
+            t2 = Thread(target=analyzer.init_and_analyze, args=[post_id])
             t2.start()
 
         return redirect(url_for("my_diary"))

@@ -14,7 +14,6 @@ class CreateWordCloud(PathDTO):
         # WordCloud 객체 initialization
         self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
                             background_color="white", max_font_size=100, max_words=10)
-        print("[CreateWordCloud] os.getcwd(): ", os.getcwd())
         self.word_list: str = ''
         self.cloud: object = None
 
@@ -22,6 +21,7 @@ class CreateWordCloud(PathDTO):
 
     def make_word_cloud(self, word_list, post_id):
         """ 단어의 list를 받아서 word cloud를 만들고, WordCloud 객체반환 """
+        print("[make_word_cloud] post_id: ", post_id)
         self._set_user_word_cloud_object(word_list)
         self._save_word_cloud(post_id)
 

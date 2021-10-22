@@ -22,28 +22,27 @@ class ThreadedAnalysis:
 
     def init_and_analyze(self, post_id: int):
         """main function"""
-        self._init_analyzers()
+        self.init_analyzers()
         self.analysis(post_id)
 
     def is_initialized(self):
         print(f"{get_time_str()} is worker initialied? ----- {self.initialized}")
         return self.initialized
 
-    def _init_analyzers(self):
+    def init_analyzers(self):
         with futures.ThreadPoolExecutor() as executor:
             # 각 객체를 초기화한다.
             self._ocr = executor.submit(OCR)
             self._text_analyzer = executor.submit(TextAnalysis)
             self._sentiment_analyzer = executor.submit(SentimentAnalysis)
 
-            if True:  # for 문을 명백히 빠져나오는 것을 표현하려고 그냥 if 씀
-                for f in futures.as_completed([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
-                    # 중복해서 담기긴 하지만 실행에는 문제 없어서 놔두기로함.
-                    self.ocr = self._ocr.result()
-                    self.text_analyzer = self._text_analyzer.result()
-                    self.sentiment_analyzer = self._sentiment_analyzer.result()
-        # for f in futures.as_completed([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
-                self.initialized = True
+            for f in futures.as_completed([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
+                # 중복해서 담기긴 하지만 실행에는 문제 없어서 놔두기로함.
+                self.ocr = self._ocr.result()
+                self.text_analyzer = self._text_analyzer.result()
+                self.sentiment_analyzer = self._sentiment_analyzer.result()
+            self.initialized = True
+            return self
 
     def analysis(self, post_id):
         print("thread.analysis", post_id)
@@ -80,7 +79,7 @@ class ThreadedAnalysis:
 
 
 # 외부에서 바로 불러서 사용할 수 있도록 여기에 선언해둠.
-worker = ThreadedAnalysis()
+# worker = ThreadedAnalysis()
 
 if __name__ == '__main__':
     pass

@@ -34,7 +34,21 @@ class SentimentAnalysis(PathDTO):
         self.json_response = ''  # response 객체의 json 데이터
         print(get_time_str(), "SentimentAnalysis initialized...")
 
-    def request(self):
+    def sentiment_analysis(self, post_id: int):
+
+        print("[sentiment_analysis] post_id: ", post_id)
+        # 경로를 설정한다.
+        self.text_path = super().get_user_ocr_file_path(post_id)  # 굳이 안해도됨. DB에 저장되어 있기 때문.
+        self.sentiment_path = super().get_user_sentiment_path(post_id)
+
+        # ocr text db에서 가져오기
+        ocr_text = Post.query.get(post_id).ocr_text
+        self.ocr_text_data = ocr_text
+
+        if self._request():
+            self._save_response(post_id)
+
+    def _request(self):
         self.res = requests.post(url=self.url,
                                  headers=self.headers,
                                  json={"content": self.ocr_text_data}
@@ -47,7 +61,7 @@ class SentimentAnalysis(PathDTO):
             print(f"{get_time_str()} SentimentAnalysis: request error! {self.res.status_code}")
             return None
 
-    def save_response(self, post_id: int) -> None:
+    def _save_response(self, post_id: int) -> None:
         # sentiment 로컬 저장
         with open(self.sentiment_path, "w", encoding='utf-8') as f:
             json.dump(self.json_response, f, indent='\t', ensure_ascii=False)
@@ -57,19 +71,6 @@ class SentimentAnalysis(PathDTO):
         post = Post.query.get_or_404(post_id)
         post.sentiment = self.json_response
         db.session.commit()
-
-    def sentiment_analysis(self, post_id: int):
-
-        # 경로를 설정한다.
-        self.text_path = super().get_user_ocr_file_path(post_id)  # 굳이 안해도됨. DB에 저장되어 있기 때문.
-        self.sentiment_path = super().get_user_sentiment_path(post_id)
-
-        # ocr text db에서 가져오기
-        ocr_text = Post.query.get(post_id).ocr_text
-        self.ocr_text_data = ocr_text
-
-        if self.request():
-            self.save_response(post_id)
 
 
 if __name__ == '__main__':

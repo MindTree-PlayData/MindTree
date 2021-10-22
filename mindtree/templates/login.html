@@ -3,7 +3,7 @@
     <div class="content-section container-fluid">
         <div class="row">
             <div class="col"></div>  {# <- 빈 컨테이너 #}
-            
+{#            로그인이 되어있으면 책 그림 표시 #}
             {% if current_user.is_authenticated %}
 
                 <div class="col mt-5">
@@ -11,8 +11,9 @@
                 <a href="{{ url_for('my_diary') }}"><img src="{{ url_for('static', filename='images/main_book.png') }}" class="img-fluid" alt=""></a>
                 </div>
 
+{#          로그인이 되어 있지 않으면 로그인 창 표시#}
             {% else %}
-                
+{#          로그인 창 시작 #}
             <div class="col" style="min-width: 500px">
             <form method="POST" action="" class="container-fluid">
                 {{ form.hidden_tag() }}
@@ -39,6 +40,7 @@
                 </div>
             </form>
             </div>
+{#          로그인 창 끝 #}
             {% endif %}
 
             <div class="col"></div> {# <- 빈 컨테이너 #}
