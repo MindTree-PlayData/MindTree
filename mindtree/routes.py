@@ -1,6 +1,7 @@
 import json
 import os
 from threading import Thread
+from urllib.parse import unquote
 
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, current_user, logout_user
@@ -89,7 +90,7 @@ def analyze(post_id):
     sentiment_json = post.sentiment  # 감성분석 json 데이터
     word_cloud = post.word_cloud  # 워드클라우드 파일 이름
 
-    image_path = os.path.join(str(username), word_cloud)
+    image_path = f"{str(username)}/{word_cloud}"
     print(image_path)
 
     return render_template('analyze.html', user_data=sentiment_json, image_path=image_path)
@@ -163,4 +164,4 @@ def _jinja2_filter_datetime(date, fmt=None):
     if fmt:
         return date.strftime(fmt)
     else:
-        return date.strftime('%Y년 %m월 %d일')
+        return date.strftime('%Y년 %m월 %d일 %H시 %M분')
