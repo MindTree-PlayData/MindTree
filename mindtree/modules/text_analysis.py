@@ -25,13 +25,13 @@ class TextAnalysis(CreateWordCloud):
         self.word_list_file_path = ''
 
         # 빈 결과 변수 설정
-        self.ocr_text: str = ''
-        self._pos_tagged_results: dict = {}
-        self.word_list: list = []
+        self.ocr_text = ''
+        self._pos_tagged_results= {}
+        self.word_list = []
 
         print(get_time_str(), "TextAnalysis: initialized...")
 
-    def text_analysis(self, post_id: int):
+    def text_analysis(self, post_id):
         """ 텍스트 분석 main function.
         - pos tagging, 원하는 품사의 단어를 추출
         - word cloud를 그리고, 저장한다. """
@@ -97,5 +97,8 @@ class TextAnalysis(CreateWordCloud):
 
 
 if __name__ == '__main__':
+    """ 유닛 테스트 방법:
+        MindTree (루트경로에서) 
+        $ python mindtree/modules/text_analysis.py  """
     ta = TextAnalysis()
     ta.text_analysis(2)

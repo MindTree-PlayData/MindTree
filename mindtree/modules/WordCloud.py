@@ -5,6 +5,7 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
+
 class CreateWordCloud(PathDTO):
 
     def __init__(self):
@@ -27,11 +28,11 @@ class CreateWordCloud(PathDTO):
         self._set_user_word_cloud_object(word_list)
         self._save_word_cloud(post_id)
 
-    def _set_user_word_cloud_object(self, word_list: list):
+    def _set_user_word_cloud_object(self, word_list):
 
         # word cloud에 넣기 위해 str형태로 반환
         if word_list:
-            _word_list_str: str = ",".join(word_list)
+            _word_list_str = ",".join(word_list)
         else:
             print("word_list가 없습니다.")
             _word_list_str = ",".join(self.word_list)
@@ -52,3 +53,11 @@ class CreateWordCloud(PathDTO):
             print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
         else:
             print("게시물을 찾을 수 없습니다.")
+
+
+if __name__ == '__main__':
+    """ 유닛 테스트 방법:
+        MindTree (루트경로에서) 
+        $ python mindtree/modules/WordCloud.py  """
+
+

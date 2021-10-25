@@ -34,7 +34,7 @@ class SentimentAnalysis(PathDTO):
         self.json_response = ''  # response 객체의 json 데이터
         print(get_time_str(), "SentimentAnalysis initialized...")
 
-    def sentiment_analysis(self, post_id: int):
+    def sentiment_analysis(self, post_id):
 
         print("[sentiment_analysis] post_id: ", post_id)
         # 경로를 설정한다.
@@ -61,7 +61,7 @@ class SentimentAnalysis(PathDTO):
             print(f"{get_time_str()} SentimentAnalysis: request error! {self.res.status_code}")
             return None
 
-    def _save_response(self, post_id: int) -> None:
+    def _save_response(self, post_id):
         # sentiment 로컬 저장
         with open(self.sentiment_path, "w", encoding='utf-8') as f:
             json.dump(self.json_response, f, indent='\t', ensure_ascii=False)
@@ -74,5 +74,8 @@ class SentimentAnalysis(PathDTO):
 
 
 if __name__ == '__main__':
+    """ 유닛 테스트 방법:
+        MindTree (루트경로에서) 
+        $ python mindtree/modules/sentiment_analysis.py  """
     sa = SentimentAnalysis()
     sa.sentiment_analysis(2)
