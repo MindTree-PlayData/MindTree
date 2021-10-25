@@ -5,7 +5,6 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
-
 class CreateWordCloud(PathDTO):
 
     def __init__(self):
@@ -53,4 +52,3 @@ class CreateWordCloud(PathDTO):
             print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
         else:
             print("게시물을 찾을 수 없습니다.")
-
