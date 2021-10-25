@@ -115,7 +115,7 @@ def upload_file():
 
         title = request.form.get('title')
         f = request.files['file']  # input 태그의 name 을 받음.
-        print("[upload_file] f.filename, title", f.filename, title)
+        print("[upload_file] f.filename, title", f.filename) #, title)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
         post = Post(title="", ocr_text=title, sentiment={}, word_cloud="", author=current_user)
