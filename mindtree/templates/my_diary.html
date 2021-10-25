@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-3">
+    <div class="row g-1">
+        <h2 class="header-bar col">내 다이어리</h2>
+
+        {# 업로드 링크 버튼 시작 #}
+        <div class="col-md-1 d-flex justify-content-end">
+            <div class="me-3">
+                <a class="btn btn-primary" href="" role="button">일기 입력하기</a>
+            </div>
+            <div class="">
+                <a class="btn btn-primary" href="/upload" role="button">업로드하기</a>
+            </div>
+        </div>
+        {# 업로드 링크 버튼 끝 #}
+    </div>
+</div>
+
+{# 작성 게시글 목록 시작 #}
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">글 번호</th>
+            <!--<th scope="col">작성자</th>-->
+            <th scope="col">작성일자</th>
+            <th scope="col">상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <th scope="row">{{ post.id }}</th>
+                <!--<td>{{ post.author.username }}</td>-->
+                {% if post.completed %}
+                <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
+                <td style="color: #1e2125"> 분석 완료 </td>
+                {% else %}
+                <td>{{ post.pub_date|datetime }}</td>
+                <td style="color: #6c757d"> 분석중... </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{#    작성 게시글 목록 끝 #}
+
+{% endblock %}

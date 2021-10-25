@@ -1,0 +1,22 @@
+.*
+!.gitignore
+
+# key 관련
+*/key
+key.zip
+
+# 기타 파일들
+diaryOcrMain*
+__pycache__
+/etc
+/data
+
+# 결과파일들은 업로드하지 않습니다.
+/mindtree/results
+/mindtree/modules/*_class*
+
+# 환경 설정 yml 파일
+*.yml
+
+# DB
+*/site.db

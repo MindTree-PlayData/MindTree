@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+    <p>
+        안녕하세요.<b> {{ current_user.username }} </b> 님! :D  <br>
+        {{ post.last_updated | datetime }}의 메인 감정은 {{ post.sentiment['document']['sentiment'] }}입니다
+    </p>
+ 
+
+    <div class="content-section container-fluid mt-5">
+        <h1 class="d-flex justify-content-center">Your Sentiment Status</h1>
+        {# 차트 #}
+        <div class="align-items-start flex-column">
+            <div class="d-flex justify-content-center m-3">
+                <canvas class='report d-flex mb-auto p-2 bd-highlight' id="bar-chart" width="500vw" height="500vh"></canvas><br><br>
+            </div>
+            <div class="d-flex justify-content-center m-3">
+                <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>
+            </div>
+            <div class="d-flex justify-content-center m-3">
+                <canvas class='report' id="radar-chart" width="500vw" height="500vh"></canvas><br><br>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    
+    <span>
+        {{ current_user.username }} 님의 일기를 살펴보니 { } 에 대한 언급이 제일 많군요! <br>
+        { } 에 대해 생각이 많으신가봐요!
+    </span>
+    <span>
+        아래는 일기에 언급된 {{ post.current_user }} 님의 생각을 그림 형태로 나타내보았어요 <br>
+        가장 크게 눈에 띄는 단어가 평소에 가장 많이 생각하고 있는 단어입니다. <br>
+        어떤 단어가 제일 크게 보이나요? <br>
+    </span>
+    {# 워드클라우드 #}
+    <img src="{{ url_for('get_word_cloud_file', post_id=post.id )}}" alt="wordcloud" class="img-fluid rounded mx-auto d-block"><br><br>
+    
+
+
+
+    <script>
+        // 'static/js/**.js' 파일에서 변수를 사용하기 위해서는 여기서 정의해둬야 한다.
+        let userData = {{ post.sentiment | tojson }}
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script>
+{% endblock %}
+
