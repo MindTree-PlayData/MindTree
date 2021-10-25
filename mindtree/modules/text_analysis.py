@@ -2,6 +2,7 @@ import os
 from mindtree.utils.util import get_time_str
 from mindtree.models import Post
 from mindtree.modules.WordCloud import CreateWordCloud
+from soylemma import Lemmatizer
 
 # 형태소 분석
 from konlpy.tag import Kkma
@@ -17,6 +18,9 @@ class TextAnalysis(CreateWordCloud):
         print(get_time_str(), "TextAnalysis: pos tagger initializing....")
         self.kkma = Kkma()
         self.kkma.pos("시작")
+
+        # lemmatizer initialization
+        self.lemmatizer = Lemmatizer()
 
         # 빈 경로 변수 설정
         #   __init__ 에 post_id를 넣어 바로 정할 수도 있지만,
@@ -66,6 +70,9 @@ class TextAnalysis(CreateWordCloud):
                 # 3. 워드 클라우드를 만들어 저장한다.
                 super().make_word_cloud(self.word_list, post_id)
 
+            else:
+                print("[text_analysis]: 단어 list 저장 실패")
+
         print(get_time_str(), "Text Analysis 완료...")
 
     def _get_pos_tag(self):
@@ -77,9 +84,34 @@ class TextAnalysis(CreateWordCloud):
 
     def _get_target_words(self):
         """ 원하는 품사에 해당하는 단어를 뽑아 리스트로 반환한다. """
+        print("self._pos_tagged_results: \n", self._pos_tagged_results)
+        # 명사
         for pos in self._pos_tagged_results:
-            if pos[1][0] in {"N", "V"}:
+            if pos[1] in ["NNG", "NNP"]:
                 self.word_list.append(pos[0])
+
+        # 용언(동사, 형용사)
+        for i, pos in enumerate(self._pos_tagged_results):
+            if pos[1] in ["VV", "VA"]:
+                j = 1
+                eomi_temp = []
+                while self._pos_tagged_results[i+j][1][0] == "E":  # 어간에 붙은 어미를 모두 하나로 만듬
+                    eomi_temp.append(self._pos_tagged_results[i+j][0])
+                    j += 1
+                eomis = "".join(eomi_temp)
+
+                # 어간과 어미를 합친 형태를 만든다. (conjugate)
+                # -> 어미가 여러개라도 conjugate함수 자체가 어미 하나의 str을 받게 되어 있어서 붙여서 줘야한다.
+                _conjugated = self.lemmatizer.conjugate(pos[0], eomis)[0]
+                print("_conjugated: ", _conjugated)
+                try:
+                    # 용언의 활용형(conjugate된 단어)에서 기본형을 추출한다.
+                    _lemmatized = self.lemmatizer.lemmatize(_conjugated)[0][0]
+                    self.word_list.append(_lemmatized)
+                except Exception as e:
+                    print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
+
+        print("[_get_target_words] self.word_list: \n", self.word_list)
 
         print(get_time_str(), f"TextAnalysis: {len(self._pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
 
@@ -102,3 +134,6 @@ if __name__ == '__main__':
         $ python mindtree/modules/text_analysis.py  """
     ta = TextAnalysis()
     ta.text_analysis(2)
+    # lm = Lemmatizer()
+    # a = lm.lemmatize("말하여")
+    # print(a)
