@@ -9,10 +9,10 @@
 {# 업로드 form 시작 #}
     <div class="container">
         <form class="container" action="{{ url_for('upload_file')}}" method="post" enctype="multipart/form-data">
-            <!--<div class="mb-3">
+            <div class="mb-3">
                 <label for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" id="title" name="title">
-            </div>-->
+            </div>
             <div class="mb-3">
                 <label for="file01" class="form-label" style="margin:1%;">FILE:</label>
                 <input type="file" name="file" id= "file01" class="form-control" required><br><br>
