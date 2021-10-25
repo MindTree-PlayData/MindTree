@@ -13,11 +13,11 @@ let sentimentArray = Object.values(sentiment2)
 new Chart(document.getElementById("bar-chart"), {
     type: 'bar',
     data: {
-      labels: ["Positive", "Neutral", "Negative"],
+      labels: ["Negative", "Neutral", "Positive"],
       datasets: [
         {
           label: "Sentiment",
-          backgroundColor: ["#59ff64", "#fff759","#ff5959"],
+          backgroundColor: ["#ff5959", "#b0b0b0","#59ff64"],
           data: sentimentArray
         }
       ]
@@ -39,11 +39,11 @@ new Chart(document.getElementById("bar-chart"), {
 new Chart(document.getElementById("doughnut-chart"), {
     type: 'doughnut',
     data: {
-      labels: ["Positive", "Neutral", "Negative"],
+      labels: ["Negative", "Neutral", "Positive"],
       datasets: [
         {
           label: "Sentiment",
-          backgroundColor: ["#59ff64", "#fff759","#ff5959"],
+          backgroundColor: ["#ff5959", "#b0b0b0","#59ff64"],
           data: sentimentArray
         }
       ]
@@ -61,7 +61,7 @@ new Chart(document.getElementById("doughnut-chart"), {
 new Chart(document.getElementById("radar-chart"), {
     type: 'radar',
     data: {
-      labels: ["Positive", "Neutral", "Negative"],
+      labels: ["Negative", "Neutral", "Positive"],
       datasets: [
         {
           label: "Sentiment",
