@@ -3,7 +3,7 @@ from concurrent import futures
 from mindtree.modules.OCR import OCR
 from mindtree.modules.request_sentiment import SentimentAnalysis
 from mindtree.modules.text_analysis import TextAnalysis
-from mindtree.modules.util import get_time_str
+from mindtree.utils.util import get_time_str
 
 from mindtree import db
 from mindtree.models import Post

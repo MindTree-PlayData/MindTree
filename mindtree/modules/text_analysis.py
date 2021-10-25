@@ -1,5 +1,5 @@
 import os
-from mindtree.modules.util import get_time_str
+from mindtree.utils.util import get_time_str
 from mindtree.models import Post
 from mindtree.modules.WordCloud import CreateWordCloud
 

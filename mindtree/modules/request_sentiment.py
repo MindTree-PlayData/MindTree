@@ -6,7 +6,7 @@ import requests
 from mindtree import APP_PATH, db
 from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
-from mindtree.modules.util import get_time_str
+from mindtree.utils.util import get_time_str
 
 key_path = os.path.join(APP_PATH, "key", "keys.json")
 with open(key_path, "r") as keys:

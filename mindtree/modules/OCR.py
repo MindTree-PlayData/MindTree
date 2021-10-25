@@ -7,7 +7,7 @@ from hanspell import spell_checker
 from mindtree import db
 from mindtree.utils.DTO import PathDTO
 from mindtree.models import Post
-from mindtree.modules.util import get_time_str
+from mindtree.utils.util import get_time_str
 
 
 class OCR(PathDTO):

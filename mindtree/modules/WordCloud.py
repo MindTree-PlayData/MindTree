@@ -1,10 +1,9 @@
 from wordcloud import WordCloud
-import os
 import sys
 from mindtree import db
 from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
-from mindtree.modules.util import get_time_str
+from mindtree.utils.util import get_time_str
 
 
 class CreateWordCloud(PathDTO):
@@ -12,11 +11,11 @@ class CreateWordCloud(PathDTO):
     def __init__(self):
         super().__init__()
         # WordCloud 객체 initialization
-        if sys.platform == "win32":
-            self.wc = WordCloud(font_path='MindTree/fonts/NanumSquareRoundB.ttf',
+        if sys.platform == "darwin":
+            self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
                                 background_color="white", max_font_size=100, max_words=10)
         else:
-            self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
+            self.wc = WordCloud(font_path='MindTree/fonts/NanumSquareRoundB.ttf',
                                 background_color="white", max_font_size=100, max_words=10)
         self.word_list: str = ''
         self.cloud: object = None
