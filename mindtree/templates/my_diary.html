@@ -24,7 +24,7 @@
         <thead>
         <tr>
             <th scope="col">글 번호</th>
-            <th scope="col">작성자</th>
+            <!--<th scope="col">작성자</th>-->
             <th scope="col">작성일자</th>
             <th scope="col">상태</th>
         </tr>
@@ -33,7 +33,7 @@
         {% for post in posts %}
             <tr>
                 <th scope="row">{{ post.id }}</th>
-                <td>{{ post.author.username }}</td>
+                <!--<td>{{ post.author.username }}</td>-->
                 {% if post.completed %}
                 <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
                 <td style="color: #1e2125"> 분석 완료 </td>
