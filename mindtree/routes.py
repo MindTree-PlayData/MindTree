@@ -14,8 +14,8 @@ from mindtree.thread import ThreadedAnalysis
 path = PathDTO()  # 경로를 찾을 때 사용한다.
 
 with futures.ThreadPoolExecutor() as executor:
-    """ analyzer를 로드합니다. 
-    쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다. 
+    """ analyzer를 로드합니다.
+    쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다.
     쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
     _analyzer = ThreadedAnalysis()
     analyzer = executor.submit(_analyzer.init_analyzers).result()
@@ -113,12 +113,11 @@ def upload_file():
     """
     if request.method == "POST":
 
-        title = request.form.get('title')
         f = request.files['file']  # input 태그의 name 을 받음.
-        print("[upload_file] f.filename, title", f.filename, title)
+        print("[upload_file] f.filename, title", f.filename)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
-        post = Post(title="", ocr_text=title, sentiment={}, word_cloud="", author=current_user)
+        post = Post(title="", ocr_text='', sentiment={}, word_cloud="", author=current_user)
         db.session.add(post)
         db.session.commit()
         post_id: int = post.id

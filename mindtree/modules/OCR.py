@@ -20,19 +20,19 @@ class OCR(PathDTO):
         print(get_time_str(), "OCR initialized....")
 
         # 빈 경로 변수 설정
-        self.image_path: str = ''
-        self.save_path: str = ''
+        self.image_path = ''
+        self.save_path = ''
 
         # 빈 post_id를 설정.
-        self.post_id: int = 0
+        self.post_id = 0
 
         # 빈 text 변수 설정
-        self.ocr_text: str = ''
-        self.ocr_text_spell_checked: str = ''
+        self.ocr_text = ''
+        self.ocr_text_spell_checked = ''
 
-        self.image_content: bytes = None
+        self.image_content = None
 
-    def ocr_main(self, post_id: int):
+    def ocr_main(self, post_id):
         """ ocr 실행 메인 함수 """
         print("[OCR.ocr_main] post_id: ", post_id)
         # post_id를 설정한다. -> OCR 객체가 Post 에 대한 쿼리를 할 때 사용된다.
