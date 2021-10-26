@@ -2,7 +2,7 @@ import os
 from threading import Thread
 from concurrent import futures
 
-from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from mindtree import app, db, bcrypt
@@ -13,12 +13,12 @@ from mindtree.thread import ThreadedAnalysis
 
 path = PathDTO()  # 경로를 찾을 때 사용한다.
 
-with futures.ThreadPoolExecutor() as executor:
-    """ analyzer를 로드합니다.
-    쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다.
-    쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
-    _analyzer = ThreadedAnalysis()
-    analyzer = executor.submit(_analyzer.init_analyzers).result()
+# with futures.ThreadPoolExecutor() as executor:
+#     """ analyzer를 로드합니다.
+#     쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다.
+#     쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
+#     _analyzer = ThreadedAnalysis()
+#     analyzer = executor.submit(_analyzer.init_analyzers).result()
 
 
 @app.route("/my_diary", methods=['GET'])
@@ -83,7 +83,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/analyze/<int:post_id>')
+@app.route('/post/<int:post_id>/analyze')
 @login_required
 def analyze(post_id):
     """
@@ -92,6 +92,20 @@ def analyze(post_id):
     post = Post.query.get_or_404(post_id)
 
     return render_template('analyze.html', post=post)
+
+
+@app.route('/post/<int:post_id>/delete', methods=["POST"])
+@login_required
+def delete_post(post_id):
+    """ 포스트를 삭제한다. """
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash("포스트가 삭제되었습니다.", 'success')
+    return redirect(url_for('my_diary'))
+
 
 
 @app.route("/results/<path:post_id>", methods=['GET'])
