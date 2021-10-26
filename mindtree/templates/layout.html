@@ -33,14 +33,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">홈</a>
+            <a class="nav-link active" aria-current="page" href="{{ url_for('/') }}">홈</a>
             </li>
-
-            {% if current_user.is_authenticated %}
-            <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('my_diary') }}">다이어리</a>
-            </li>
-            {% endif %}
 
             {% if not current_user.is_authenticated %}
             <li class="nav-item">
@@ -48,6 +42,12 @@
             </li>
             <li class="nav-item">
             <a class="nav-link" href="{{ url_for('register') }}">회원가입</a>
+            </li>
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('my_diary') }}">다이어리</a>
             </li>
             {% endif %}
 
