@@ -55,5 +55,3 @@ if __name__ == '__main__':
     """ 유닛 테스트 방법:
         MindTree (루트경로에서) 
         $ python mindtree/modules/WordCloud.py  """
-
-

@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section container-fluid mt-5">
-        <h1 class="d-flex justify-content-center">{{ current_user.username }}님의 현재 감정상태입니다</h1>
         {# 1. 제목 구역 #}
         <div class="row mb-3">
-            <h1 class="col d-flex justify-content-center">Your Sentiment Status</h1>
+            <h1 class="d-flex justify-content-center">{{ current_user.username }}님의 현재 감정상태입니다</h1>
         </div>
         {# 2. 버튼 구역 #}
         <div class="row mb-3">
@@ -61,4 +60,3 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script>
 {% endblock %}
-
