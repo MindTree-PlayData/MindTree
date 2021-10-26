@@ -6,9 +6,9 @@ Team Member : 김수연, 김영민, 박태영, 장동기
 MindTree는 사용자의 일기장을 저장하여 분석해주는 웹서비스입니다.
 
 ## 기술set
-Python 언어로 작성
+Python 언어로 작성하고
 Flask App으로 개발하였으며
-git을 통해 업데이트를 하였습니다.
+git을 통한 버전관리와 업데이트를 하였습니다.
 
 ## 기능구현내용
 일기장을 분석하여 감정상태를 분석하여 웹페이지에 보여주는 기능을 구현하였습니다.
@@ -31,37 +31,39 @@ git을 통해 업데이트를 하였습니다.
 워드클라우드 이미지(.jpg)생성 > report\wordcloud.jpg에 덮어쓰기
 
 ## Application Architecture
-API_keys
-    key01.json
-    key02.json
-    ...
-diaries
-    diary.json
+
+API_key
+    key.json
+
 modules
-    (function_name).py
-    models.py
-    routes.py
-    DAO.py
-    DTO.py
-    VO.py
-    ...
-report
-    sentiment.json
-    wordcloud.jpg
+    OCR.py
+    request_sentiment.py
+    text_analysis.py
+    WordCloud.py
+
+results
+    user_diaryid.jpg
+    user_diaryid_ocr.txt
+    user_diaryid_sentiment.json
+    user_diaryid_wordcloud.jpg
+
 static
     css
         style.css
+    images
+        img.jpg
     js
         script.js
-test_data
-    test_text
-        testtxt01.txt
-        testtxt02.txt
-        ...
-    test_img
-        testimg01.jpg
-        testimg02.jpg
-        ...
-templates
-    index.html
+
+utils
+    config.py
+    forms.py
+    models.py
+    routes.py
+    site.db
+    thread.py
+
+resources
+    testdata.jpg
+
 app.py
