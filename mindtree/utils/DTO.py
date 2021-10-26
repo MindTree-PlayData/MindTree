@@ -64,6 +64,20 @@ class PathDTO(PathConfig):
         self._set_user_variables(post_id)  # self._username 을 설정하는 용도.
         return f"{self._username}_{str(post_id)}_word_cloud.png"
 
+
+    # # 기능: DB에서 유저 정보를 조회해 upload 이미지 파일 이름을 반환하는 용도.
+    # # 입력: Post 테이블에서 user_id를, User 테이블에서 username을 조회해서 입력
+    # # 출력: {username}_{post_id}.png라는 이름의 업로드 이미지 파일 이름을 반환
+    # # 개발자: 김수연
+    # # 버전/일시: ver 0.x/2021.10.26
+    # def get_user_upload_img_file_name(self, post_id: int):
+    #     '''
+    #     Post 테이블에서 user_id를, User 테이블에서 username을 조회해 upload 이미지 파일 이름 반환
+    #     '''
+    #     self._set_user_variables(post_id)  
+    #     return f"{self._username}_{str(post_id)}.png"
+
+
     def get_user_sentiment_path(self, post_id: int):
         self._set_user_variables(post_id)
         self._set_user_media_path()
