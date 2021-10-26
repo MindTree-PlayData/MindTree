@@ -174,4 +174,4 @@ def _jinja2_filter_datetime(date, fmt=None):
     if fmt:
         return date.strftime(fmt)
     else:
-        return date.strftime('%Y년 %m월 %d일 %H시 %M분')
+        return date.strftime('%Y년 %m월 %d일')  # 시, 분을 지웟지만 임시적임. 나중에 한국시간으로 바꾸는 법을 찾을 것.
