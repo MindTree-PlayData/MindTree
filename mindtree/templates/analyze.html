@@ -1,10 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section container-fluid mt-5">
-<<<<<<< HEAD
         <h1 class="d-flex justify-content-center">{{ current_user.username }}님의 현재 감정상태입니다</h1>
-        {# 차트 #}
-=======
         {# 1. 제목 구역 #}
         <div class="row mb-3">
             <h1 class="col d-flex justify-content-center">Your Sentiment Status</h1>
@@ -17,7 +14,6 @@
             </div>
         </div>
         {# 3. 차트 구역 #}
->>>>>>> d9fe375871fcf09990c25d5ba6652134b84a39ed
         <div class="align-items-start flex-column">
             <div class="d-flex justify-content-center m-3">
                 <canvas class='report d-flex mb-auto p-2 bd-highlight' id="bar-chart" width="500vw" height="500vh"></canvas><br><br>

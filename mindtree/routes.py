@@ -22,7 +22,7 @@ with futures.ThreadPoolExecutor() as executor:
 
 
 @app.route("/",  methods=['GET', 'POST'])
-def main_render():
+def home():
     return render_template('cover.html', title='cover')
 
 
