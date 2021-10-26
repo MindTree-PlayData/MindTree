@@ -64,21 +64,6 @@ def login():
     return render_template('login.html', title='login', form=form)
 
 
-@app.route("/my_diary", methods=['GET'])
-@login_required
-def my_diary():
-    username = current_user.username
-    posts = Post.query.filter_by(author=current_user).all()
-    print("[my_diary] username: ", username)
-    return render_template('my_diary.html', posts=posts)
-
-
-@app.route("/upload", methods=['GET'])
-@login_required
-def upload():
-    return render_template('upload.html')
-
-
 @app.route("/logout")
 def logout():
     logout_user()
