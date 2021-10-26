@@ -20,21 +20,9 @@ with futures.ThreadPoolExecutor() as executor:
     _analyzer = ThreadedAnalysis()
     analyzer = executor.submit(_analyzer.init_analyzers).result()
 
-
-@app.route("/my_diary", methods=['GET'])
-@login_required
-def my_diary():
-    username = current_user.username
-    posts = Post.query.filter_by(author=current_user).all()
-    print("[my_diary] username: ", username)
-    return render_template('my_diary.html', posts=posts)
-
-
-@app.route("/upload", methods=['GET'])
-@login_required
-def upload():
-    return render_template('upload.html')
-
+@app.route("/",  methods=['GET', 'POST'])
+def main_render():
+    return render_template('cover.html', title='cover')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -54,7 +42,6 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route("/",  methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -75,6 +62,21 @@ def login():
         else:
             flash('입력정보가 올바르지 않습니다.', 'danger')
     return render_template('login.html', title='login', form=form)
+
+
+@app.route("/my_diary", methods=['GET'])
+@login_required
+def my_diary():
+    username = current_user.username
+    posts = Post.query.filter_by(author=current_user).all()
+    print("[my_diary] username: ", username)
+    return render_template('my_diary.html', posts=posts)
+
+
+@app.route("/upload", methods=['GET'])
+@login_required
+def upload():
+    return render_template('upload.html')
 
 
 @app.route("/logout")
