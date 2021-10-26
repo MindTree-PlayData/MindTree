@@ -20,34 +20,9 @@ with futures.ThreadPoolExecutor() as executor:
     _analyzer = ThreadedAnalysis()
     analyzer = executor.submit(_analyzer.init_analyzers).result()
 
-<<<<<<< HEAD
 @app.route("/",  methods=['GET', 'POST'])
 def main_render():
     return render_template('cover.html', title='cover')
-=======
-
-@app.route("/my_diary", methods=['GET'])
-@login_required
-def my_diary():
-    # 이름 확인용
-    username = current_user.username
-    print("[my_diary] username: ", username)
-
-    # 포스트들을 페이지 정보를 담아 보낸다.
-    page = request.args.get('page', 1, type=int)  # url에 /my_diary?page=1 과 같이 표기된 정보를 받음.
-    posts = Post.query.filter_by(author=current_user) \
-        .order_by(Post.pub_date.desc()) \
-        .paginate(page=page, per_page=10)
-
-    return render_template('my_diary.html', posts=posts)
-
-
-@app.route("/upload", methods=['GET'])
-@login_required
-def upload():
-    return render_template('upload.html')
-
->>>>>>> d9fe375871fcf09990c25d5ba6652134b84a39ed
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
