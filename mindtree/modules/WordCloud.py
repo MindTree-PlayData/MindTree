@@ -11,12 +11,8 @@ class CreateWordCloud(PathDTO):
     def __init__(self):
         super().__init__()
         # WordCloud 객체 initialization
-        if sys.platform == "darwin":
-            self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
-                                background_color="white", max_font_size=100, max_words=10)
-        else:
-            self.wc = WordCloud(font_path='MindTree/fonts/NanumSquareRoundB.ttf',
-                                background_color="white", max_font_size=100, max_words=10)
+        self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
+                            background_color="white", max_font_size=100, max_words=10)
         self.word_list: str = ''
         self.cloud: object = None
 
@@ -59,5 +55,3 @@ if __name__ == '__main__':
     """ 유닛 테스트 방법:
         MindTree (루트경로에서) 
         $ python mindtree/modules/WordCloud.py  """
-
-
