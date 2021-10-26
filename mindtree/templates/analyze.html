@@ -1,31 +1,27 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section container-fluid mt-5">
-        {# 1. 제목 구역 #}
-        <div class="row mb-3">
-            <h1 class="d-flex justify-content-center">{{ current_user.username }}님의 현재 감정상태입니다</h1>
-        </div>
-        {# 2. 버튼 구역 #}
+        {# 1. 버튼 영역 #}
         <div class="row mb-3">
             <div class="col-md-11 d-flex justify-content-sm-end">
                 <a type="button" href="#" class="btn btn-warning btn-sm me-sm-2">수정하기</a>
                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" > 삭제하기 </button>
             </div>
         </div>
-        {# 3. 차트 구역 #}
+        {# 2. 제목 영역 #}
+        <div class="row mb-3">
+            <h1 class="d-flex justify-content-center"><b>{{ current_user.username }}님의 현재 감정상태는</b></h1>
+        </div><br><br>
+        {# 2. 워드클라우드 영역#}
+        <img src="{{ url_for('get_word_cloud_file', post_id=post.id )}}" width="800vw", height="800vh" alt="wordcloud" class="img-fluid rounded mx-auto d-block"><br><br>
+        {# 3. 차트 영역 #}
         <div class="align-items-start flex-column">
             <div class="d-flex justify-content-center m-3">
-                <canvas class='report d-flex mb-auto p-2 bd-highlight' id="bar-chart" width="500vw" height="500vh"></canvas><br><br>
-            </div>
-            <div class="d-flex justify-content-center m-3">
-                <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas><br><br>
-            </div>
-            <div class="d-flex justify-content-center m-3">
-                <canvas class='report' id="radar-chart" width="500vw" height="500vh"></canvas><br><br>
+                <!-- <canvas class='report d-flex mb-auto p-2 bd-highlight' id="bar-chart" width="500vw" height="500vh"></canvas> -->
+                <canvas class='report' id="doughnut-chart" width="500vw" height="500vh"></canvas>
+                <canvas class='report' id="radar-chart" width="500vw" height="500vh"></canvas>
             </div>
         </div>
-        {# 워드클라우드 #}
-        <img src="{{ url_for('get_word_cloud_file', post_id=post.id )}}" alt="wordcloud" class="img-fluid rounded mx-auto d-block"><br><br>
     </div>
 
     {# 삭제 확인 모달창 #}
