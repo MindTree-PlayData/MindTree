@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-4 mb-3">
     <div class="row g-1">
-        <h2 class="header-bar col">내 다이어리</h2>
+        <h2 class="header-bar col">{{ current_user.username }} 님의 다이어리</h2>
 
         {# 업로드 링크 버튼 시작 #}
         <div class="col d-flex justify-content-end">
@@ -30,7 +30,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for post in posts %}
+        {% for post in posts.items %}
             <tr>
                 <th scope="row">{{ post.id }}</th>
                 <!--<td>{{ post.author.username }}</td>-->
@@ -45,6 +45,19 @@
         {% endfor %}
         </tbody>
     </table>
+    <div id="pages">
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+                {% if posts.page == page_num %}
+                    <a class="btn btn-info mb-4" href="">{{ page_num }}</a>
+                {% else %}
+                    <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                페이지가 없습니다.
+            {% endif %}
+        {% endfor %}
+    </div>
 </div>
 {#    작성 게시글 목록 끝 #}
 

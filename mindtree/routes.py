@@ -13,20 +13,27 @@ from mindtree.thread import ThreadedAnalysis
 
 path = PathDTO()  # 경로를 찾을 때 사용한다.
 
-# with futures.ThreadPoolExecutor() as executor:
-#     """ analyzer를 로드합니다.
-#     쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다.
-#     쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
-#     _analyzer = ThreadedAnalysis()
-#     analyzer = executor.submit(_analyzer.init_analyzers).result()
+with futures.ThreadPoolExecutor() as executor:
+    """ analyzer를 로드합니다.
+    쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다.
+    쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
+    _analyzer = ThreadedAnalysis()
+    analyzer = executor.submit(_analyzer.init_analyzers).result()
 
 
 @app.route("/my_diary", methods=['GET'])
 @login_required
 def my_diary():
+    # 이름 확인용
     username = current_user.username
-    posts = Post.query.filter_by(author=current_user).all()
     print("[my_diary] username: ", username)
+
+    # 포스트들을 페이지 정보를 담아 보낸다.
+    page = request.args.get('page', 1, type=int)  # url에 /my_diary?page=1 과 같이 표기된 정보를 받음.
+    posts = Post.query.filter_by(author=current_user) \
+        .order_by(Post.pub_date.desc()) \
+        .paginate(page=page, per_page=10)
+
     return render_template('my_diary.html', posts=posts)
 
 
