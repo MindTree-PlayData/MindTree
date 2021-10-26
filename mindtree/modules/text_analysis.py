@@ -30,7 +30,7 @@ class TextAnalysis(CreateWordCloud):
 
         # 빈 결과 변수 설정
         self.ocr_text = ''
-        self._pos_tagged_results= {}
+        self._pos_tagged_results = {}
         self.word_list = []
 
         print(get_time_str(), "TextAnalysis: initialized...")
@@ -65,13 +65,14 @@ class TextAnalysis(CreateWordCloud):
             self._get_target_words()
 
             # 2-1. 단어 list를 파일로 저장한다.
-            if self._save_list():
+            try:
+                self._save_list()
 
                 # 3. 워드 클라우드를 만들어 저장한다.
                 super().make_word_cloud(self.word_list, post_id)
 
-            else:
-                print("[text_analysis]: 단어 list 저장 실패")
+            except Exception as e:
+                print("[text_analysis]: 단어 list 저장 실패", e)
 
         print(get_time_str(), "Text Analysis 완료...")
 

@@ -10,6 +10,7 @@ diaryOcrMain*
 __pycache__
 /etc
 /data
+/resources
 
 # 결과파일들은 업로드하지 않습니다.
 /mindtree/results
