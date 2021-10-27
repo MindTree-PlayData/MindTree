@@ -180,6 +180,11 @@ def upload_file():
         return '실패'
 
 
+@app.route("/datetime", methods=['GET', 'POST'])
+def datetime_analyze():
+    return render_template("datetime.html")
+
+
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):
     if fmt:
