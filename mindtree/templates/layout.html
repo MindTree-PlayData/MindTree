@@ -54,12 +54,12 @@
             </li>
             <li><a href="{{ url_for('logout') }}" class="nav-link"> 로그아웃 </a></li>
             <li class="navbar-text ms-3">
-                <img src="../static/images/lightOn.png" style="height: 30px;" alt="login img">
+                <img src="{{ url_for('static', filename='images/lightOn.png') }}" style="height: 30px;" alt="login img">
                 안녕하세요.<b> {{ current_user.username }} </b> 님
             </li>
             {% else %}
             <li class="navbar-text ms-3">
-                <img src="/static/images/lightOut.png" style="height: 30px;" alt="logout img">
+                <img src="{{ url_for('static', filename='images/lightOut.png') }}" style="height: 30px;" alt="logout img">
                 Anonymous User 로 접속중입니다.
                 <li class="nav-item">
                     <p class="nav-link disabled">다이어리를 올리려면 로그인하세요</p>
