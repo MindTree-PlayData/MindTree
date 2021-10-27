@@ -119,7 +119,7 @@ def delete_post(post_id):
 
 
 
-@app.route("/results/<path:post_id>", methods=['GET'])
+@app.route("/results/word_cloud/<path:post_id>", methods=['GET'])
 def get_word_cloud_file(post_id):
     """ word cloud가 저장된 미디어 폴더에 접근(results폴더)
     :param post_id: 포스트 id
@@ -128,6 +128,23 @@ def get_word_cloud_file(post_id):
     word_cloud_file_name = path.get_user_word_cloud_file_name(post_id)
     print("[get_word_cloud_file] word_cloud_file_name: ", word_cloud_file_name)
     return send_from_directory(path.get_user_media_path(post_id), word_cloud_file_name)
+
+
+
+
+# 기능: analysis page에 일기 이미지 불러오기 위한 route
+# 입력: post_id와 업로드한 일기 이미지 파일 이름을 input
+# 출력: post_id와 일기 이미지 파일 이름을 user_media_path 경로에 추가하여 출력
+# 버전/일시: ver 0.x/2021.10.26 추가
+# 개발자: 김수연
+@app.route("/results/diary_img/<path:post_id>", methods=['GET'])
+def get_upload_img(post_id):
+    """ 
+    일기 이미지 파일을 불러와서 analysis 웹 페이지에 업로드한 일기 이미지 전송
+    """
+    upload_img_file_name = path.get_user_diary_file_name(post_id)
+    print("[get_upload_img] upload_img_file_name: ", upload_img_file_name)
+    return send_from_directory(path.get_user_media_path(post_id), upload_img_file_name)
 
 
 @app.route("/upload_file", methods=['GET', 'POST'])

@@ -35,7 +35,7 @@ class SentimentAnalysis(PathDTO):
         print(get_time_str(), "SentimentAnalysis initialized...")
 
     def sentiment_analysis(self, post_id):
-
+    
         print("[sentiment_analysis] post_id: ", post_id)
         # 경로를 설정한다.
         self.text_path = super().get_user_ocr_file_path(post_id)  # 굳이 안해도됨. DB에 저장되어 있기 때문.
