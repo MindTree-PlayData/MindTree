@@ -5,18 +5,13 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
-
 class CreateWordCloud(PathDTO):
 
     def __init__(self):
         super().__init__()
         # WordCloud 객체 initialization
-        if sys.platform == "darwin":
-            self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
-                                background_color="white", max_font_size=100, max_words=10)
-        else:
-            self.wc = WordCloud(font_path='MindTree/fonts/NanumSquareRoundB.ttf',
-                                background_color="white", max_font_size=100, max_words=10)
+        self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
+                            background_color="white", max_font_size=100, max_words=10)
         self.word_list: str = ''
         self.cloud: object = None
 
@@ -29,7 +24,7 @@ class CreateWordCloud(PathDTO):
         self._save_word_cloud(post_id)
 
     def _set_user_word_cloud_object(self, word_list):
-
+    
         # word cloud에 넣기 위해 str형태로 반환
         if word_list:
             _word_list_str = ",".join(word_list)
