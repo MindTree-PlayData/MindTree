@@ -46,17 +46,33 @@
         </tbody>
     </table>
     <div id="pages">
-        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-            {% if page_num %}
-                {% if posts.page == page_num %}
+        {# previous #}
+        {% if posts.page > 1 %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=posts.page - 1) }}">previous</a>
+        {% elif  posts.page == 1 %}
+            <button class="btn btn-outline-info mb-4">previous</button>
+        {% endif %}
+
+        {# pages #}
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=3) %}
+            {% if page_num %}  {# iter할 페이지가 있으면(page_num하나에 좌우 3개까지 iter 페이지라고 정의함.) #}
+                {% if posts.page == page_num %}  {# 현재 포스트들이 있는 페이지와  iter하는 페이지가 같으면 #}
                     <button class="btn btn-info mb-4">{{ page_num }}</button>
-                {% else %}
+                {% else %}  {# 예시) 현재 포스트들의 페이지는 1인데 표시할 iter 페이지는 2일 때.#}
                     <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
-                페이지가 없습니다.
+                ...
             {% endif %}
         {% endfor %}
+
+        {# next #}
+        {% if posts.page < (posts.total/10) %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=posts.page + 1) }}">next</a>
+        {% else %}
+            <button class="btn btn-outline-info mb-4">next</button>
+        {% endif %}
+
     </div>
 </div>
 {#    작성 게시글 목록 끝 #}
