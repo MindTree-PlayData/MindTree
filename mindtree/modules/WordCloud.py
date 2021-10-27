@@ -12,8 +12,8 @@ class CreateWordCloud(PathDTO):
         # WordCloud 객체 initialization
         self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
                             background_color="white", max_font_size=100, max_words=10)
-        self.word_list = ''
-        self.cloud = None
+        self.word_list: str = ''
+        self.cloud: object = None
 
         print(get_time_str(), "Word Cloud 생성 객체 초기화 완료")
 
@@ -24,7 +24,7 @@ class CreateWordCloud(PathDTO):
         self._save_word_cloud(post_id)
 
     def _set_user_word_cloud_object(self, word_list):
-    
+        
         # word cloud에 넣기 위해 str형태로 반환
         if word_list:
             _word_list_str = ",".join(word_list)
@@ -54,3 +54,5 @@ if __name__ == '__main__':
     """ 유닛 테스트 방법:
         MindTree (루트경로에서) 
         $ python mindtree/modules/WordCloud.py  """
+
+
