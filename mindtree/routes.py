@@ -25,7 +25,7 @@ def home():
     return render_template('cover.html', title='cover')
 
 
-@app.route("/my_diary", methods=['GET'])
+@app.route("/post/my_diary", methods=['GET'])
 @login_required
 def my_diary():
     # 이름 확인용
@@ -41,7 +41,7 @@ def my_diary():
     return render_template('my_diary.html', posts=posts)
 
 
-@app.route("/upload", methods=['GET'])
+@app.route("/post/upload", methods=['GET'])
 @login_required
 def upload():
     return render_template('upload.html')
@@ -144,7 +144,7 @@ def get_upload_img(post_id):
     return send_from_directory(path.get_user_media_path(post_id), upload_img_file_name)
 
 
-@app.route("/upload_file", methods=['GET', 'POST'])
+@app.route("/post/upload_file", methods=['GET', 'POST'])
 def upload_file():
     """
     1. 요청한 파일을 업로드 하고 my_diary로 리다이렉트 한다.
@@ -153,7 +153,7 @@ def upload_file():
     if request.method == "POST":
 
         f = request.files['file']  # input 태그의 name 을 받음.
-        print("[upload_file] f.filename, title", f.filename)
+        print("[upload_file] f.filename", f.filename)
 
         # 현재 유저로 포스트를 db에 저장(빈 데이터를 저장하고, 각 분석이 끝나면 업데이트하는 방식)
         post = Post(title="", ocr_text='', sentiment={}, word_cloud="", author=current_user)
@@ -221,6 +221,7 @@ def re_analyze(post_id):
 
 
 @app.route("/datetime", methods=['GET', 'POST'])
+@login_required
 def datetime_analyze():
     return render_template("datetime.html")
 

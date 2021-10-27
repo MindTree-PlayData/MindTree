@@ -52,7 +52,7 @@ class ThreadedAnalysis:
             return self
 
     def analysis(self, post_id):
-        print("thread.analysis", post_id)
+        print("[analysis] post_id: ", post_id)
         with futures.ThreadPoolExecutor() as executor:
             # 1. OCR 시작. 끝날때까지 기다린다.
             f1_m = executor.submit(self.ocr.ocr_main, post_id)
@@ -60,9 +60,9 @@ class ThreadedAnalysis:
 
             # 1-2. 완료 로그찍기
             if f1_m.done():
-                print("f1_m 완료")
+                print("[analysis] f1_m 완료")
             else:
-                print("f1_m 오류발생")
+                print("[analysis] f1_m 오류발생")
                 f1_m.cancel()
 
             # 2. 감성분석, 텍스트 분석 모두 실행.
@@ -91,6 +91,7 @@ class ThreadedAnalysis:
                 """ thread 관련 오류든, 분석 모듈 관련 오류든, db 쿼리 관련 오류든
                 어쨌든 오류이기 때문에 에러 플래그를 반영시킨다. """
                 print('[analysis] ', e)
+                post = Post.query.get_or_404(post_id)
                 post.error = True
             finally:
                 db.session.commit()

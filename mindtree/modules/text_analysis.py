@@ -49,8 +49,6 @@ class TextAnalysis(CreateWordCloud):
         if os.path.isfile(self.word_list_file_path):
             # 워드클라우드 만들기
             with open(self.word_list_file_path, "r") as word_list:
-                print(type(word_list))
-
                 # 로컬에 워드클라우드 파일 저장, DB에 워드클라우드 파일 이름 저장.
                 super().make_word_cloud(word_list, post_id)
 
@@ -85,7 +83,7 @@ class TextAnalysis(CreateWordCloud):
 
     def _get_target_words(self):
         """ 원하는 품사에 해당하는 단어를 뽑아 리스트로 반환한다. """
-        print("self._pos_tagged_results: \n", self._pos_tagged_results)
+        # print("self._pos_tagged_results: \n", self._pos_tagged_results)
         # 명사
         for pos in self._pos_tagged_results:
             if pos[1] in ["NNG", "NNP"]:
@@ -112,7 +110,7 @@ class TextAnalysis(CreateWordCloud):
                 except Exception as e:
                     print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
 
-        print("[_get_target_words] self.word_list: \n", self.word_list)
+        # print("[_get_target_words] self.word_list: \n", self.word_list)
 
         print(get_time_str(), f"TextAnalysis: {len(self._pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
 

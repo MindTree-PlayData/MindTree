@@ -30,7 +30,7 @@ class CreateWordCloud(PathDTO):
         if word_list:
             _word_list_str = ",".join(word_list)
         else:
-            print("word_list가 없습니다.")
+            print("[_set_user_word_cloud_object] word_list가 없습니다.")
             _word_list_str = ",".join(self.word_list)
 
         # word cloud 생성
