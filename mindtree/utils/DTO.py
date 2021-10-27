@@ -57,7 +57,7 @@ class PathDTO(PathConfig):
     def get_user_word_cloud_path(self, post_id: int):
         self._set_user_variables(post_id)
         self._set_user_media_path()
-        print("_username: ", self._username)  # 유닛테스트용.
+        # print("[get_user_word_cloud_path] _username: ", self._username)  # 유닛테스트용.
         return os.path.join(self._user_media_path, f"{self._username}_{str(post_id)}_word_cloud.png")
 
     def get_user_word_cloud_file_name(self, post_id: int):
