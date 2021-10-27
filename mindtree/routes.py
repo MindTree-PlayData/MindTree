@@ -180,18 +180,44 @@ def upload_file():
         2. 안되어있으면 초기화 후 분석 진행.
         단, app이 debug모드이기 때문에 reloading될 때마다 다시 초기화해야한다.
         """
+        try:
+            if Apps.analyzer.is_initialized():
+                t1 = Thread(target=Apps.analyzer.analysis, args=[post_id])
+                t1.start()
+            else:
+                t2 = Thread(target=Apps.analyzer.init_and_analyze, args=[post_id])
+                t2.start()
+        except Exception as e:
+            print('[upload_file] error: ', e)
+            post = Post.query.get_or_404(post_id)
+            post.error = True
+            db.session.commit()
 
+        return redirect(url_for("my_diary"))
+
+    else:
+        return '실패'
+
+
+@app.route('/post/<int:post_id>/re_analyze')
+@login_required
+def re_analyze(post_id):
+
+    try:
         if Apps.analyzer.is_initialized():
             t1 = Thread(target=Apps.analyzer.analysis, args=[post_id])
             t1.start()
         else:
             t2 = Thread(target=Apps.analyzer.init_and_analyze, args=[post_id])
             t2.start()
+        flash("다시 분석을 요청하였습니다.", 'success')
+    except Exception as e:
+        print('[re_analyze] error: ', e)
+        post = Post.query.get_or_404(post_id)
+        post.error = True
+        db.session.commit()
 
-        return redirect(url_for("my_diary"))
-
-    else:
-        return '실패'
+    return redirect(url_for("my_diary"))
 
 
 @app.route("/datetime", methods=['GET', 'POST'])

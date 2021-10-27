@@ -1,4 +1,5 @@
 import os
+import time
 from mindtree.utils.util import get_time_str
 from mindtree.models import Post
 from mindtree.modules.word_cloud import CreateWordCloud
@@ -44,7 +45,6 @@ class TextAnalysis(CreateWordCloud):
         print("[text_analysis] post_id: ", post_id)
         self.word_list_file_path = super().get_user_word_list_path(post_id)
         self.ocr_text_path = super().get_user_ocr_file_path(post_id)
-
         # --- 분석한 리스트가 있으면 그걸로 워드클라우드를 만든다.
         if os.path.isfile(self.word_list_file_path):
             # 워드클라우드 만들기

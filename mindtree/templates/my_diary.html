@@ -23,10 +23,10 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">글 번호</th>
-            <th scope="col">작성일자</th>
-            <th scope="col">상태</th>
-            <th scope="col" class="col-1">삭제</th>
+            <th scope="col" class="text-nowrap">글 번호</th>
+            <th scope="col" class="text-nowrap col-7">작성일자</th>
+            <th scope="col" class="text-nowrap">상태</th>
+            <th scope="col" class="text-nowrap col-1">삭제</th>
         </tr>
         </thead>
 
@@ -37,11 +37,13 @@
                 {% if post.completed %}
                     <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
                     <td style="color: #1e2125"> 분석 완료 </td>
-                {% elif post.completed == 'error' %}
-                    <td><button class="btn btn-outline-danger">{{ post.pub_date|datetime }}</button></td>
-                    <td style="color: #6c757d"> 분석 오류 </td>
+                {% elif post.error == True %}
+                    <td><button class="btn btn-outline-danger">{{ post.pub_date|datetime }}</button>
+                        <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
+                    <td style="color: #f81d31"> 분석 오류 </td>
                 {% else %}
-                    <td><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button></td>
+                    <td class="text-nowrap"><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button>
+                    <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
                     <td style="color: #6c757d"> 분석중... </td>
                 {% endif %}
                     <td>

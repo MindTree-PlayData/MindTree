@@ -69,21 +69,33 @@ class ThreadedAnalysis:
             f2_m = executor.submit(self.text_analyzer.text_analysis, post_id)
             f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, post_id)
 
-            # 2-2. 완료되면 로그찍기
-            i = 2
-            for f in futures.as_completed([f2_m, f3_m]):
-                if f.done():
-                    print(i, "완료")
-                    i += 1
-                    continue
-                else:
-                    f.cancel()
+            futures.wait([f2_m, f3_m], timeout=10)
 
-        # 분석이 끝난 후 db에 완료 했음을 저장.
-        post = Post.query.get(post_id)
-        post.completed = True
-        db.session.commit()
+            try:
+                post = Post.query.get_or_404(post_id)
+                if f2_m.done():
+                    if f3_m.done():
+                        print('[analysis] f2_m 완료, f3_m 완료')
+                        post.completed = True
+                        post.error = False
+                    else:
+                        print('[analysis] f2_m 완료, f3_m 에러')
+                        post.error = True
+                elif f3_m.done():
+                    print('[analysis] f2_m 에러, f3_m 완료')
+                    post.error = True
+                else:
+                    print('[analysis] f2_m 에러, f3_m 에러')
+                    post.error = True
+            except Exception as e:
+                """ thread 관련 오류든, 분석 모듈 관련 오류든, db 쿼리 관련 오류든
+                어쨌든 오류이기 때문에 에러 플래그를 반영시킨다. """
+                print('[analysis] ', e)
+                post.error = True
+            finally:
+                db.session.commit()
 
 
 if __name__ == '__main__':
-    pass
+    thr = ThreadedAnalysis()
+    thr.init_and_analyze(3)
