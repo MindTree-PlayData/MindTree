@@ -27,6 +27,7 @@
             <!--<th scope="col">작성자</th>-->
             <th scope="col">작성일자</th>
             <th scope="col">상태</th>
+            <!--<th scope="col">분석요약</th>-->
         </tr>
         </thead>
         <tbody>
@@ -35,12 +36,17 @@
                 <th scope="row">{{ post.id }}</th>
                 <!--<td>{{ post.author.username }}</td>-->
                 {% if post.completed %}
-                <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
-                <td style="color: #1e2125"> 분석 완료 </td>
+                    <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
+                    <td style="color: #1e2125"> 분석 완료 </td>
+                    <!--<td>stacked bar chart가 들어갈 자리</td>{# stacked bar chart가 들어갈 자리#}-->
                 {% else %}
-                <td>{{ post.pub_date|datetime }}</td>
-                <td style="color: #6c757d"> 분석중... </td>
+                    <td>{{ post.pub_date|datetime }}</td>
+                    <td style="color: #6c757d"> 분석중... </td>
+                    <!--<td style="color: #6c757d"> 분석중... </td>-->
                 {% endif %}
+                    
+                        
+
             </tr>
         {% endfor %}
         </tbody>
