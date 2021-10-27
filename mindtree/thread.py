@@ -36,12 +36,19 @@ class ThreadedAnalysis:
             self._text_analyzer = executor.submit(TextAnalysis)
             self._sentiment_analyzer = executor.submit(SentimentAnalysis)
 
-            for f in futures.as_completed([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
-                # 중복해서 담기긴 하지만 실행에는 문제 없어서 놔두기로함.
+            if futures.wait([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
+                """ 세 futures 객체가 일을 마칠때 까지 기다린다. 
+                    실제로 위 wait 메서드의 return 값은 각 객체가 일을 마칠때 까지 반환되지 않기 때문에,
+                    if 문으로 바로 검증되지 않고 wait()가 return 될때까지 기다린다. 
+                    True가 리턴되면 아래와 같이 각 분석 객체를 변수에 담는다."""
+
                 self.ocr = self._ocr.result()
                 self.text_analyzer = self._text_analyzer.result()
                 self.sentiment_analyzer = self._sentiment_analyzer.result()
-            self.initialized = True
+
+                print("[init_analyzers] initialization 완료")
+                self.initialized = True
+
             return self
 
     def analysis(self, post_id):
@@ -77,9 +84,6 @@ class ThreadedAnalysis:
         post.completed = True
         db.session.commit()
 
-
-# 외부에서 바로 불러서 사용할 수 있도록 여기에 선언해둠.
-# worker = ThreadedAnalysis()
 
 if __name__ == '__main__':
     pass

@@ -5,7 +5,7 @@ from concurrent import futures
 from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
-from mindtree import app, db, bcrypt
+from mindtree import app, db, bcrypt, Apps
 from mindtree.utils.DTO import PathDTO
 from mindtree.models import User, Post
 from mindtree.forms import RegistrationForm, LoginForm
@@ -13,15 +13,15 @@ from mindtree.thread import ThreadedAnalysis
 
 path = PathDTO()  # 경로를 찾을 때 사용한다.
 
-with futures.ThreadPoolExecutor() as executor:
-    """ analyzer를 로드합니다.
-    쓰레드 처리 하였지만 실질적으로 앱이 로드되려면 각 분석기가 모두 로드되어야 합니다.
-    쓰레드 처리를 하지 않으면 두번 initializing되어서 이렇게 처리했습니다. """
-    _analyzer = ThreadedAnalysis()
-    analyzer = executor.submit(_analyzer.init_analyzers).result()
+
+@app.before_first_request
+def initialize():
+    with futures.ThreadPoolExecutor() as executor:
+        _analyzer = ThreadedAnalysis()
+        Apps.analyzer = executor.submit(_analyzer.init_analyzers).result()
 
 
-@app.route("/",  methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def home():
     return render_template('cover.html', title='cover')
 
@@ -76,7 +76,8 @@ def login():
                 # db의 password와 form의 password를 비교하여 True, False를 반환함
                 if user and bcrypt.check_password_hash(user.password, form.password.data):
                     login_user(user, remember=form.remember.data)
-                    next_page = request.args.get('next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
+                    next_page = request.args.get(
+                        'next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
 
                     return redirect(next_page) if next_page else redirect(url_for('my_diary'))
                 else:
@@ -118,7 +119,6 @@ def delete_post(post_id):
     return redirect(url_for('my_diary'))
 
 
-
 @app.route("/results/word_cloud/<path:post_id>", methods=['GET'])
 def get_word_cloud_file(post_id):
     """ word cloud가 저장된 미디어 폴더에 접근(results폴더)
@@ -128,8 +128,6 @@ def get_word_cloud_file(post_id):
     word_cloud_file_name = path.get_user_word_cloud_file_name(post_id)
     print("[get_word_cloud_file] word_cloud_file_name: ", word_cloud_file_name)
     return send_from_directory(path.get_user_media_path(post_id), word_cloud_file_name)
-
-
 
 
 # 기능: analysis page에 일기 이미지 불러오기 위한 route
@@ -184,11 +182,11 @@ def upload_file():
         단, app이 debug모드이기 때문에 reloading될 때마다 다시 초기화해야한다.
         """
 
-        if analyzer.is_initialized():
-            t1 = Thread(target=analyzer.analysis, args=[post_id])
+        if Apps.analyzer.is_initialized():
+            t1 = Thread(target=Apps.analyzer.analysis, args=[post_id])
             t1.start()
         else:
-            t2 = Thread(target=analyzer.init_and_analyze, args=[post_id])
+            t2 = Thread(target=Apps.analyzer.init_and_analyze, args=[post_id])
             t2.start()
 
         return redirect(url_for("my_diary"))
