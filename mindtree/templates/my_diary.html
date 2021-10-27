@@ -20,31 +20,64 @@
 
 {# 작성 게시글 목록 시작 #}
 <div class="container">
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th scope="col">글 번호</th>
-            <!--<th scope="col">작성자</th>-->
             <th scope="col">작성일자</th>
             <th scope="col">상태</th>
+            <th scope="col" class="col-1">삭제</th>
         </tr>
         </thead>
+
         <tbody>
         {% for post in posts.items %}
             <tr>
                 <th scope="row">{{ post.id }}</th>
-                <!--<td>{{ post.author.username }}</td>-->
                 {% if post.completed %}
-                <td><a href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
-                <td style="color: #1e2125"> 분석 완료 </td>
+                    <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
+                    <td style="color: #1e2125"> 분석 완료 </td>
+                {% elif post.completed == 'error' %}
+                    <td><button class="btn btn-outline-danger">{{ post.pub_date|datetime }}</button></td>
+                    <td style="color: #6c757d"> 분석 오류 </td>
                 {% else %}
-                <td>{{ post.pub_date|datetime }}</td>
-                <td style="color: #6c757d"> 분석중... </td>
+                    <td><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button></td>
+                    <td style="color: #6c757d"> 분석중... </td>
                 {% endif %}
+                    <td>
+                        {% if post.author == current_user %}
+                            <button type="button" class="btn btn-danger btn-sm m-1 text-nowrap" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">삭제</button>
+
+                            {# 삭제 확인 모달창 시작 #} {# 각 모달창 마다 고유한 id가 있어야 정상적으로 삭제된다. #}
+                            <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            정말로 삭제하시겠습니까?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                            <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                                                <input type="submit" class="btn btn-danger" value="삭제하기">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {# 삭제 확인 모달창 끝 #}
+                        {% endif %}
+                    </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    {# pagination 시작 #}
     <div id="pages">
         {# previous #}
         {% if posts.page > 1 %}
@@ -67,14 +100,14 @@
         {% endfor %}
 
         {# next #}
-        {% if posts.page < (posts.total/10) %}
+        {% if posts.page < (posts.total/posts.per_page) %}  {# 마지막 페이지가 아닐 때 #}
             <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=posts.page + 1) }}">next</a>
-        {% else %}
+        {% else %}  {# 마지막 페이지일 때 #}
             <button class="btn btn-outline-info mb-4">next</button>
         {% endif %}
 
     </div>
+    {# pagination 끝 #}
 </div>
 {#    작성 게시글 목록 끝 #}
-
 {% endblock %}
