@@ -1,7 +1,7 @@
 import os
 from mindtree.utils.util import get_time_str
 from mindtree.models import Post
-from mindtree.modules.WordCloud import CreateWordCloud
+from mindtree.modules.word_cloud import CreateWordCloud
 from soylemma import Lemmatizer
 
 # 형태소 분석
@@ -104,7 +104,7 @@ class TextAnalysis(CreateWordCloud):
                 # 어간과 어미를 합친 형태를 만든다. (conjugate)
                 # -> 어미가 여러개라도 conjugate함수 자체가 어미 하나의 str을 받게 되어 있어서 붙여서 줘야한다.
                 _conjugated = self.lemmatizer.conjugate(pos[0], eomis)[0]
-                print("_conjugated: ", _conjugated)
+                # print("_conjugated: ", _conjugated)
                 try:
                     # 용언의 활용형(conjugate된 단어)에서 기본형을 추출한다.
                     _lemmatized = self.lemmatizer.lemmatize(_conjugated)[0][0]

@@ -16,9 +16,8 @@ path = PathDTO()  # 경로를 찾을 때 사용한다.
 
 @app.before_first_request
 def initialize():
-    with futures.ThreadPoolExecutor() as executor:
-        _analyzer = ThreadedAnalysis()
-        Apps.analyzer = executor.submit(_analyzer.init_analyzers).result()
+    _analyzer = ThreadedAnalysis()
+    Apps.analyzer = _analyzer.init_analyzers()
 
 
 @app.route("/", methods=['GET', 'POST'])

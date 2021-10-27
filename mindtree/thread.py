@@ -1,7 +1,7 @@
 from concurrent import futures
 
 from mindtree.modules.OCR import OCR
-from mindtree.modules.request_sentiment import SentimentAnalysis
+from mindtree.modules.sentiment_analysis import SentimentAnalysis
 from mindtree.modules.text_analysis import TextAnalysis
 from mindtree.utils.util import get_time_str
 

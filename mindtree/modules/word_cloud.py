@@ -5,6 +5,7 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
+
 class CreateWordCloud(PathDTO):
 
     def __init__(self):
@@ -53,6 +54,6 @@ class CreateWordCloud(PathDTO):
 if __name__ == '__main__':
     """ 유닛 테스트 방법:
         MindTree (루트경로에서) 
-        $ python mindtree/modules/WordCloud.py  """
+        $ python mindtree/modules/word_cloud.py  """
 
 
