@@ -2,7 +2,7 @@ import os
 from threading import Thread
 from concurrent import futures
 
-from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from mindtree import app, db, bcrypt
@@ -21,12 +21,24 @@ with futures.ThreadPoolExecutor() as executor:
     analyzer = executor.submit(_analyzer.init_analyzers).result()
 
 
+@app.route("/",  methods=['GET', 'POST'])
+def home():
+    return render_template('cover.html', title='cover')
+
+
 @app.route("/my_diary", methods=['GET'])
 @login_required
 def my_diary():
+    # 이름 확인용
     username = current_user.username
-    posts = Post.query.filter_by(author=current_user).all()
     print("[my_diary] username: ", username)
+
+    # 포스트들을 페이지 정보를 담아 보낸다.
+    page = request.args.get('page', 1, type=int)  # url에 /my_diary?page=1 과 같이 표기된 정보를 받음.
+    posts = Post.query.filter_by(author=current_user) \
+        .order_by(Post.pub_date.desc()) \
+        .paginate(page=page, per_page=10)
+
     return render_template('my_diary.html', posts=posts)
 
 
@@ -54,7 +66,6 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route("/",  methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -83,7 +94,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/analyze/<int:post_id>')
+@app.route('/post/<int:post_id>/analyze')
 @login_required
 def analyze(post_id):
     """
@@ -92,6 +103,20 @@ def analyze(post_id):
     post = Post.query.get_or_404(post_id)
 
     return render_template('analyze.html', post=post)
+
+
+@app.route('/post/<int:post_id>/delete', methods=["POST"])
+@login_required
+def delete_post(post_id):
+    """ 포스트를 삭제한다. """
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash("포스트가 삭제되었습니다.", 'success')
+    return redirect(url_for('my_diary'))
+
 
 
 @app.route("/results/<path:post_id>", methods=['GET'])
@@ -169,9 +194,14 @@ def upload_file():
         return '실패'
 
 
+@app.route("/datetime", methods=['GET', 'POST'])
+def datetime_analyze():
+    return render_template("datetime.html")
+
+
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):
     if fmt:
         return date.strftime(fmt)
     else:
-        return date.strftime('%Y년 %m월 %d일 %H시 %M분')
+        return date.strftime('%Y년 %m월 %d일')  # 시, 분을 지웟지만 임시적임. 나중에 한국시간으로 바꾸는 법을 찾을 것.

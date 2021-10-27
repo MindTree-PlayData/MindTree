@@ -3,30 +3,29 @@
     <div class="content-section container-fluid">
         <div class="d-flex justify-content-center">
 
-{#            로그인이 되어있으면 책 그림 표시 #}
+            {# 로그인상태의 홈화면 #}
             {% if current_user.is_authenticated %}
                 <div class="col mt-5">
-                    <p class="text-center h3 text-muted mb-3"> 내 다이어리 보기 </p>
-                    <a href="{{ url_for('my_diary') }}"><img src="{{ url_for('static', filename='images/main_book.png') }}" class="img-fluid" alt=""></a>
+                    <h3 class="text-center h3 text-muted mb-3"> 내 다이어리 보기 </h3>
+                    <a href="{{ url_for('my_diary') }}"><center><img src="{{ url_for('static', filename='images/open_diary.jpeg') }}" style="width:1280px;height:720px;" class="img-fluid" alt=""></center></a>
                 </div>
 
             {% else %}
-                {#          로그인이 되어 있지 않으면 로그인 창 표시#}
-                {#          로그인 창 시작 #}
+            {# 시작화면 #}
                 <div class="m-3" style="min-width: 500px">
                 <form method="POST" action="" class="container-fluid">
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group">
-                    <legend class="border-bottom mb-4 mt-5">Log In</legend>
-                            <div class="form-group">
-                                {{ form.email.label(class="form-control-label")}}
+                    <legend class="border-bottom mb-4 mt-5">로그인</legend>
+                            <div class="mb-3">
+                                {{ form.email.label(class="form-label")}}
                                 {{ form.email(class="form-control form-control-lg")}}
                             </div>
-                            <div class="form-group">
-                                {{ form.password.label(class="form-control-label")}}
+                            <div class="mb-3">
+                                {{ form.password.label(class="form-label")}}
                                 {{ form.password(class="form-control form-control-lg")}}
                             </div>
-                            <div class="form-check">
+                            <div class="form-check mb-3">
                                 {{ form.remember(class="form-check-input") }}
                                 {{ form.remember.label(class="form-check-label") }}
                             </div>
@@ -39,7 +38,6 @@
                     </div>
                 </form>
                 </div>
-{#          로그인 창 끝 #}
             {% endif %}
 
 
