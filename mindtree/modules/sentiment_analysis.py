@@ -45,7 +45,7 @@ class SentimentAnalysis(PathDTO):
         ocr_text = Post.query.get(post_id).ocr_text
         self.ocr_text_data = ocr_text
 
-        if self._request():
+        if self._request():  # _request() 실패시 결과를 저장하지 않는다.
             self._save_response(post_id)
 
     def _request(self):

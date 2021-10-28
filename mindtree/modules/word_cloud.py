@@ -5,6 +5,7 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
+
 class CreateWordCloud(PathDTO):
 
     def __init__(self):
@@ -29,7 +30,7 @@ class CreateWordCloud(PathDTO):
         if word_list:
             _word_list_str = ",".join(word_list)
         else:
-            print("word_list가 없습니다.")
+            print("[_set_user_word_cloud_object] word_list가 없습니다.")
             _word_list_str = ",".join(self.word_list)
 
         # word cloud 생성
@@ -53,6 +54,6 @@ class CreateWordCloud(PathDTO):
 if __name__ == '__main__':
     """ 유닛 테스트 방법:
         MindTree (루트경로에서) 
-        $ python mindtree/modules/WordCloud.py  """
+        $ python mindtree/modules/word_cloud.py  """
 
 
