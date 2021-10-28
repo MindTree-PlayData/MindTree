@@ -3,31 +3,22 @@
     <!-- 배경 이미지 -->
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
         <style>
-            body {
-                background-position: center;
-                /*background-image: url('/static/images/book3.jpg');*/
-                background-repeat:no-repeat;
-                background-attachment: scroll;
-                background-size: cover;
+            .a {
+                background-color: #8faec7;
             }
-            .font {
-                font-family: 'Gowun Dodum', sans-serif;
-                font-size: 30px; 
-                font-weight: 600;
-                text-align: center;
-                margin-top: 3%;
-                
+            .b {
+                background-color: #7b68c0;
+                padding: 10px 20px;
             }
-            .media {
-                margin-top: 5%;
-                margin-bottom: 5%;
+            .c {
+                background-color: #97c96e;
+                margin: 10px 20px;
             }
-            
         </style>
     <!-- 도입 문구 -->
     <div style="display: flex; justify-content: center; ">
         <span class="font">
-            <p>
+            <br><p>
                 안녕하세요.<b> {{ current_user.username }} </b> 님! :D  <br>
                 아래는 <b> {{ current_user.username }} </b> 님이 올려주신 일기 이미지입니다. <br>
             </p>
@@ -38,12 +29,30 @@
             <p style="margin-top: 10%;">
                 {{ post.last_updated | datetime }}에 올려주신 일기의 메인 감정은 {{ post.sentiment['document']['sentiment'] }}
                 <!-- 메인 감정 표현 이미지 -->
-                {% if post.sentiment['document']['sentiment'] == 'negative' %}
+                {% if post.sentiment['document']['sentiment'] == 'negative' %}                    
                     <img src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/000000/external-sad-social-media-basic-1-sbts2018-flat-sbts2018.png"/>
+                    <style>
+                        body {
+                            background: linear-gradient(0.25turn, #c04d4d, #f3f5f2, #f3f5f2, #c04d4d);
+                            background-size: cover;
+                        }
+                    </style>
                 {% elif post.sentiment['document']['sentiment'] == 'positive'%}
                     <img src="https://img.icons8.com/ios-glyphs/30/000000/happy.png"/>
+                    <style>
+                        body {
+                            background: linear-gradient(0.25turn, #5172af, #f3f5f2, #f3f5f2, #5172af);
+                            background-size: cover;
+                        }
+                    </style>
                 {% else %}
                     <img src="https://img.icons8.com/ios-glyphs/30/000000/neutral-emoticon--v2.png"/>
+                    <style>
+                        body {
+                            background: linear-gradient(0.25turn, #89cf6d, #f3f5f2, #f3f5f2, #89cf6d);
+                            background-size: cover;
+                        }
+                    </style>
                 {% endif %}
                 입니다.
             </p>
@@ -59,9 +68,11 @@
             <div class="font" style="display: flex; justify-content: center;" >
                 {{ current_user.username }} 님의 메인 감정 {{ post.sentiment['document']['sentiment'] }}이 
                 {% if post.sentiment['document']['sentiment'] == 'negative' %}
+                      
                     {{ post.sentiment['document']['confidence']['negative'] }} 이네요! <br>
                     힘든 하루를 보내셨군요. <br>
                     고된 하루를 버틴 {{ current_user.username }}님 정말 고생 많으셨어요. <br> 
+                
                 {% elif post.sentiment['document']['sentiment'] == 'positive' %}
                     {{ post.sentiment['document']['confidence']['positive'] }} 이네요! <br>
                     좋은 하루를 보내셨군요! <br>
