@@ -57,7 +57,7 @@ class PathDTO(PathConfig):
     def get_user_word_cloud_path(self, post_id: int):
         self._set_user_variables(post_id)
         self._set_user_media_path()
-        print("_username: ", self._username)  # 유닛테스트용.
+        # print("[get_user_word_cloud_path] _username: ", self._username)  # 유닛테스트용.
         return os.path.join(self._user_media_path, f"{self._username}_{str(post_id)}_word_cloud.png")
 
     def get_user_word_cloud_file_name(self, post_id: int):
@@ -69,6 +69,16 @@ class PathDTO(PathConfig):
         self._set_user_media_path()
         return os.path.join(self._user_media_path, f"{str(self._username)}_{str(post_id)}_sentiment.json")
 
+
+    # 기능: 스택 바 차트 파일 이름을 반환하는 함수
+    # 입력: 유저 정보를 input
+    # 출력: 스택 바 차트 파일 이름을 output
+    # 개발자: 김수연
+    # 버전/일시: 0.x/2021.10.28
+    def get_user_stacked_bar_chart_file_name(self, post_id):
+        self._set_user_variables(post_id)
+        return f"{self._username}_{str(post_id)}_stacked_bar_char.png"
+        pass
 
 if __name__ == '__main__':
     """ 유닛 테스트 방법:

@@ -1,7 +1,7 @@
 from concurrent import futures
 
 from mindtree.modules.OCR import OCR
-from mindtree.modules.request_sentiment import SentimentAnalysis
+from mindtree.modules.sentiment_analysis import SentimentAnalysis
 from mindtree.modules.text_analysis import TextAnalysis
 from mindtree.utils.util import get_time_str
 
@@ -36,16 +36,23 @@ class ThreadedAnalysis:
             self._text_analyzer = executor.submit(TextAnalysis)
             self._sentiment_analyzer = executor.submit(SentimentAnalysis)
 
-            for f in futures.as_completed([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
-                # 중복해서 담기긴 하지만 실행에는 문제 없어서 놔두기로함.
+            if futures.wait([self._ocr, self._text_analyzer, self._sentiment_analyzer]):
+                """ 세 futures 객체가 일을 마칠때 까지 기다린다. 
+                    실제로 위 wait 메서드의 return 값은 각 객체가 일을 마칠때 까지 반환되지 않기 때문에,
+                    if 문으로 바로 검증되지 않고 wait()가 return 될때까지 기다린다. 
+                    True가 리턴되면 아래와 같이 각 분석 객체를 변수에 담는다."""
+
                 self.ocr = self._ocr.result()
                 self.text_analyzer = self._text_analyzer.result()
                 self.sentiment_analyzer = self._sentiment_analyzer.result()
-            self.initialized = True
+
+                print("[init_analyzers] initialization 완료")
+                self.initialized = True
+
             return self
 
     def analysis(self, post_id):
-        print("thread.analysis", post_id)
+        print("[analysis] post_id: ", post_id)
         with futures.ThreadPoolExecutor() as executor:
             # 1. OCR 시작. 끝날때까지 기다린다.
             f1_m = executor.submit(self.ocr.ocr_main, post_id)
@@ -53,33 +60,43 @@ class ThreadedAnalysis:
 
             # 1-2. 완료 로그찍기
             if f1_m.done():
-                print("f1_m 완료")
+                print("[analysis] f1_m 완료")
             else:
-                print("f1_m 오류발생")
+                print("[analysis] f1_m 오류발생")
                 f1_m.cancel()
 
             # 2. 감성분석, 텍스트 분석 모두 실행.
             f2_m = executor.submit(self.text_analyzer.text_analysis, post_id)
             f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, post_id)
 
-            # 2-2. 완료되면 로그찍기
-            i = 2
-            for f in futures.as_completed([f2_m, f3_m]):
-                if f.done():
-                    print(i, "완료")
-                    i += 1
-                    continue
+            futures.wait([f2_m, f3_m], timeout=10)
+
+            try:
+                post = Post.query.get_or_404(post_id)
+                if f2_m.done():
+                    if f3_m.done():
+                        print('[analysis] f2_m 완료, f3_m 완료')
+                        post.completed = True
+                        post.error = False
+                    else:
+                        print('[analysis] f2_m 완료, f3_m 에러')
+                        post.error = True
+                elif f3_m.done():
+                    print('[analysis] f2_m 에러, f3_m 완료')
+                    post.error = True
                 else:
-                    f.cancel()
+                    print('[analysis] f2_m 에러, f3_m 에러')
+                    post.error = True
+            except Exception as e:
+                """ thread 관련 오류든, 분석 모듈 관련 오류든, db 쿼리 관련 오류든
+                어쨌든 오류이기 때문에 에러 플래그를 반영시킨다. """
+                print('[analysis] ', e)
+                post = Post.query.get_or_404(post_id)
+                post.error = True
+            finally:
+                db.session.commit()
 
-        # 분석이 끝난 후 db에 완료 했음을 저장.
-        post = Post.query.get(post_id)
-        post.completed = True
-        db.session.commit()
-
-
-# 외부에서 바로 불러서 사용할 수 있도록 여기에 선언해둠.
-# worker = ThreadedAnalysis()
 
 if __name__ == '__main__':
-    pass
+    thr = ThreadedAnalysis()
+    thr.init_and_analyze(3)

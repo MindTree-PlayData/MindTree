@@ -1,7 +1,8 @@
 import os
+import time
 from mindtree.utils.util import get_time_str
 from mindtree.models import Post
-from mindtree.modules.WordCloud import CreateWordCloud
+from mindtree.modules.word_cloud import CreateWordCloud
 from soylemma import Lemmatizer
 
 # 형태소 분석
@@ -44,13 +45,10 @@ class TextAnalysis(CreateWordCloud):
         print("[text_analysis] post_id: ", post_id)
         self.word_list_file_path = super().get_user_word_list_path(post_id)
         self.ocr_text_path = super().get_user_ocr_file_path(post_id)
-
         # --- 분석한 리스트가 있으면 그걸로 워드클라우드를 만든다.
         if os.path.isfile(self.word_list_file_path):
             # 워드클라우드 만들기
             with open(self.word_list_file_path, "r") as word_list:
-                print(type(word_list))
-
                 # 로컬에 워드클라우드 파일 저장, DB에 워드클라우드 파일 이름 저장.
                 super().make_word_cloud(word_list, post_id)
 
@@ -85,7 +83,7 @@ class TextAnalysis(CreateWordCloud):
 
     def _get_target_words(self):
         """ 원하는 품사에 해당하는 단어를 뽑아 리스트로 반환한다. """
-        print("self._pos_tagged_results: \n", self._pos_tagged_results)
+        # print("self._pos_tagged_results: \n", self._pos_tagged_results)
         # 명사
         for pos in self._pos_tagged_results:
             if pos[1] in ["NNG", "NNP"]:
@@ -104,7 +102,7 @@ class TextAnalysis(CreateWordCloud):
                 # 어간과 어미를 합친 형태를 만든다. (conjugate)
                 # -> 어미가 여러개라도 conjugate함수 자체가 어미 하나의 str을 받게 되어 있어서 붙여서 줘야한다.
                 _conjugated = self.lemmatizer.conjugate(pos[0], eomis)[0]
-                print("_conjugated: ", _conjugated)
+                # print("_conjugated: ", _conjugated)
                 try:
                     # 용언의 활용형(conjugate된 단어)에서 기본형을 추출한다.
                     _lemmatized = self.lemmatizer.lemmatize(_conjugated)[0][0]
@@ -112,7 +110,7 @@ class TextAnalysis(CreateWordCloud):
                 except Exception as e:
                     print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
 
-        print("[_get_target_words] self.word_list: \n", self.word_list)
+        # print("[_get_target_words] self.word_list: \n", self.word_list)
 
         print(get_time_str(), f"TextAnalysis: {len(self._pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
 

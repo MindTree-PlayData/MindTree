@@ -48,7 +48,7 @@ class Post(db.Model):
     sentiment = db.Column(db.JSON, nullable=False)
     word_cloud = db.Column(db.String(100), nullable=False)
     completed = db.Column(db.Boolean, nullable=True, default=False)
-    # stacked_bar_chart = db.Column(db.String(100), nullable=False)
+    error = db.Column(db.Boolean, nullable=True, default=False)
 
     def __repr__(self):
         return f"Post('{self.id}', '{self.user_id}', '{self.pub_date}',\n'{self.last_updated}', \n" \
