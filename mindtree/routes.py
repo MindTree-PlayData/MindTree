@@ -198,6 +198,7 @@ def upload_file():
 
 
 @app.route("/datetime", methods=['GET', 'POST'])
+@login_required
 def datetime_analyze():
     return render_template("datetime.html")
 
