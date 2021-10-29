@@ -7,7 +7,7 @@
             {% if current_user.is_authenticated %}
                 <div class="col mt-5">
                     <h3 class="text-center h3 text-muted mb-3"> 내 다이어리 보기 </h3>
-                    <a href="{{ url_for('my_diary') }}"><center><img src="{{ url_for('static', filename='images/open_diary.jpeg') }}" style="width:1280px;height:720px;" class="img-fluid" alt=""></center></a>
+                    <a href="{{ url_for('my_diary') }}"><center><img src="{{ url_for('static', filename='images/open_diary.jpeg') }}" style="width:640px;height:360px;" class="img-fluid" alt=""></center></a>
                 </div>
 
             {% else %}

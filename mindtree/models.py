@@ -53,4 +53,5 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post('{self.id}', '{self.user_id}', '{self.pub_date}',\n'{self.last_updated}', \n" \
                f"'{self.ocr_text}',\n" \
-               f" '{self.sentiment}', \n'{self.word_cloud}', \n'{self.completed}')"
+               f" '{self.sentiment}', \n'{self.word_cloud}', \n'{self.completed}'  )" # , \n " \
+                # f" '{self.stacked_bar_chart}' )"

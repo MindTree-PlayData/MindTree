@@ -129,7 +129,7 @@ def get_word_cloud_file(post_id):
     return send_from_directory(path.get_user_media_path(post_id), word_cloud_file_name)
 
 
-# 기능: analysis page에 일기 이미지 불러오기 위한 route
+# 기능: analysis page에 유저의 게시글별 일기 이미지 파일 주소를 불러오기 위한 route
 # 입력: post_id와 업로드한 일기 이미지 파일 이름을 input
 # 출력: post_id와 일기 이미지 파일 이름을 user_media_path 경로에 추가하여 출력
 # 버전/일시: ver 0.x/2021.10.26 추가
@@ -142,6 +142,21 @@ def get_upload_img(post_id):
     upload_img_file_name = path.get_user_diary_file_name(post_id)
     print("[get_upload_img] upload_img_file_name: ", upload_img_file_name)
     return send_from_directory(path.get_user_media_path(post_id), upload_img_file_name)
+
+
+# 기능: my_diary(다이어리 페이지)의 게시글에 각 게시글별 stack bar chart 이미지 주소를 전송하는 route
+# 입력: post_id와 stacked bar char 이미지 파일 이름을 input
+# 출력: post_id와 stacked bar chart 이미지 파일 이름을 user_media_path 경로에 추가하여 출력
+# 버전/일시: ver 0.x/2021.10.26 추가
+# 개발자: 김수연
+@app.route("/results/stacked_bar_chart/<path:post_id>", methods=['GET'])
+def get_stacked_bar_chart_img(post_id):
+    """ 
+    stacked_bar_chart 이미지 파일 주소를 my_diary에 전송 
+    """
+    stacked_bar_chart_img_file_name = path.get_user_stacked_bar_chart_file_name(post_id)
+    print("[stacked_bar_chart_img_file_name] stacked_bar_chart_img_file_name: ", stacked_bar_chart_img_file_name)
+    return send_from_directory(path.get_user_media_path(post_id), stacked_bar_chart_img_file_name)
 
 
 @app.route("/post/upload_file", methods=['GET', 'POST'])

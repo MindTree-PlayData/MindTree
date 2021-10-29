@@ -24,8 +24,9 @@
         <thead>
         <tr>
             <th scope="col" class="text-nowrap">글 번호</th>
-            <th scope="col" class="text-nowrap col-7">작성일자</th>
-            <th scope="col" class="text-nowrap">상태</th>
+            <th scope="col" class="text-nowrap col-5">작성일자</th>
+            <th scope="col" class="text-nowrap ">상태</th>
+            <th scope="col" class="text-nowrap ">감정비율</th>
             <th scope="col" class="text-nowrap col-1">삭제</th>
         </tr>
         </thead>
@@ -36,14 +37,19 @@
                 <th scope="row">{{ post.id }}</th>
                 {% if post.completed %}
                     <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
-                    <td style="color: #1e2125"> 분석 완료 </td>
+                    <td style="color: #1e2125"; > 분석 완료 </td>
+                    <td>
+                       <img src="{{url_for('get_stacked_bar_chart_img', post_id=post.id)}} " style="width: 60px; margin: 0%;" alt="감정비율 그래프">
+                    </td>
                 {% elif post.error == True %}
-                    <td><button class="btn btn-outline-danger">{{ post.pub_date|datetime }}</button>
+                    <td><button class="graph_container">{{ post.pub_date|datetime }}</button>
                         <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
+                    <td style="color: #f81d31"> 분석 오류 </td>
                     <td style="color: #f81d31"> 분석 오류 </td>
                 {% else %}
                     <td class="text-nowrap"><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button>
-                    <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
+                        <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">분석 중 다시 분석하기</a></td>
+                    <td style="color: #6c757d"> 분석중... </td>
                     <td style="color: #6c757d"> 분석중... </td>
                 {% endif %}
                     <td>
@@ -110,6 +116,7 @@
 
     </div>
     {# pagination 끝 #}
+    
 </div>
 {#    작성 게시글 목록 끝 #}
 {% endblock %}
