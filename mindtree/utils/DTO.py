@@ -77,8 +77,7 @@ class PathDTO(PathConfig):
     # 버전/일시: 0.x/2021.10.28
     def get_user_stacked_bar_chart_file_name(self, post_id):
         self._set_user_variables(post_id)
-        return f"{self._username}_{str(post_id)}_stacked_bar_char.png"
-        pass
+        return f"{self._username}_{str(post_id)}_stacked_bar_chart.png"
 
 if __name__ == '__main__':
     """ 유닛 테스트 방법:
