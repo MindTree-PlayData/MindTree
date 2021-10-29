@@ -1,6 +1,3 @@
-// Charts from Chart.js
-// var sentiment = [0.3,0.4,0.3]
-
 // 단순 변수만 선언해서 Array 타입의 데이터로 만들면
 // 아래 차트의 data에 넣으면 된다.
 let sentiment2 = userData.document.confidence
