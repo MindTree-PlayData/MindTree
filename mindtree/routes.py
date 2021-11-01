@@ -7,7 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from mindtree import app, db, bcrypt, Apps
 from mindtree.utils.DTO import PathDTO
-from mindtree.models import User, Post
+from mindtree.models import User, Post, SeriesPost
 from mindtree.forms import RegistrationForm, LoginForm
 from mindtree.thread import ThreadedAnalysis
 
@@ -129,6 +129,16 @@ def get_word_cloud_file(post_id):
     return send_from_directory(path.get_user_media_path(post_id), word_cloud_file_name)
 
 
+@app.route("/results/word_cloud/<path:series_post_id>", methods=['GET'])
+def get_series_word_cloud_file(series_post_id):
+    """ word cloud가 저장된 미디어 폴더에 접근(results폴더)
+    :param post_id: 포스트 id
+    :return: 지정된 directory의 파일에 접근한다.
+    """
+    series_word_cloud_file_name = path.get_user_series_word_cloud_file_name(series_post_id)
+    print("[get_word_cloud_file] word_cloud_file_name: ", series_word_cloud_file_name)
+    return send_from_directory(path.get_user_media_path(series_post_id), series_word_cloud_file_name)
+
 # 기능: analysis page에 유저의 게시글별 일기 이미지 파일 주소를 불러오기 위한 route
 # 입력: post_id와 업로드한 일기 이미지 파일 이름을 input
 # 출력: post_id와 일기 이미지 파일 이름을 user_media_path 경로에 추가하여 출력
@@ -239,19 +249,50 @@ def re_analyze(post_id):
 @login_required
 def datetime_analyze():
     if request.method == "POST":
-        startdate=request.form['startdate']
-        finishdate=request.form['finishdate']
-        # posts=Post.query.filter(Post.pubdate.between(startdate,finishdate))
-        # text_list=[]
-        # for post in posts:
-        #     # 모든 ocr_text를 문자열로 만들어서 리스트에 담는다
-        #     text_list.append(post.ocr_text)
-        #     # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
-        #     texts = ''.join(post.ocr_text)
-        #     # thread.py 안에 OCR 하지않고 텍스트, 감성분석만 돌리도록 메서드 분리해 놓기
-        #     App.analyzer.analyze_2(texts)
+        start_date = request.form['startdate']
+        finish_date = request.form['finishdate']
+        print(start_date, finish_date, type(start_date))
 
-        print(startdate,finishdate)
+        posts = Post.query.filter(db.func.date(Post.pub_date).between(str(start_date), str(finish_date))).all()
+        # print(posts)
+        text_list = []
+        for post in posts:
+            # 모든 ocr_text를 문자열로 만들어서 리스트에 담는다
+            text_list.append(post.ocr_text)
+        # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
+        texts = ' '.join(text_list)
+        print(texts)
+
+
+        # db에 위에서 조회한 일기 텍스트를 저장한다.
+        series_post = SeriesPost(title="", ocr_text_bulk=texts, sentiment={}, word_cloud="", author=current_user)
+        db.session.add(series_post)
+        db.session.commit()
+
+        #######
+        #for문으로 post.sentiment['document']['sentiment']
+        # 빈도를 세서 비율을 도출 -> series_post.sentiment에 json 형식으로 저장
+        # -> 이후에 html에서 시각화에 써먹으면 된다.
+        #######
+
+        # 저장한 SeriesPost의 id를 조회한다.
+        series_post_id = series_post.id
+
+        # 이 아이디를 사용해서 분석기를 돌린다.
+        try:
+            if Apps.analyzer.is_initialized():
+                Apps.analyzer.analyze_series(series_post_id)
+            else:
+                print("not initialized")
+        except Exception as e:
+            print('[datetime_analyze] error: ', e)
+            series_post.error = True
+            db.session.commit()
+            return render_template("datetime.html")
+
+        series_post = SeriesPost.query.get(series_post_id)
+
+        return render_template("analyze_series.html", series_post=series_post)
     return render_template("datetime.html")
 
 

@@ -4,7 +4,7 @@ import os
 import requests
 
 from mindtree import APP_PATH, db
-from mindtree.models import Post
+from mindtree.models import Post, SeriesPost
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
@@ -55,12 +55,24 @@ class SentimentAnalysis(PathDTO):
             self._save_response(post_id)
             self.make_stacked_bar_chart(post_id)
 
+    def sentiment_analysis_series(self, series_post_id):
+        self.ocr_text_data = SeriesPost.query.get(series_post_id).ocr_text_bulk
+
+        if self._request():  # _request() 실패시 결과를 저장하지 않는다.
+            self._save_response_series(series_post_id)
+            # self.make_stacked_bar_chart(series_post_id)
+        else:
+            print('[sentiment_analysis_series] 요청 에러')
+
     def _request(self):
         self.res = requests.post(url=self.url,
                                  headers=self.headers,
                                  json={"content": self.ocr_text_data}
                                  )
-        self.json_response = self.res.json()
+        if self.res.json():
+            self.json_response = self.res.json()
+        else:
+            print('[_request] self.res.json() == None....')
 
         if self.res.status_code == 200:
             return self.json_response
@@ -70,13 +82,19 @@ class SentimentAnalysis(PathDTO):
 
     def _save_response(self, post_id):
         # sentiment 로컬 저장
-        with open(self.sentiment_path, "w", encoding='utf-8') as f:
-            json.dump(self.json_response, f, indent='\t', ensure_ascii=False)
-            print(get_time_str(), "SentimentAnalysis: 감성분석 저장 완료")
+        # with open(self.sentiment_path, "w", encoding='utf-8') as f:
+        #     json.dump(self.json_response, f, indent='\t', ensure_ascii=False)
+        #     print(get_time_str(), "SentimentAnalysis: 감성분석 저장 완료")
 
         # sentiment DB 저장
         post = Post.query.get_or_404(post_id)
         post.sentiment = self.json_response
+        db.session.commit()
+
+    def _save_response_series(self, post_id):
+        # sentiment DB 저장
+        series_post = SeriesPost.query.get_or_404(post_id)
+        series_post.sentiment = self.json_response
         db.session.commit()
 
     def make_stacked_bar_chart(self, post_id):

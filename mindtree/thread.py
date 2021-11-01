@@ -6,7 +6,7 @@ from mindtree.modules.text_analysis import TextAnalysis
 from mindtree.utils.util import get_time_str
 
 from mindtree import db
-from mindtree.models import Post
+from mindtree.models import Post, SeriesPost
 
 
 class ThreadedAnalysis:
@@ -95,6 +95,40 @@ class ThreadedAnalysis:
                 post.error = True
             finally:
                 db.session.commit()
+
+    def analyze_series(self, series_post_id):
+        with futures.ThreadPoolExecutor() as executor:
+            # 2. 감성분석, 텍스트 분석 모두 실행.
+            f2_m = executor.submit(self.text_analyzer.text_analysis_series, series_post_id)
+            f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis_series, series_post_id)
+
+        futures.wait([f2_m, f3_m], timeout=10)
+
+        try:  # 코드 구조가 겹쳐서 수정하라고 하는데 실행되는지 일단 해보기로.
+            series_post = SeriesPost.query.get_or_404(series_post_id)
+
+            if f2_m.done():
+                if f3_m.done():
+                    print('[analysis] f2_m 완료, f3_m 완료')
+                    series_post.completed = True
+                    series_post.error = False
+                else:
+                    print('[analysis] f2_m 완료, f3_m 에러')
+                    series_post.error = True
+            elif f3_m.done():
+                print('[analysis] f2_m 에러, f3_m 완료')
+                series_post.error = True
+            else:
+                print('[analysis] f2_m 에러, f3_m 에러')
+                series_post.error = True
+        except Exception as e:
+            """ thread 관련 오류든, 분석 모듈 관련 오류든, db 쿼리 관련 오류든
+            어쨌든 오류이기 때문에 에러 플래그를 반영시킨다. """
+            print('[analysis] ', e)
+            series_post = Post.query.get_or_404(series_post_id)
+            series_post.error = True
+        finally:
+            db.session.commit()
 
 
 if __name__ == '__main__':

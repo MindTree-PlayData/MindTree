@@ -1,7 +1,7 @@
 from wordcloud import WordCloud
 import sys
 from mindtree import db
-from mindtree.models import Post
+from mindtree.models import Post, SeriesPost
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
@@ -23,6 +23,13 @@ class CreateWordCloud(PathDTO):
         print("[make_word_cloud] post_id: ", post_id)
         self._set_user_word_cloud_object(word_list)
         self._save_word_cloud(post_id)
+
+    def make_series_word_cloud(self, word_list, series_post_id):
+        """ 단어의 list를 받아서 word cloud를 만들고, WordCloud 객체반환 """
+        print("[make_word_cloud] post_id: ", series_post_id)
+        self._set_user_word_cloud_object(word_list)
+        self._save_series_word_cloud(series_post_id)
+
 
     def _set_user_word_cloud_object(self, word_list):
         
@@ -47,6 +54,20 @@ class CreateWordCloud(PathDTO):
             post.word_cloud = super().get_user_word_cloud_file_name(post_id)
             db.session.commit()
             print(get_time_str(), "TextAnalysis: word cloud 저장 완료")
+        else:
+            print("게시물을 찾을 수 없습니다.")
+
+    def _save_series_word_cloud(self, series_post_id):
+        # 파일 저장
+        self.cloud.to_file(super().get_user_series_word_cloud_path(series_post_id))
+
+        # 파일명 db에 저장
+        if series_post_id:
+            print("[_save_word_cloud] post_id: ", series_post_id)
+            series_post = SeriesPost.query.get_or_404(series_post_id)
+            series_post.word_cloud = super().get_user_series_word_cloud_file_name(series_post_id)
+            db.session.commit()
+            print(get_time_str(), "TextAnalysis: series word cloud 저장 완료")
         else:
             print("게시물을 찾을 수 없습니다.")
 
