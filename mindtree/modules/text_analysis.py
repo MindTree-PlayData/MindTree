@@ -1,7 +1,7 @@
 import os
 import time
 from mindtree.utils.util import get_time_str
-from mindtree.models import Post
+from mindtree.models import Post, SeriesPost
 from mindtree.modules.word_cloud import CreateWordCloud
 from soylemma import Lemmatizer
 
@@ -74,6 +74,13 @@ class TextAnalysis(CreateWordCloud):
 
         print(get_time_str(), "Text Analysis 완료...")
 
+    def text_analysis_series(self, series_post_id):
+        self.ocr_text = SeriesPost.query.get(series_post_id).ocr_text_bulk
+        self._get_pos_tag()
+        self._get_target_words()  # word_list 변수에 담음.
+        super().make_series_word_cloud(self.word_list, series_post_id)
+
+
     def _get_pos_tag(self):
         print(get_time_str(), "TextAnalysis: pos tagging 시작...")
 
@@ -85,6 +92,7 @@ class TextAnalysis(CreateWordCloud):
         """ 원하는 품사에 해당하는 단어를 뽑아 리스트로 반환한다. """
         # print("self._pos_tagged_results: \n", self._pos_tagged_results)
         # 명사
+        self.word_list = []
         for pos in self._pos_tagged_results:
             if pos[1] in ["NNG", "NNP"]:
                 self.word_list.append(pos[0])

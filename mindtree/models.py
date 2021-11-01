@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable=False)
     date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy=True)  # 해당 유저의 모든 포스트 연결
+    series_posts = db.relationship('SeriesPost', backref='author', lazy=True)  # 해당 유저의 모든 포스트 연결
 
     # 토큰 발행하기 (현재 User객체에 대해서)
     def get_reset_token(self, expires_sec=1800):
@@ -55,3 +56,21 @@ class Post(db.Model):
                f"'{self.ocr_text}',\n" \
                f" '{self.sentiment}', \n'{self.word_cloud}', \n'{self.completed}'  )" # , \n " \
                 # f" '{self.stacked_bar_chart}' )"
+
+
+class SeriesPost(db.Model):  # 여러날의 포스트를 분석하여 저장하는 테이블
+    id = db.Column(db.Integer, primary_key=True)  # 자동 증가
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 참조: 'author'키로
+    title = db.Column(db.String(100), nullable=False)
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # 자동 입력됨
+    last_updated = db.Column(db.DateTime, nullable=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+    ocr_text_bulk = db.Column(db.String(500), nullable=False)
+    sentiment = db.Column(db.JSON, nullable=False)
+    word_cloud = db.Column(db.String(100), nullable=False)
+    completed = db.Column(db.Boolean, nullable=True, default=False)
+    error = db.Column(db.Boolean, nullable=True, default=False)
+
+    def __repr__(self):
+        return f"SeriesPost('{self.id}', '{self.user_id}', '{self.pub_date}',\n'{self.last_updated}', \n" \
+               f"'{self.ocr_text_bulk}',\n" \
+               f" '{self.sentiment}', \n'{self.word_cloud}', \n'{self.completed}', \n'{self.error}')"

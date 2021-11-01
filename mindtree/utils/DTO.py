@@ -69,6 +69,16 @@ class PathDTO(PathConfig):
         self._set_user_media_path()
         return os.path.join(self._user_media_path, f"{str(self._username)}_{str(post_id)}_sentiment.json")
 
+    def get_user_series_word_cloud_file_name(self, series_post_id):
+        self._set_user_variables(series_post_id)  # self._username 을 설정하는 용도.
+        return f"{self._username}_series_{str(series_post_id)}_word_cloud.png"
+
+    def get_user_series_word_cloud_path(self, series_post_id):
+        self._set_user_variables(series_post_id)
+        self._set_user_media_path()
+        return os.path.join(self._user_media_path, self.get_user_series_word_cloud_file_name(series_post_id))
+
+
 
     # 기능: 스택 바 차트 파일 이름을 반환하는 함수
     # 입력: 유저 정보를 input
