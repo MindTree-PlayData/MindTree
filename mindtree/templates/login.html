@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-    
+    <style>
+        img{float:left;}
+    </style>
     <div class="content-section container-fluid">
         <div class="d-flex justify-content-center">
 
@@ -13,20 +15,21 @@
 
             {% else %}
             {# 시작화면 #}
-                <div class="m-3" style="min-width: 500px">
-                <form method="POST" action="" class="container-fluid">
+            <img src="{{ url_for('static', filename='images/ww.jpg') }}" style="width:640px;height:420px; float:right; margin:100px 80px 20px 20px;" class="img-fluid" alt="">
+                <div class="m-3" style="width: 500px; float:right;">
+                <form method="POST" action="" class="container-fluid" style="width: 500px; float:right;">
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group">
-                    <legend class="border-bottom mb-4 mt-5">로그인</legend>
-                            <div class="mb-3">
+                    <legend class="border-bottom mb-4 mt-5" style="width: 500px; float:right;">로그인</legend>
+                            <div class="mb-3" style="width: 500px; float:right;">
                                 {{ form.email.label(class="form-label")}}
                                 {{ form.email(class="form-control form-control-lg")}}
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" style="width: 500px; float:right;">
                                 {{ form.password.label(class="form-label")}}
                                 {{ form.password(class="form-control form-control-lg")}}
                             </div>
-                            <div class="form-check mb-3">
+                            <div class="form-check mb-3" style="width: 500px; float:right;">
                                 {{ form.remember(class="form-check-input") }}
                                 {{ form.remember.label(class="form-check-label") }}
                             </div>

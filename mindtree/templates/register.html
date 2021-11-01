@@ -1,27 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
+    <style>
+        img{float:right;}
+    </style>
     <div class="content-section container">
-        <form method="POST" action="">
+        <form method="POST" action="" class="container-fluid">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4 mt-4">회원가입</legend>
-                <div class="m-3">
-                    {{ form.username.label(class="form-label")}}
+                <img src="{{ url_for('static', filename='images/open_diary.jpeg') }}" style="width:720px;height:420px; float:right; margin:100px 20px 20px 20px;" class="img-fluid" alt="">
 
-                    <!-- if: 인풋이 폼에 맞지 않으면 모든 에러에 대해서 error를 표시하라는 뜻
-                        else: 에러가 없으면 있던 인풋 칸 그대로 두기 -->
-{#                    {% if form.username.errors %}#}
-{#                        {{ form.username(class="form-control form-control-lg is-invalid") }}#}
-{#                        <div class="invalid-feedback">#}
-{#                            {% for error in form.username.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-                        {{ form.username(class="form-control form-control-lg")}}
-{#                    {% endif %}#}
-                </div>
-                <div class="m-3">
+                <legend class="border-bottom mb-4 mt-5" style="width: 400px; float:left;">회원가입</legend>
+                <div class="m-3" style="width: 400px">
                     {{ form.email.label(class="form-control-label")}}
 
 {#                    {% if form.email.errors %}#}
@@ -36,7 +25,7 @@
 {#                    {% endif %}#}
 
                 </div>
-                <div class="m-3">
+                <div class="m-3" style="width: 400px">
                     {{ form.password.label(class="form-label")}}
 
 {#                    {% if form.password.errors %}#}
@@ -50,7 +39,7 @@
                         {{ form.password(class="form-control form-control-lg")}}
 {#                    {% endif %}#}
                 </div>
-                <div class="m-3">
+                <div class="m-3" style="width: 400px">
                     {{ form.confirm_password.label(class="form-label")}}
 
 {#                    {% if form.confirm_password.errors %}#}
@@ -62,6 +51,22 @@
 {#                        </div>#}
 {#                    {% else %}#}
                         {{ form.confirm_password(class="form-control form-control-lg")}}
+{#                    {% endif %}#}
+                </div>
+                <div class="m-3" style="width: 400px">
+                    {{ form.username.label(class="form-label")}}
+
+                    <!-- if: 인풋이 폼에 맞지 않으면 모든 에러에 대해서 error를 표시하라는 뜻
+                        else: 에러가 없으면 있던 인풋 칸 그대로 두기 -->
+{#                    {% if form.username.errors %}#}
+{#                        {{ form.username(class="form-control form-control-lg is-invalid") }}#}
+{#                        <div class="invalid-feedback">#}
+{#                            {% for error in form.username.errors %}#}
+{#                                <span>{{ error }}</span>#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                    {% else %}#}
+                        {{ form.username(class="form-control form-control-lg")}}
 {#                    {% endif %}#}
                 </div>
             </fieldset>
