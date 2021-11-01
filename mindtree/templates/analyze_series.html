@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+    {{ series_post }}<br><br>
+
+    <img src="{{ url_for('get_series_word_cloud_file', series_post_id=series_post.id) }}" alt="실패">
+{% endblock %}
