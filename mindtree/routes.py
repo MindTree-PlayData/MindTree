@@ -238,6 +238,20 @@ def re_analyze(post_id):
 @app.route("/datetime", methods=['GET', 'POST'])
 @login_required
 def datetime_analyze():
+    if request.method == "POST":
+        startdate=request.form['startdate']
+        finishdate=request.form['finishdate']
+        # posts=Post.query.filter(Post.pubdate.between(startdate,finishdate))
+        # text_list=[]
+        # for post in posts:
+        #     # 모든 ocr_text를 문자열로 만들어서 리스트에 담는다
+        #     text_list.append(post.ocr_text)
+        #     # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
+        #     texts = ''.join(post.ocr_text)
+        #     # thread.py 안에 OCR 하지않고 텍스트, 감성분석만 돌리도록 메서드 분리해 놓기
+        #     App.analyzer.analyze_2(texts)
+
+        print(startdate,finishdate)
     return render_template("datetime.html")
 
 
@@ -246,4 +260,4 @@ def _jinja2_filter_datetime(date, fmt=None):
     if fmt:
         return date.strftime(fmt)
     else:
-        return date.strftime('%Y년 %m월 %d일')  # 시, 분을 지웟지만 임시적임. 나중에 한국시간으로 바꾸는 법을 찾을 것.
+        return date.strftime('%Y년 %m월 %d일')  # 시, 분을 지웟지만 임시적임. 나중에 한국시간으로 바꾸는 법을 찾을 것
