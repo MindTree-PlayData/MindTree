@@ -4,7 +4,7 @@ import os
 import requests
 
 from mindtree import APP_PATH, db
-from mindtree.models import Post
+from mindtree.models import Post, SeriesPost
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 

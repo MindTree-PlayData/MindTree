@@ -24,13 +24,6 @@ class CreateWordCloud(PathDTO):
         self._set_user_word_cloud_object(word_list)
         self._save_word_cloud(post_id)
 
-    def make_series_word_cloud(self, word_list, series_post_id):
-        """ 단어의 list를 받아서 word cloud를 만들고, WordCloud 객체반환 """
-        print("[make_series_word_cloud] series_post_id: ", series_post_id)
-        self._set_user_word_cloud_object(word_list)
-        self._save_series_word_cloud(series_post_id)
-
-
     def _set_user_word_cloud_object(self, word_list):
         
         # word cloud에 넣기 위해 str형태로 반환
