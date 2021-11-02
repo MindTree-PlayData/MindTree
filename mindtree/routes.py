@@ -102,7 +102,7 @@ def analyze(post_id):
 
     post = Post.query.get_or_404(post_id)
 
-    return render_template('analyze.html', post=post)
+    return render_template('analyze.html', post=post)# post라는 키로 post라는 데이터를 보내주는건데, 위에 post를 말한다.
 
 
 @app.route('/post/<int:post_id>/delete', methods=["POST"])

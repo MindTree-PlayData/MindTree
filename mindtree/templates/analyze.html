@@ -3,29 +3,29 @@
     <!-- 배경 이미지 -->
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-image: url('/static/images/ink_and_paper.png');
-            background-repeat:no-repeat;
-            background-size: cover;
-        }
         .font {
             font-family: 'Gowun Dodum', sans-serif;
-            font-size: 30px; 
+            font-size: 30px;
             font-weight: 600;
             text-align: center;
             margin-top: 3%;
+        }
+        footer{
             
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
         }
-        .media {
-            margin-top: 5%;
-            margin-bottom: 5%;
-        }
-        
-    </style>
+    </style>    
     <!-- 도입 문구 -->
     <div style="display: flex; justify-content: center; ">
         <span class="font">
-            <p>
+            <br><p>
                 안녕하세요.<b> {{ current_user.username }} </b> 님! :D  <br>
                 아래는 <b> {{ current_user.username }} </b> 님이 올려주신 일기 이미지입니다. <br>
             </p>
@@ -36,12 +36,30 @@
             <p style="margin-top: 10%;">
                 {{ post.last_updated | datetime }}에 올려주신 일기의 메인 감정은 {{ post.sentiment['document']['sentiment'] }}
                 <!-- 메인 감정 표현 이미지 -->
-                {% if post.sentiment['document']['sentiment'] == 'negative' %}
+                {% if post.sentiment['document']['sentiment'] == 'negative' %}                    
                     <img src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/000000/external-sad-social-media-basic-1-sbts2018-flat-sbts2018.png"/>
+                    <style>
+                        body {
+                            background-image: url('/static/images/past1.jpg');
+                            background-size: cover;
+                        }
+                    </style>
                 {% elif post.sentiment['document']['sentiment'] == 'positive'%}
                     <img src="https://img.icons8.com/ios-glyphs/30/000000/happy.png"/>
+                    <style>
+                        body {
+                            background-image: url('/static/images/past2.jpg');
+                            background-size: cover;
+                        }
+                    </style>
                 {% else %}
                     <img src="https://img.icons8.com/ios-glyphs/30/000000/neutral-emoticon--v2.png"/>
+                    <style>
+                        body {
+                            background-image: url('/static/images/past4.jpg');
+                            background-size: cover;
+                        }
+                    </style>
                 {% endif %}
                 입니다.
             </p>
@@ -57,9 +75,11 @@
             <div class="font" style="display: flex; justify-content: center;" >
                 {{ current_user.username }} 님의 메인 감정 {{ post.sentiment['document']['sentiment'] }}이 
                 {% if post.sentiment['document']['sentiment'] == 'negative' %}
+                      
                     {{ post.sentiment['document']['confidence']['negative'] }} 이네요! <br>
                     힘든 하루를 보내셨군요. <br>
                     고된 하루를 버틴 {{ current_user.username }}님 정말 고생 많으셨어요. <br> 
+                
                 {% elif post.sentiment['document']['sentiment'] == 'positive' %}
                     {{ post.sentiment['document']['confidence']['positive'] }} 이네요! <br>
                     좋은 하루를 보내셨군요! <br>
@@ -100,4 +120,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script>
+
+    <footer class="py-3 my-4" >
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+          <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+          <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+          <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+          <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2021 Team MindTree</p><br>
+    </footer>
 {% endblock %}
