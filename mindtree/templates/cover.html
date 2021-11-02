@@ -18,6 +18,20 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="static/css/styles2.css" rel="stylesheet" />
     </head>
+    <style>
+        
+        footer{
+            
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+    </style>
     <body id="page-top">
         
         <!-- Masthead-->
@@ -29,7 +43,7 @@
                         <hr class="divider" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 mb-5">MindTree에 방문하신 것을 환영합니다<br>지금 일기를 작성하고 내면의 감정상태를 확인해보세요</p>
+                        <p class="text-white-75 mb-5" style="font-family: sans-serif;">MindTree에 방문하신 것을 환영합니다<br>지금 일기를 작성하고 내면의 감정상태를 확인해보세요</p>
                         <a class="btn btn-primary btn-xl" href="{{ url_for('my_diary') }}">내 다이어리 보러가기</a>
                     </div>
                 </div>
@@ -60,11 +74,14 @@
         </section>
         
         <!-- Footer-->
-        <footer class="bg-light py-5" >
-            <div class="container px-4 px-lg-5"><div class="small text-center text-muted">더 알고 싶다면? <br><br> Team MindTree - <a href="https://github.com/GoodDonkey" style="text-decoration:none" target="_blank">장동기</a> - 
-            <a href="https://github.com/metaego" style="text-decoration:none">김수연</a> - <a href="https://github.com/mechaniclib" style="text-decoration:none">김영민</a> - 
-            <a href="https://github.com/taeyoung0103" style="text-decoration:none">박태영</a></div></div>
-            
+        <footer class="py-3 my-4" >
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+              <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+              <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+              <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+              <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+            </ul>
+            <p class="text-center text-muted">© 2021 Team MindTree</p><br>
         </footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

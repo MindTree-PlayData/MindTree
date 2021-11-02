@@ -1,5 +1,20 @@
-a {
-    text-decoration:none;
-    
-    
+.box01{
+    width: 500px;
+    height: 300px; 
+    position: relative;}
+.box01::before{
+    content: "";
+    background: url('/static/images/diary.jpg' );
+    background-size: cover;
+    opacity: 0.5;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
+.box01 h1{
+color: rgb(121, 68, 219);
+text-align: center;
+line-height: 300px;  
+position: relative;}

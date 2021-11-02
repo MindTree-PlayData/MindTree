@@ -1,15 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
     <style>
-        img{float:right;}
+        
+        footer{
+            position:absolute;
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+        body{
+            background-color: rgba(228, 215, 184, 0.3);
+        }
     </style>
-    <div class="content-section container">
-        <form method="POST" action="" class="container-fluid">
+    <div class="content-section container-fluid">
+        
+        <form method="POST" action="" class="d-flex justify-content-center">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <img src="{{ url_for('static', filename='images/open_diary.jpeg') }}" style="width:720px;height:420px; float:right; margin:100px 20px 20px 20px;" class="img-fluid" alt="">
-
-                <legend class="border-bottom mb-4 mt-5" style="width: 400px; float:left;">회원가입</legend>
+                
+                <legend class="border-bottom mb-4 mt-5" style="width: 400px; ">회원가입</legend>
                 <div class="m-3" style="width: 400px">
                     {{ form.email.label(class="form-control-label")}}
 
@@ -69,10 +83,20 @@
                         {{ form.username(class="form-control form-control-lg")}}
 {#                    {% endif %}#}
                 </div>
+                <div class="ms-3 mt-2">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
             </fieldset>
-            <div class="ms-3 mt-2">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
+            
         </form>
     </div>
+    <footer class="py-3 my-4" >
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+          <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+          <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+          <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+          <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2021 Team MindTree</p>
+    </footer>
 {% endblock %}
