@@ -131,7 +131,9 @@ def get_word_cloud_file(post_id):
 
 # 기능: analysis page에 유저의 게시글별 일기 이미지 파일 주소를 불러오기 위한 route
 # 입력: post_id와 업로드한 일기 이미지 파일 이름을 input
+        # input: f"{self._username}_{str(post_id)}.png"
 # 출력: post_id와 일기 이미지 파일 이름을 user_media_path 경로에 추가하여 출력
+        # output: send_from_directory(path.get_user_media_path(post_id), upload_img_file_name)
 # 버전/일시: ver 0.x/2021.10.26 추가
 # 개발자: 김수연
 @app.route("/results/diary_img/<path:post_id>", methods=['GET'])
@@ -146,7 +148,9 @@ def get_upload_img(post_id):
 
 # 기능: my_diary(다이어리 페이지)의 게시글에 각 게시글별 stack bar chart 이미지 주소를 전송하는 route
 # 입력: post_id와 stacked bar char 이미지 파일 이름을 input
+    # input: f"{self._username}_{str(post_id)}_stacked_bar_chart.png"
 # 출력: post_id와 stacked bar chart 이미지 파일 이름을 user_media_path 경로에 추가하여 출력
+    # output: send_from_directory(path.get_user_media_path(post_id), stacked_bar_chart_img_file_name)
 # 버전/일시: ver 0.x/2021.10.26 추가
 # 개발자: 김수연
 @app.route("/results/stacked_bar_chart/<path:post_id>", methods=['GET'])
