@@ -8,6 +8,12 @@ from mindtree.models import Post
 from mindtree.utils.DTO import PathDTO
 from mindtree.utils.util import get_time_str
 
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# matplotlib을 서버 상에서 사용할 때 GUI 사용 관련 에러가 날 수 있으므로 아래의 옵션을 설정해준다.
+plt.switch_backend('Agg')
+
 key_path = os.path.join(APP_PATH, "key", "keys.json")
 with open(key_path, "r") as keys:
     n_key = json.load(keys)
@@ -45,8 +51,9 @@ class SentimentAnalysis(PathDTO):
         ocr_text = Post.query.get(post_id).ocr_text
         self.ocr_text_data = ocr_text
 
-        if self._request():
+        if self._request():  # _request() 실패시 결과를 저장하지 않는다.
             self._save_response(post_id)
+            self.make_stacked_bar_chart(post_id)
 
     def _request(self):
         self.res = requests.post(url=self.url,
@@ -71,6 +78,22 @@ class SentimentAnalysis(PathDTO):
         post = Post.query.get_or_404(post_id)
         post.sentiment = self.json_response
         db.session.commit()
+
+    def make_stacked_bar_chart(self, post_id):
+        # 데이터 준비
+        emotion_ratio_tic = ['temp']
+        data = self.json_response["document"]["confidence"]
+
+        df = pd.DataFrame(data, index=emotion_ratio_tic)
+
+        # 그래프 생성
+        df.plot(kind='barh', stacked=True, figsize=(1,0.5), legend=False) # 그래프를 수평 스택 바 형태로 만들기(barh)
+        plt.axis('off')  # 틱 제거
+
+        # 이미지 저장
+        # transparent = True 이 옵션은 이미지 저장할 때 배경을 투명으로 저장하겠다는 옵션
+        plt.savefig(os.path.join(super().get_user_media_path(post_id), super().get_user_stacked_bar_chart_file_name(
+                post_id)), transparent = True)
 
 
 if __name__ == '__main__':

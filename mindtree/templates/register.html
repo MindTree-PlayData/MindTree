@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+
     <style>
         
         footer{
@@ -18,8 +19,8 @@
         }
     </style>
     <div class="content-section container-fluid">
-        
-        <form method="POST" action="" class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
+        <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 
@@ -27,18 +28,20 @@
                 <div class="m-3" style="width: 400px">
                     {{ form.email.label(class="form-control-label")}}
 
-{#                    {% if form.email.errors %}#}
-{#                        {{ form.email(class="form-control form-control-lg is-invalid") }}#}
-{#                        <div class="invalid-feedback">#}
-{#                            {% for error in form.email.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-                        {{ form.email(class="form-control form-control-lg")}}
-{#                    {% endif %}#}
-
-                </div>
+                        <!-- if: 인풋이 폼에 맞지 않으면 모든 에러에 대해서 error를 표시하라는 뜻
+                            else: 에러가 없으면 있던 인풋 칸 그대로 두기 -->
+    {#                    {% if form.username.errors %}#}
+    {#                        {{ form.username(class="form-control form-control-lg is-invalid") }}#}
+    {#                        <div class="invalid-feedback">#}
+    {#                            {% for error in form.username.errors %}#}
+    {#                                <span>{{ error }}</span>#}
+    {#                            {% endfor %}#}
+    {#                        </div>#}
+    {#                    {% else %}#}
+                            {{ form.email(class="form-control form-control-lg")}}
+    {#                    {% endif %}#}
+                    </div>
+                    
                 <div class="m-3" style="width: 400px">
                     {{ form.password.label(class="form-label")}}
 
@@ -56,17 +59,18 @@
                 <div class="m-3" style="width: 400px">
                     {{ form.confirm_password.label(class="form-label")}}
 
-{#                    {% if form.confirm_password.errors %}#}
-{#                        {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}#}
-{#                        <div class="invalid-feedback">#}
-{#                            {% for error in form.confirm_password.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-                        {{ form.confirm_password(class="form-control form-control-lg")}}
-{#                    {% endif %}#}
-                </div>
+    {#                    {% if form.confirm_password.errors %}#}
+    {#                        {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}#}
+    {#                        <div class="invalid-feedback">#}
+    {#                            {% for error in form.confirm_password.errors %}#}
+    {#                                <span>{{ error }}</span>#}
+    {#                            {% endfor %}#}
+    {#                        </div>#}
+    {#                    {% else %}#}
+                            {{ form.confirm_password(class="form-control form-control-lg")}}
+    {#                    {% endif %}#}
+                    </div>
+
                 <div class="m-3" style="width: 400px">
                     {{ form.username.label(class="form-label")}}
 
@@ -89,6 +93,7 @@
             </fieldset>
             
         </form>
+        </div>
     </div>
     <footer class="py-3 my-4" >
         <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
@@ -100,3 +105,4 @@
         <p class="text-center text-muted">© 2021 Team MindTree</p>
     </footer>
 {% endblock %}
+
