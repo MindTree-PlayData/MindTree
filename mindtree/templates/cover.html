@@ -44,7 +44,7 @@
                         <hr class="divider" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 mb-5" style="font-family: sans-serif;">MindTree에 방문하신 것을 환영합니다<br>지금 일기를 작성하고 내면의 감정상태를 확인해보세요</p>
+                        <p class="text-white-75 mb-5" style="font-family: sans-serif;">MindTree에 방문하신 것을 환영합니다<br>지금 일기를 작성하고 내면의 감성상태를 확인해보세요</p>
                         <a class="btn btn-primary btn-xl" href="{{ url_for('my_diary') }}">내 다이어리 보러가기</a>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                     <div class="col-lg-8 text-center">
                         <h2 class="text-white mt-0">하루가 아닌 여러날을 !</h2>
                         <hr class="divider divider-light" />
-                        <p class="text-white-75 mb-4">하루만이 아닌 여러 날을 합친 기간의 분석을 확인해보세요<br>언제부터 언제까지 기분이 좋았고 싫었는지를 확인하실수 있습니다</p>
+                        <p class="text-white-75 mb-4">하루만이 아닌 여러 날을 합친 기간의 분석을 확인해보세요<br>언제부터 언제까지 기분이 좋았고 싫었는지를 확인하실 수 있습니다</p>
                         <a class="btn btn-light btn-xl" href="{{ url_for('datetime_analyze') }}">기간분석 보러가기</a>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
         </section>
         <section class="page-section bg-dark text-white">
           <div class="container px-4 px-lg-5 text-center">
-              <h3 class="mb-4">회원가입을 아직 안하셨나요?<br><br>지금 회원가입후 서비스를 누려보세요!</h3><br>
+              <h3 class="mb-4">회원가입을 아직 안하셨나요?<br><br>지금 회원가입 후 서비스를 누려보세요!</h3><br>
               {% if current_user.is_authenticated %}
               <button class="btn btn-light btn-xl" >회원가입하러가기</button>
               {% else %}
