@@ -73,18 +73,22 @@
                 <canvas class='report d-flex mb-auto p-2 bd-highlight' id="bar-chart" width="500vw" height="500vh" style="margin-top: 2%; margin-bottom: 5%;"></canvas><br><br>
             </div>
             <div class="font" style="display: flex; justify-content: center;" >
-                {{ current_user.username }} 님의 메인 감정 {{ post.sentiment['document']['sentiment'] }}이 
+                {{ current_user.username }} 님의 메인 감정
+
                 {% if post.sentiment['document']['sentiment'] == 'negative' %}
-                      
+                {{ post.sentiment['document']['sentiment'] }} 가
                     {{ post.sentiment['document']['confidence']['negative'] }} 이네요! <br>
                     힘든 하루를 보내셨군요. <br>
                     고된 하루를 버틴 {{ current_user.username }}님 정말 고생 많으셨어요. <br> 
                 
                 {% elif post.sentiment['document']['sentiment'] == 'positive' %}
+                    {{ post.sentiment['document']['sentiment'] }} 가
                     {{ post.sentiment['document']['confidence']['positive'] }} 이네요! <br>
                     좋은 하루를 보내셨군요! <br>
                     다음날은 또 어떤 좋은 일들이 생길까요? 벌써 기대됩니다 :D <br>
+
                 {% else %}
+                {{ post.sentiment['document']['sentiment'] }} 이
                     {{ post.sentiment['document']['confidence']['neutral'] }} 이네요! <br>
                     무난한 하루를 보내셨군요. <br>
                     나쁜 일이 생기지 않은 것만으로도 좋은 날이에요! <br>
@@ -107,7 +111,7 @@
     {# 워드클라우드 #}
     <img src="{{ url_for('get_word_cloud_file', post_id=post.id )}}" alt="wordcloud" class="img-fluid rounded mx-auto d-block" style="width: 600px;"><br><br>
     <div class="font" style="margin-bottom: 5%; display: flex; justify-content: center; ">
-        MidTree의 심리분석 서비스는 여기까지입니다. <br>
+        MindTree의 심리분석 서비스는 여기까지입니다. <br>
         저희 서비스가 {{ current_user.username }}님에게 조금이라도 도움이 되었나요? <br>
         자신의 상태를 객관적으로 파악하는 것만으로도 내가 가진 고민에 큰 도움이 된답니다. <br>
         MindTree는 {{ current_user.username }}님의 건강한 자아 확립과 성장을 응원합니다 :)

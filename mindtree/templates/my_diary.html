@@ -40,11 +40,11 @@
 
         {# 업로드 링크 버튼 시작 #}
         <div class="col d-flex justify-content-end">
-{#            <div class="me-3">#}
-{#                <a class="btn btn-primary" href="" role="button">일기 입력하기</a>#}
-{#            </div>#}
+        <!--<div class="me-3">
+                <a class="btn btn-primary" href="" role="button">일기 입력하기</a>
+            </div>-->
             <div class="">
-                <a class="btn btn-primary" href="{{ url_for('upload') }}" role="button">업로드하기</a>
+                <a class="btn btn-primary" href="{{ url_for('upload') }}" role="button">일기업로드</a>
             </div>
         </div>
         {# 업로드 링크 버튼 끝 #}
@@ -82,8 +82,8 @@
                 {% else %}
                     <td class="text-nowrap"><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button>
                         <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">분석 중 다시 분석하기</a></td>
-                    <td style="color: #6c757d"> <b> 분석중... </b> </td>
-                    <td style="color: #6c757d"> <b> 분석중... </b> </td>
+                    <td style="color: #6c757d"> <b> 분석 중... </b> </td>
+                    <td style="color: #6c757d"> <b> 분석 중... </b> </td>
                 {% endif %}
                     <td>
                         {% if post.author == current_user %}
