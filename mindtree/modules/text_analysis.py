@@ -46,31 +46,31 @@ class TextAnalysis(CreateWordCloud):
         self.word_list_file_path = super().get_user_word_list_path(post_id)
         self.ocr_text_path = super().get_user_ocr_file_path(post_id)
         # --- 분석한 리스트가 있으면 그걸로 워드클라우드를 만든다.
-        if os.path.isfile(self.word_list_file_path):
-            # 워드클라우드 만들기
-            with open(self.word_list_file_path, "r") as word_list:
-                # 로컬에 워드클라우드 파일 저장, DB에 워드클라우드 파일 이름 저장.
-                super().make_word_cloud(word_list, post_id)
+        # if os.path.isfile(self.word_list_file_path):
+        #     # 워드클라우드 만들기
+        #     with open(self.word_list_file_path, "r") as word_list:
+        #         # 로컬에 워드클라우드 파일 저장, DB에 워드클라우드 파일 이름 저장.
+        #         super().make_word_cloud(word_list, post_id)
 
         # --- 분석한 리스트가 없으면 pos tagging을 실시함.
-        else:
-            # 1. POS tagging 한다.
-            # ocr text db에서 가져오기
-            self.ocr_text = Post.query.get(post_id).ocr_text
-            self._get_pos_tag()
 
-            # 2. 특정 품사를 가진 단어만 뽑아 list로 만든다.
-            self._get_target_words()
+        # 1. POS tagging 한다.
+        # ocr text db에서 가져오기
+        self.ocr_text = Post.query.get(post_id).ocr_text
+        self._get_pos_tag()
 
-            # 2-1. 단어 list를 파일로 저장한다.
-            try:
-                self._save_list()
+        # 2. 특정 품사를 가진 단어만 뽑아 list로 만든다.
+        self._get_target_words()
 
-                # 3. 워드 클라우드를 만들어 저장한다.
-                super().make_word_cloud(self.word_list, post_id)
+        # 2-1. 단어 list를 파일로 저장한다.
+        try:
+            self._save_list()
 
-            except Exception as e:
-                print("[text_analysis]: 단어 list 저장 실패", e)
+            # 3. 워드 클라우드를 만들어 저장한다.
+            super().make_word_cloud(self.word_list, post_id)
+
+        except Exception as e:
+            print("[text_analysis]: 단어 list 저장 실패", e)
 
         print(get_time_str(), "Text Analysis 완료...")
 
@@ -83,7 +83,8 @@ class TextAnalysis(CreateWordCloud):
 
     def _get_pos_tag(self):
         print(get_time_str(), "TextAnalysis: pos tagging 시작...")
-
+        if self._pos_tagged_results:
+            self._pos_tagged_results = ''
         self._pos_tagged_results = self.kkma.pos(self.ocr_text)
 
         print(get_time_str(), "TextAnalysis: pos tagging 완료...")
@@ -93,6 +94,7 @@ class TextAnalysis(CreateWordCloud):
         # print("self._pos_tagged_results: \n", self._pos_tagged_results)
         # 명사
         self.word_list = []
+        print(self._pos_tagged_results)
         for pos in self._pos_tagged_results:
             if pos[1] in ["NNG", "NNP"]:
                 self.word_list.append(pos[0])
@@ -100,25 +102,38 @@ class TextAnalysis(CreateWordCloud):
         # 용언(동사, 형용사)
         for i, pos in enumerate(self._pos_tagged_results):
             if pos[1] in ["VV", "VA"]:
+                print(pos[0])
+
                 j = 1
                 eomi_temp = []
-                while self._pos_tagged_results[i+j][1][0] == "E":  # 어간에 붙은 어미를 모두 하나로 만듬
-                    eomi_temp.append(self._pos_tagged_results[i+j][0])
-                    j += 1
-                eomis = "".join(eomi_temp)
 
-                # 어간과 어미를 합친 형태를 만든다. (conjugate)
-                # -> 어미가 여러개라도 conjugate함수 자체가 어미 하나의 str을 받게 되어 있어서 붙여서 줘야한다.
-                _conjugated = self.lemmatizer.conjugate(pos[0], eomis)[0]
-                # print("_conjugated: ", _conjugated)
-                try:
-                    # 용언의 활용형(conjugate된 단어)에서 기본형을 추출한다.
-                    _lemmatized = self.lemmatizer.lemmatize(_conjugated)[0][0]
-                    self.word_list.append(_lemmatized)
-                except Exception as e:
-                    print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
+                if self._pos_tagged_results[i+j][1][0] == "E":  # 용언 뒤에 어미가 있는지 먼저 찾는다.
+                    print(self._pos_tagged_results[i+j][1][0])
+                    while self._pos_tagged_results[i+j][1][0] == "E":  # 어간에 붙은 어미를 모두 하나로 만듬
+                        eomi_temp.append(self._pos_tagged_results[i+j][0])
+                        j += 1
 
-        # print("[_get_target_words] self.word_list: \n", self.word_list)
+                        if i + j >= len(self._pos_tagged_results):  # 이 길이보다 크면 다음 pos를 인덱싱 할 수 없어서 오류가 난다.
+                            break
+                    eomis = "".join(eomi_temp)
+                    # 어간과 어미를 합친 형태를 만든다. (conjugate)
+                    # -> 어미가 여러개라도 conjugate함수 자체가 어미 하나의 str을 받게 되어 있어서 붙여서 줘야한다.
+                    _conjugated = self.lemmatizer.conjugate(pos[0], eomis)[0]
+                    print("_conjugated: ", _conjugated)
+                    try:
+                        # 용언의 활용형(conjugate된 단어)에서 기본형을 추출한다.
+                        _lemmatized = self.lemmatizer.lemmatize(_conjugated)[0][0]
+                        print('self.lemmatizer.lemmatize(_conjugated)', self.lemmatizer.lemmatize(_conjugated))
+                        print('_lemmatized: ', _lemmatized)
+                        self.word_list.append(_lemmatized)
+                    except Exception as e:
+                        print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
+                        continue
+                else:
+                    print('[_get_target_words]: 어미 없음')
+                    self.word_list.append(pos[0])
+
+        print("[_get_target_words] self.word_list: \n", self.word_list)
 
         print(get_time_str(), f"TextAnalysis: {len(self._pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
 
