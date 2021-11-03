@@ -53,7 +53,7 @@ class SentimentAnalysis(PathDTO):
 
         if self._request():  # _request() 실패시 결과를 저장하지 않는다.
             self._save_response(post_id)
-            self.make_stacked_bar_chart(post_id)
+            self._create_stacked_bar_chart(post_id)
 
     def sentiment_analysis_series(self, series_post_id):
         self.ocr_text_data = SeriesPost.query.get(series_post_id).ocr_text_bulk
@@ -97,21 +97,25 @@ class SentimentAnalysis(PathDTO):
         series_post.sentiment = self.json_response
         db.session.commit()
 
-    def make_stacked_bar_chart(self, post_id):
-        # 데이터 준비
-        emotion_ratio_tic = ['temp']
-        data = self.json_response["document"]["confidence"]
+    def _create_stacked_bar_chart(self, post_id):
+        # 스택바 이미지 크기 설정
+        plt.rcParams["figure.figsize"] = [7.50, 3.50]
 
-        df = pd.DataFrame(data, index=emotion_ratio_tic)
+        # 데이터 준비
+        negative_ratio = self.json_response["document"]["confidence"]["negative"]
+        positive_ratio = self.json_response["document"]["confidence"]["positive"]
+        neutral_ratio = self.json_response["document"]["confidence"]["neutral"]
+        emotion = ['emotion']
 
         # 그래프 생성
-        df.plot(kind='barh', stacked=True, figsize=(1,0.5), legend=False) # 그래프를 수평 스택 바 형태로 만들기(barh)
-        plt.axis('off')  # 틱 제거
+        df = pd.DataFrame({'negative_ratio': negative_ratio, 'positive_ratio': positive_ratio, 'neutral_ratio':neutral_ratio}, index=emotion)
+        ax = df.plot.barh(stacked=True, color={'negative_ratio': 'red', 'positive_ratio': 'blue', 'neutral_ratio': 'gray'})
+        ax.get_legend().remove() # 범례 제거
+        plt.axis('off') # tic 제거
 
         # 이미지 저장
         # transparent = True 이 옵션은 이미지 저장할 때 배경을 투명으로 저장하겠다는 옵션
-        plt.savefig(os.path.join(super().get_user_media_path(post_id), super().get_user_stacked_bar_chart_file_name(
-                post_id)), transparent = True)
+        plt.savefig(os.path.join(super().get_user_media_path(post_id), super().get_user_stacked_bar_chart_file_name(post_id)), transparent = True)
 
 
 if __name__ == '__main__':
@@ -119,4 +123,5 @@ if __name__ == '__main__':
         MindTree (루트경로에서) 
         $ python mindtree/modules/sentiment_analysis.py  """
     sa = SentimentAnalysis()
-    sa.sentiment_analysis(2)
+    # sa.sentiment_analysis(2)
+    # sa._create_stacked_bar_chart(13)

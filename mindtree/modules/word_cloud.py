@@ -30,7 +30,6 @@ class CreateWordCloud(PathDTO):
         self._set_user_word_cloud_object(word_list)
         self._save_series_word_cloud(series_post_id)
 
-
     def _set_user_word_cloud_object(self, word_list):
         
         # word cloud에 넣기 위해 str형태로 반환

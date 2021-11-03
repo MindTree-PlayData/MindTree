@@ -1,17 +1,50 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        body {
+
+            background-image: url('/static/images/ink_and_paper.png');
+            background-repeat:no-repeat;
+            background-size: cover;
+        }
+        .font {
+            font-family: 'Gowun Dodum', sans-serif;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 3%;
+
+        }
+        .media {
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+        footer{
+            position:absolute;
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+
+    </style>
 <div class="container mt-4 mb-3">
     <div class="row g-1">
-        <h2 class="header-bar col">{{ current_user.username }} 님의 다이어리</h2>
+        <h2 class="header-bar col"> <b>{{ current_user.username }} 님의 다이어리</b> </h2>
 
         {# 업로드 링크 버튼 시작 #}
         <div class="col d-flex justify-content-end">
-{#            <div class="me-3">#}
-{#                <a class="btn btn-primary" href="" role="button">일기 입력하기</a>#}
-{#            </div>#}
+        <!--<div class="me-3">
+                <a class="btn btn-primary" href="" role="button">일기 입력하기</a>
+            </div>-->
             <div class="">
-                <a class="btn btn-primary" href="{{ url_for('upload') }}" role="button">업로드하기</a>
+                <a class="btn btn-primary" href="{{ url_for('upload') }}" role="button">일기업로드</a>
             </div>
         </div>
         {# 업로드 링크 버튼 끝 #}
@@ -26,7 +59,7 @@
             <th scope="col" class="text-nowrap">글 번호</th>
             <th scope="col" class="text-nowrap col-5">작성일자</th>
             <th scope="col" class="text-nowrap ">상태</th>
-            <th scope="col" class="text-nowrap ">감정비율</th>
+            <th scope="col" class="text-nowrap ">감성비율</th>
             <th scope="col" class="text-nowrap col-1">삭제</th>
         </tr>
         </thead>
@@ -37,22 +70,22 @@
                 <th scope="row">{{ post.id }}</th>
                 {% if post.completed %}
                     <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a>
-                        <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
+                    <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
 
-                    <td style="color: #1e2125"; > 분석 완료 </td>
+                    <td style="color: #1e2125";> <b>분석 완료</b> </td>
                     <td>
                        <img src="{{url_for('get_stacked_bar_chart_img', post_id=post.id)}} " style="width: 60px; margin: 0%;" alt="감정비율 그래프">
                     </td>
                 {% elif post.error == True %}
                     <td><button class="graph_container">{{ post.pub_date|datetime }}</button>
                         <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
-                    <td style="color: #f81d31"> 분석 오류 </td>
-                    <td style="color: #f81d31"> 분석 오류 </td>
+                    <td style="color: #f81d31"> <b>분석 오류</b> </td>
+                    <td style="color: #f81d31"> <b>분석 오류</b> </td>
                 {% else %}
                     <td class="text-nowrap"><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button>
                         <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">분석 중 다시 분석하기</a></td>
-                    <td style="color: #6c757d"> 분석중... </td>
-                    <td style="color: #6c757d"> 분석중... </td>
+                    <td style="color: #6c757d"> <b> 분석 중... </b> </td>
+                    <td style="color: #6c757d"> <b> 분석 중... </b> </td>
                 {% endif %}
                     <td>
                         {% if post.author == current_user %}
@@ -121,4 +154,16 @@
     
 </div>
 {#    작성 게시글 목록 끝 #}
+
+<footer class="py-3 my-4" >
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+      <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+      <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+      <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+      <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2021 Team MindTree</p>
+</footer>
+
+
 {% endblock %}

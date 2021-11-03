@@ -1,21 +1,63 @@
 {% extends "layout.html" %}
+
 {% block content %}
-    <div class="container">
-    <header class="header">
-        <h2 class="header-center mt-4"> 업로드 하기 </h2>
-    </header>
+    <style>
+            
+        footer{
+            position:absolute;
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+        body{
+            background-color: blanchedalmond;
+            background-color: rgba(228, 215, 184, 0.5);
+        }
+        
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=">
+    <div class="image">
+    <img src="{{ url_for('static', filename='images/writing.jpg') }}" style="width:100%; height: 320px; display:top;  " class="img-fluid" alt="">
+    <br><br>
+    <span class="imtext" style="margin-left: 200px; font-style: italic; display:block; font-size: 20px;"> 당신의 일기를 업로드 해주세요 </span>
     </div>
+
 
 {# 업로드 form 시작 #}
+    
     <div class="container">
-        <form class="container" action="{{ url_for('upload_file')}}" method="post" enctype="multipart/form-data">
+        
+        <form class="container" action="{{ url_for('upload_file')}}" method="post" enctype="multipart/form-data" >
             <div class="mb-3">
-                <label for="file01" class="form-label" style="margin:1%;">FILE:</label>
-                <input type="file" name="file" id= "file01" class="form-control" required><br><br>
+                
+                
+                <label for="file01" class="form-label" style="margin:1%;"></label>
+                <input type="file" name="file" id= "file01" class="form-control" style="width:600px;" required><br>
+                
             </div>
-                <button type="submit" class="btn btn-primary">업로드</button>
+            
+                <button type="submit" class="btn btn-primary">업로드</button><br><br>
         </form>
     </div>
+    
 {# 업로드 form 끝 #}
 
+
+<footer class="py-3 my-4" >
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+      <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+      <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+      <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+      <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2021 Team MindTree</p>
+</footer>
+
 {% endblock %}
+
