@@ -1,13 +1,13 @@
 // 단순 변수만 선언해서 Array 타입의 데이터로 만들면
 // 아래 차트의 data에 넣으면 된다.
-let sentiment2 = userData.document.confidence
+let sentiment2 = sentimentJson.document.confidence
 console.log(sentiment2)
 let sentimentArray = Object.values(sentiment2)
 console.log(sentimentArray)
 
-let negative_ratio = userData.document.confidence.negative
-let neutral_ratio = userData.document.confidence.neutral
-let positive_ratio = userData.document.confidence.positive
+let negative_ratio = sentimentJson.document.confidence.negative
+let neutral_ratio = sentimentJson.document.confidence.neutral
+let positive_ratio = sentimentJson.document.confidence.positive
 
 // bar chart
 new Chart(document.getElementById("bar-chart"), {

@@ -1,6 +1,6 @@
 import os
 from mindtree.config import PathConfig
-from mindtree.models import Post, User
+from mindtree.models import Post, User, SeriesPost
 
 
 class PathDTO(PathConfig):
@@ -16,6 +16,10 @@ class PathDTO(PathConfig):
         """ 경로를 찾는 메서드에서 쓰기 위한 유저 정보를 변수에 저장한다. """
         self._user_id = Post.query.get(post_id).user_id  # post_id를 받아 Post의 user_id를 조회한다.
         self._username = User.query.get(self._user_id).username  # user_id를 받아 User의 username을 조회한다.
+
+    def _set_user_variables_series(self, series_post_id):
+        self._user_id = SeriesPost.query.get(series_post_id).user_id
+        self._username = User.query.get(self._user_id).username
 
     def _set_user_media_path(self):
         """ MEDIA_PATH 에 회원의 경로를 설정한다.
@@ -34,6 +38,11 @@ class PathDTO(PathConfig):
 
     def get_user_media_path(self, post_id):
         self._set_user_variables(post_id)
+        self._set_user_media_path()
+        return self._user_media_path
+
+    def get_user_media_path_series(self, series_post_id):
+        self._set_user_variables_series(series_post_id)
         self._set_user_media_path()
         return self._user_media_path
 
@@ -70,11 +79,11 @@ class PathDTO(PathConfig):
         return os.path.join(self._user_media_path, f"{str(self._username)}_{str(post_id)}_sentiment.json")
 
     def get_user_series_word_cloud_file_name(self, series_post_id):
-        self._set_user_variables(series_post_id)  # self._username 을 설정하는 용도.
+        self._set_user_variables_series(series_post_id)  # self._username 을 설정하는 용도.
         return f"{self._username}_series_{str(series_post_id)}_word_cloud.png"
 
     def get_user_series_word_cloud_path(self, series_post_id):
-        self._set_user_variables(series_post_id)
+        self._set_user_variables_series(series_post_id)
         self._set_user_media_path()
         return os.path.join(self._user_media_path, self.get_user_series_word_cloud_file_name(series_post_id))
 
