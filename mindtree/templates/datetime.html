@@ -4,7 +4,7 @@
     <h2 class="header-bar col">분석기간을 선택하세요</h2>
     <div class="row g-1">
         <div class="col d-flex justify-content-end">
-            <form class="container" action="" method="POST" enctype="multipart/form-data">
+            <form class="container" action="{{ url_for('datetime_analyze') }}" method="POST" enctype="multipart/form-data">
                 <input class="me-3" name="startdate" type="date" required>
                 <input class="me-3" name="finishdate" type="date" required>
                 <button type="submit" class="btn btn-primary">분석하기</button>

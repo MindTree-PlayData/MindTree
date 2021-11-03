@@ -76,7 +76,7 @@ def login():
                 if user and bcrypt.check_password_hash(user.password, form.password.data):
                     login_user(user, remember=form.remember.data)
                     next_page = request.args.get(
-                        'next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
+                            'next')  # arg: get method일때 주소에서 'next'키(key)에 대한 값(value)을 가져온다. 없으면 none
 
                     return redirect(next_page) if next_page else redirect(url_for('my_diary'))
                 else:
@@ -129,15 +129,16 @@ def get_word_cloud_file(post_id):
     return send_from_directory(path.get_user_media_path(post_id), word_cloud_file_name)
 
 
-@app.route("/results/word_cloud/<path:series_post_id>", methods=['GET'])
+@app.route("/results/series_word_cloud/<path:series_post_id>", methods=['GET'])
 def get_series_word_cloud_file(series_post_id):
     """ word cloud가 저장된 미디어 폴더에 접근(results폴더)
     :param post_id: 포스트 id
     :return: 지정된 directory의 파일에 접근한다.
     """
     series_word_cloud_file_name = path.get_user_series_word_cloud_file_name(series_post_id)
-    print("[get_word_cloud_file] word_cloud_file_name: ", series_word_cloud_file_name)
-    return send_from_directory(path.get_user_media_path(series_post_id), series_word_cloud_file_name)
+    print("[get_series_word_cloud_file] series_word_cloud_file_name: ", series_word_cloud_file_name)
+    return send_from_directory(path.get_user_media_path_series(series_post_id), series_word_cloud_file_name)
+
 
 # 기능: analysis page에 유저의 게시글별 일기 이미지 파일 주소를 불러오기 위한 route
 # 입력: post_id와 업로드한 일기 이미지 파일 이름을 input
@@ -231,7 +232,6 @@ def upload_file():
 @app.route('/post/<int:post_id>/re_analyze')
 @login_required
 def re_analyze(post_id):
-
     try:
         if Apps.analyzer.is_initialized():
             t1 = Thread(target=Apps.analyzer.analysis, args=[post_id])
@@ -253,20 +253,24 @@ def re_analyze(post_id):
 @login_required
 def datetime_analyze():
     if request.method == "POST":
+        # 날짜 받아오기
         start_date = request.form['startdate']
         finish_date = request.form['finishdate']
         print(start_date, finish_date, type(start_date))
 
+        # 날짜에 해당하는 모든 포스트 쿼리
         posts = Post.query.filter(db.func.date(Post.pub_date).between(str(start_date), str(finish_date))).all()
         # print(posts)
+
+        # 모든 포스트의 ocr_text 뽑기 -> wordcloud 만드는 데에 사용
         text_list = []
         for post in posts:
             # 모든 ocr_text를 문자열로 만들어서 리스트에 담는다
             text_list.append(post.ocr_text)
+
         # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
         texts = ' '.join(text_list)
         print(texts)
-
 
         # db에 위에서 조회한 일기 텍스트를 저장한다.
         series_post = SeriesPost(title="", ocr_text_bulk=texts, sentiment={}, word_cloud="", author=current_user)
@@ -278,6 +282,34 @@ def datetime_analyze():
         # 빈도를 세서 비율을 도출 -> series_post.sentiment에 json 형식으로 저장
         # -> 이후에 html에서 시각화에 써먹으면 된다.
         #######
+
+        # 각 확률을 쓰지 않고 overall_sentiment만 쓸거면 아래의 함수를 쓰면 된다.
+        # positive이면 1, negative이면 -1, neutral이면 0을 더한다.
+        sentiment_cnt = 0
+        sentiment_func = lambda x: 1 if x == 'positive' else -1 if x == 'negative' else 0
+        neg_prob = 0
+        pos_prob = 0
+        neut_prob = 0
+
+        for post in posts:
+            overall_sentiment = post.sentiment['document']['sentiment']
+            sentiment_cnt += sentiment_func(str(overall_sentiment))
+            neg_prob += post.sentiment['document']['confidence']['negative']
+            pos_prob += post.sentiment['document']['confidence']['positive']
+            neut_prob += post.sentiment['document']['confidence']['neutral']
+
+        print(sentiment_cnt, neg_prob, pos_prob, neut_prob)
+
+        # DB에 합산된 sentiment 정보를 저장한다.
+        sentiment_dict = {'document':
+                              {'confidence':
+                                   {'negative': neg_prob,
+                                    'neutral': neut_prob,
+                                    'positive': pos_prob}
+                                }
+                          }
+        series_post.sentiment = sentiment_dict
+        db.session.commit()
 
         # 저장한 SeriesPost의 id를 조회한다.
         series_post_id = series_post.id
@@ -294,6 +326,7 @@ def datetime_analyze():
             db.session.commit()
             return render_template("datetime.html")
 
+        # 위의 과정들에서 series_post에 정보를 모두 넣은 후 다시 쿼리해서 변수에 담는다.
         series_post = SeriesPost.query.get(series_post_id)
 
         return render_template("analyze_series.html", series_post=series_post)
