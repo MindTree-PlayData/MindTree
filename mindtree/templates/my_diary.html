@@ -4,18 +4,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <style>
         body {
-            
+
             background-image: url('/static/images/ink_and_paper.png');
             background-repeat:no-repeat;
             background-size: cover;
         }
         .font {
             font-family: 'Gowun Dodum', sans-serif;
-            font-size: 30px; 
+            font-size: 30px;
             font-weight: 600;
             text-align: center;
             margin-top: 3%;
-            
+
         }
         .media {
             margin-top: 5%;
@@ -32,7 +32,7 @@
             text-decoration-color: black;
             font-weight: bold;
         }
-        
+
     </style>
 <div class="container mt-4 mb-3">
     <div class="row g-1">
@@ -70,6 +70,9 @@
                 <th scope="row">{{ post.id }}</th>
                 {% if post.completed %}
                     <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a></td>
+                    <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a>
+                    <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
+
                     <td style="color: #1e2125";> <b>분석 완료</b> </td>
                     <td>
                        <img src="{{url_for('get_stacked_bar_chart_img', post_id=post.id)}} " style="width: 60px; margin: 0%;" alt="감정비율 그래프">

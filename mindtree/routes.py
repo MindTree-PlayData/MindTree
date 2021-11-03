@@ -314,7 +314,7 @@ def datetime_analyze():
         # 저장한 SeriesPost의 id를 조회한다.
         series_post_id = series_post.id
 
-        # 이 아이디를 사용해서 분석기를 돌린다.
+        # 이 아이디를 사용해서 분석기(text 분석만 함)를 돌린다.
         try:
             if Apps.analyzer.is_initialized():
                 Apps.analyzer.analyze_series(series_post_id)

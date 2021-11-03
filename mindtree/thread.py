@@ -69,7 +69,7 @@ class ThreadedAnalysis:
             f2_m = executor.submit(self.text_analyzer.text_analysis, post_id)
             f3_m = executor.submit(self.sentiment_analyzer.sentiment_analysis, post_id)
 
-            futures.wait([f2_m, f3_m], timeout=10)
+            futures.wait([f2_m, f3_m], timeout=20)
 
             try:
                 post = Post.query.get_or_404(post_id)
