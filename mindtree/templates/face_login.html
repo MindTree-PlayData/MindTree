@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+<style>
+    #videoElement {
+	width: 500px;
+	height: 375px;
+	background-color: #666;
+}
+</style>
+
+{% block content %}
+
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="mt-5">
+            <video autoplay="true" id="videoElement"></video>
+        </div>
+    </div>
+
+    <script>
+        let video = document.querySelector("#videoElement");
+
+        if (navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+              video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+              console.log("Something went wrong!");
+            });
+        }
+    </script>
+
+{% endblock %}
