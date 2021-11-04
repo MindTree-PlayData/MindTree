@@ -88,6 +88,11 @@ def login():
     return render_template('login.html', title='login', form=form)
 
 
+@app.route('/face_login')
+def face_login():
+    return render_template("face_login.html")
+
+
 @app.route("/logout")
 def logout():
     logout_user()
