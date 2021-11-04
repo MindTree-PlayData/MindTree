@@ -5,10 +5,32 @@
     <div class="row g-1">
         <div class="col d-flex justify-content-end">
             <form class="container" action="{{ url_for('datetime_analyze') }}" method="POST" enctype="multipart/form-data">
-                <input class="me-3" name="startdate" type="date" required>
-                <input class="me-3" name="finishdate" type="date" required>
-                <button type="submit" class="btn btn-primary">분석하기</button>
+                <label>
+                    <input class="me-3" name="startdate" type="date" required>
+                </label>
+                <label>
+                    <input class="me-3" name="finishdate" type="date" required>
+                </label>
+
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#waitModal">분석하기</button>
             </form>
+
+                {# 대기 모달창 시작 #}
+                <div class="modal fade" id="waitModal" tabindex="-1" role="dialog" aria-labelledby="waitModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="waitModalLabel">기다려 주세요</h5>
+                            </div>
+
+                            <div class="modal-body">
+                                잠시만 기다려 주세요...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# 대기 모달창 끝 #}
         </div>
     </div>
 </div>

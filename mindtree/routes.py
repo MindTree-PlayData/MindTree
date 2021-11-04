@@ -1,7 +1,7 @@
 import os
 from threading import Thread
 from concurrent import futures
-
+from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
@@ -260,13 +260,30 @@ def datetime_analyze():
 
         # 날짜에 해당하는 모든 포스트 쿼리
         posts = Post.query.filter(db.func.date(Post.pub_date).between(str(start_date), str(finish_date))).all()
-        # print(posts)
+        print(posts, type(posts))
+
+        user_id = current_user.id
 
         # 모든 포스트의 ocr_text 뽑기 -> wordcloud 만드는 데에 사용
         text_list = []
+        date_list = []
+        sentiment_list = []
+
+        neg_list = []
+        pos_list = []
+        neu_list = []
+
         for post in posts:
             # 모든 ocr_text를 문자열로 만들어서 리스트에 담는다
             text_list.append(post.ocr_text)
+            date_format = post.pub_date.strftime('%Y-%m-%d')
+            date_list.append(str(date_format))
+            sentiment_list.append(post.sentiment)
+
+            for sentiment in sentiment_list:
+                neg_list.append(sentiment['document']['confidence']['negative'])
+                pos_list.append(sentiment['document']['confidence']['positive'])
+                neu_list.append(sentiment['document']['confidence']['neutral'])
 
         # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
         texts = ' '.join(text_list)
@@ -329,9 +346,15 @@ def datetime_analyze():
         # 위의 과정들에서 series_post에 정보를 모두 넣은 후 다시 쿼리해서 변수에 담는다.
         series_post = SeriesPost.query.get(series_post_id)
 
-        return render_template("analyze_series.html", series_post=series_post)
+        return render_template("analyze_series.html", series_post=series_post, posts=posts,
+                               pos_list=pos_list, neg_list=neg_list, neu_list=neu_list,
+                               date_list=date_list)
     return render_template("datetime.html")
 
+
+@app.route('/get_data')
+def get_data():
+    pass
 
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):

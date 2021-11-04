@@ -12,7 +12,9 @@ class CreateWordCloud(PathDTO):
         super().__init__()
         # WordCloud 객체 initialization
         self.wc = WordCloud(font_path='fonts/NanumSquareRoundB.ttf',
-                            background_color="white", max_font_size=100, max_words=10)
+                            background_color=None, max_font_size=100, max_words=10,
+                            stopwords={'하다', '이다', '되다', '있다'},
+                            mode='RGBA')
         self.word_list: str = ''
         self.cloud: object = None
 
