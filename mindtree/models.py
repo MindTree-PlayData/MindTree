@@ -3,6 +3,7 @@ from mindtree import db, login_manager
 from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from pytz import timezone
 
 
 @login_manager.user_loader
@@ -16,7 +17,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_joined = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('Asia/Seoul')))
     posts = db.relationship('Post', backref='author', lazy=True)  # 해당 유저의 모든 포스트 연결
     series_posts = db.relationship('SeriesPost', backref='author', lazy=True)  # 해당 유저의 모든 포스트 연결
 
@@ -43,8 +44,8 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # 자동 증가
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 참조: 'author'키로
     title = db.Column(db.String(100), nullable=False)
-    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # 자동 입력됨
-    last_updated = db.Column(db.DateTime, nullable=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('Asia/Seoul')))  # 자동 입력됨
+    last_updated = db.Column(db.DateTime, nullable=True, default=datetime.now(timezone('Asia/Seoul')), onupdate=datetime.now(timezone('Asia/Seoul')))
     ocr_text = db.Column(db.String(500), nullable=False)
     sentiment = db.Column(db.JSON, nullable=False)
     word_cloud = db.Column(db.String(100), nullable=False)
@@ -62,8 +63,8 @@ class SeriesPost(db.Model):  # 여러날의 포스트를 분석하여 저장하�
     id = db.Column(db.Integer, primary_key=True)  # 자동 증가
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 참조: 'author'키로
     title = db.Column(db.String(100), nullable=False)
-    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # 자동 입력됨
-    last_updated = db.Column(db.DateTime, nullable=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('Asia/Seoul')))  # 자동 입력됨
+    last_updated = db.Column(db.DateTime, nullable=True, default=datetime.now(timezone('Asia/Seoul')), onupdate=datetime.now(timezone('Asia/Seoul')))
     ocr_text_bulk = db.Column(db.String(500), nullable=False)
     sentiment = db.Column(db.JSON, nullable=False)
     word_cloud = db.Column(db.String(100), nullable=False)
