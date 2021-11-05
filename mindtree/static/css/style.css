@@ -38,6 +38,7 @@
     border-color:#ffecb5
 }
 
+/* analyze_series.html 의 배경 이미지를 정하는 css 시작 */
 body.positive{
     width: 100%;
     height: 100%;
@@ -101,6 +102,78 @@ body.neutral::after {
     left: 0;
     z-index: -1;
 }
+/* analyze_series.html 의 배경 이미지를 정하는 css 끝
+(analyze.html의 css와 같음)*/
+
+
+
+/* analyze.html 의 배경 이미지를 정하는 css 시작 */
+body.analyze-negative {
+    /*background-image: url('/static/images/past1.jpg');*/
+    /*background-size: cover;*/
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body.analyze-negative::after {
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-image: url('/static/images/past1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: saturate(30%) blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+body.analyze-positive {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body.analyze-positive::after {
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-image: url('/static/images/past2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: saturate(80%) blur(15px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+body.analyze-neutral {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body.analyze-neutral::after {
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-image: url('/static/images/past4.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: saturate(70%) blur(15px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* analyze.html 의 배경 이미지를 정하는 css 끝 */
 
 .canvas {
     width: 70%;
