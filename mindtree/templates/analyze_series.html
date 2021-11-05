@@ -3,11 +3,16 @@
     <script>
         let sentimentJson = {{ series_post.sentiment | tojson }}
 
-        const posArray = Object.values({{ pos_list | tojson }})
-        const negArray = Object.values({{ neg_list | tojson }})
-        const neuArray = Object.values({{ neu_list | tojson }})
+        const posArray = Object.values({{ pos_list }})
+        const negArray = Object.values({{ neg_list }})
+        const neuArray = Object.values({{ neu_list }})
+        const dateArray = Object.values({{ date_list | tojson}})
 
-        const dateArray = Object.values({{ date_list | tojson }})
+        console.log(posArray)
+        console.log(negArray)
+        console.log(neuArray)
+        console.log(dateArray)
+
     </script>
 
 {% endblock %}
