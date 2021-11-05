@@ -1,4 +1,17 @@
 {% extends "layout.html" %}
+{% block javascript %}
+    <script>
+        let sentimentJson = {{ series_post.sentiment | tojson }}
+
+        const posArray = Object.values({{ pos_list | tojson }})
+        const negArray = Object.values({{ neg_list | tojson }})
+        const neuArray = Object.values({{ neu_list | tojson }})
+
+        const dateArray = Object.values({{ date_list | tojson }})
+    </script>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container-fluid border-dark border-3 d-flex flex-column">
@@ -10,32 +23,22 @@
         </div>
     </div>
 
-    <h1 class="d-flex justify-content-center mt-5"><b>{{ posts | length }} 일 간의 워드클라우드</b></h1>
+    <h1 class="d-flex justify-content-center mt-5"><b>{{ posts | length }}개의 일기를 분석한 워드클라우드 입니다.</b></h1>
     <div class="d-flex justify-content-center m-3 border">
         <img src="{{ url_for('get_series_word_cloud_file', series_post_id=series_post.id) }}" alt="실패">
     </div>
 
-    <h1 class="d-flex justify-content-center mt-5"><b>{{ posts | length }}일 간의 감성 비율</b></h1>
-    <h2 class="d-flex justify-content-center mt-3">부정{{ series_post.sentiment['document']['confidence']['negative'] }}</h2>
-    <h2 class="d-flex justify-content-center mt-3">긍정{{ series_post.sentiment['document']['confidence']['positive'] }}</h2>
-    <h2 class="d-flex justify-content-center mt-3">중립{{ series_post.sentiment['document']['confidence']['neutral'] }}</h2>
-{#    <h2 class="d-flex justify-content-center mt-3">{{  }}</h2>#}
+    <h1 class="d-flex justify-content-center mt-5"><b>{{ posts | length }}개의 일기를 분석한 감성 비율 입니다.</b></h1>
+
+    <h2 class="d-flex justify-content-center mt-5">
+        분석결과, &nbsp<span id="sentiment"> </span>이 가장 많은 감정이었습니다
+    </h2>
+
     <div class="d-flex justify-content-center m-3 border" >
         <canvas class='report border' id="doughnut-chart" width="500vw" height="500vh" style=" margin-top: 5%; margin-bottom: 5%;"></canvas><br><br>
     </div>
 
 </div>
-    <script>
-        let sentimentJson = {{ series_post.sentiment | tojson }}
-
-        const posArray = Object.values({{ pos_list | tojson }})
-        const negArray = Object.values({{ neg_list | tojson }})
-        const neuArray = Object.values({{ neu_list | tojson }})
-
-        const dateArray = Object.values({{ date_list | tojson }})
-        {#console.log(dateArray)#}
-
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script>
 {% endblock %}

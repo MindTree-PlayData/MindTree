@@ -261,10 +261,15 @@ $(function() {
 
     if (neg_ratio>0.333){
         $(document.body).toggleClass('negative')
+        $('#sentiment').text('\'부정\'')
     }else if(pos_ratio>0.333){
         $(document.body).toggleClass('positive')
+        $('#sentiment').text('\'긍정\'')
+
     }else{
         $(document.body).toggleClass('neutral')
+        $('#sentiment').text('\'중립\'')
+
     }
     // $("div").css("position", "relative")
 
