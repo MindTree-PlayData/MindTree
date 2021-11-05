@@ -248,18 +248,24 @@ new Chart(document.getElementById("line-chart"), {
 // })
 
 
-// $(function() {
-//     $.ajax({
-//         url: 'http://127.0.0.1:5000/get_data',
-//         type: 'get'
-//         dataType: 'json'
-//         success: function (posts){
-//             let pubDateArr = [];
-//             let postsJson = JSON.parse(posts)
-//             for (let post of postsJson) {
-//                 pubDateArr.push(post['pub_date'])
-//                 console.log(pubDateArr)
-//             }
-//         }
-//     })
-// })
+$(function() {
+    const sum = sentimentArray.reduce((a,b)=>(a+b));
+
+    // sentimentArray[0]: 부정, [1]: 중립, [2]: 긍정
+    const neg_ratio = sentimentArray[0]/sum
+    const neu_ratio = sentimentArray[1]/sum
+    const pos_ratio = sentimentArray[2]/sum
+
+    console.log(pos_ratio)
+    console.log(neg_ratio)
+
+    if (neg_ratio>0.333){
+        $(document.body).toggleClass('negative')
+    }else if(pos_ratio>0.333){
+        $(document.body).toggleClass('positive')
+    }else{
+        $(document.body).toggleClass('neutral')
+    }
+    // $("div").css("position", "relative")
+
+    })

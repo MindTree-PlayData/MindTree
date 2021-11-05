@@ -4,11 +4,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <style>
         body {
-
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        body::after {
+            width: 100%;
+            height: 120%;
+            content: '';
+            {#background-color: #000;#}
             background-image: url('/static/images/ink_and_paper.png');
             background-repeat:no-repeat;
             background-size: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.9;
+            filter: blur(10px);
         }
+
         .font {
             font-family: 'Gowun Dodum', sans-serif;
             font-size: 30px;
@@ -21,7 +37,7 @@
             margin-top: 5%;
             margin-bottom: 5%;
         }
-        footer{
+        footer::after{
             position:absolute;
             bottom:10%;
             margin:0;
@@ -69,13 +85,14 @@
             <tr>
                 <th scope="row">{{ post.id }}</th>
                 {% if post.completed %}
-                    <td><a type='button' class='btn btn-outline-success' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a>
+                    <td><a type='button' class='btn btn-outline-success ' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a>
                     <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
 
                     <td style="color: #1e2125";> <b>분석 완료</b> </td>
                     <td>
                        <img src="{{url_for('get_stacked_bar_chart_img', post_id=post.id)}} " style="width: 60px; margin: 0%;" alt="감정비율 그래프">
                     </td>
+
                 {% elif post.error == True %}
                     <td><button class="graph_container">{{ post.pub_date|datetime }}</button>
                         <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
@@ -165,5 +182,8 @@
     <p class="text-center text-muted">© 2021 Team MindTree</p>
 </footer>
 
+{#<script>#}
+{#    $("div").css("position", "relative")#}
+{#</script>#}
 
 {% endblock %}

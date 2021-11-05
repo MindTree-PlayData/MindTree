@@ -351,11 +351,6 @@ def datetime_analyze():
                                date_list=date_list)
     return render_template("datetime.html")
 
-
-@app.route('/get_data')
-def get_data():
-    pass
-
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):
     if fmt:

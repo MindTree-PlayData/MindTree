@@ -37,3 +37,72 @@
     background-color:#fff3cd;
     border-color:#ffecb5
 }
+
+body.positive{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+
+}
+body.positive::after {
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-image: url('/static/images/past2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: saturate(30%) blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+
+}
+
+body.negative {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body.negative::after {
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-image: url('/static/images/past1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: saturate(30%) blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+body.negative {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body.neutral::after {
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-image: url('/static/images/past4.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: saturate(30%) blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.canvas {
+    width: 70%;
+    height: 30%;
+}
