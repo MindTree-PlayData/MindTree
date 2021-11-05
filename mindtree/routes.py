@@ -289,7 +289,11 @@ def datetime_analyze():
                 neg_list.append(sentiment['document']['confidence']['negative'])
                 pos_list.append(sentiment['document']['confidence']['positive'])
                 neu_list.append(sentiment['document']['confidence']['neutral'])
-
+        # 순서를 바꿔야 선 그래프를 그릴 때 맞는 방향으로 나온다.
+        neg_list.reverse()
+        pos_list.reverse()
+        neu_list.reverse()
+        date_list.reverse()
         # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
         texts = ' '.join(text_list)
         print(texts)

@@ -45,7 +45,7 @@ class OCR(PathDTO):
         # 이미지 파일을 가져온다.
         with io.open(self.image_path, 'rb') as image_file:
             self.image_content = image_file.read()
-            print("[OCR.ocr_main] image file type ", type(self.image_content))
+            # print("[OCR.ocr_main] image file type ", type(self.image_content))
 
         # GOOGLE VISION API 사용하여 OCR 실시.
         self._ocr_request()

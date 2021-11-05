@@ -94,7 +94,7 @@ class TextAnalysis(CreateWordCloud):
         # print("self._pos_tagged_results: \n", self._pos_tagged_results)
         # 명사
         self.word_list = []
-        print(self._pos_tagged_results)
+        # print(self._pos_tagged_results)
         for pos in self._pos_tagged_results:
             if pos[1] in ["NNG", "NNP"]:
                 self.word_list.append(pos[0])
@@ -102,13 +102,13 @@ class TextAnalysis(CreateWordCloud):
         # 용언(동사, 형용사)
         for i, pos in enumerate(self._pos_tagged_results):
             if pos[1] in ["VV", "VA"]:
-                print(pos[0])
+                # print(pos[0])
 
                 j = 1
                 eomi_temp = []
 
                 if self._pos_tagged_results[i+j][1][0] == "E":  # 용언 뒤에 어미가 있는지 먼저 찾는다.
-                    print(self._pos_tagged_results[i+j][1][0])
+                    # print(self._pos_tagged_results[i+j][1][0])
                     while self._pos_tagged_results[i+j][1][0] == "E":  # 어간에 붙은 어미를 모두 하나로 만듬
                         eomi_temp.append(self._pos_tagged_results[i+j][0])
                         j += 1
@@ -119,21 +119,21 @@ class TextAnalysis(CreateWordCloud):
                     # 어간과 어미를 합친 형태를 만든다. (conjugate)
                     # -> 어미가 여러개라도 conjugate함수 자체가 어미 하나의 str을 받게 되어 있어서 붙여서 줘야한다.
                     _conjugated = self.lemmatizer.conjugate(pos[0], eomis)[0]
-                    print("_conjugated: ", _conjugated)
+                    # print("_conjugated: ", _conjugated)
                     try:
                         # 용언의 활용형(conjugate된 단어)에서 기본형을 추출한다.
                         _lemmatized = self.lemmatizer.lemmatize(_conjugated)[0][0]
-                        print('self.lemmatizer.lemmatize(_conjugated)', self.lemmatizer.lemmatize(_conjugated))
-                        print('_lemmatized: ', _lemmatized)
+                        # print('self.lemmatizer.lemmatize(_conjugated)', self.lemmatizer.lemmatize(_conjugated))
+                        # print('_lemmatized: ', _lemmatized)
                         self.word_list.append(_lemmatized)
                     except Exception as e:
-                        print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
+                        # print(f"lemmatization error: {e}\n\t->오류 발생 어간: {pos[0]}")
                         continue
                 else:
                     print('[_get_target_words]: 어미 없음')
                     self.word_list.append(pos[0])
 
-        print("[_get_target_words] self.word_list: \n", self.word_list)
+        # print("[_get_target_words] self.word_list: \n", self.word_list)
 
         print(get_time_str(), f"TextAnalysis: {len(self._pos_tagged_results)}중에 {len(self.word_list)}개를 추출하였습니다.")
 

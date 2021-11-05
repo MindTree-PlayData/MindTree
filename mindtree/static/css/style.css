@@ -38,6 +38,54 @@
     border-color:#ffecb5
 }
 
+/* my_diary.html의 body를 정하는 css 시작 */
+body.my-diary {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+body.my-diary::after {
+    width: 100vw;
+    height: 100vh;
+    content: '';
+    /*background-color: beige;*/
+    background-image: url('/static/images/ink_and_paper.png');
+    background-repeat:no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.4;
+    filter: blur(10px);
+}
+/* my_diary.html의 body를 정하는 css 끝 */
+
+/* datetime.html의 body를 정하는 css 시작 */
+body.datetime {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+body.datetime::after {
+    width: 100vw;
+    height: 100vh;
+    content: '';
+    background-color: gainsboro;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.5;
+    filter: blur(10px);
+}
+/* datetime.html의 body를 정하는 css 끝 */
+
+
+
+
 /* analyze_series.html 의 배경 이미지를 정하는 css 시작 */
 body.positive{
     width: 100%;
