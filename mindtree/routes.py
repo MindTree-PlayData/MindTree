@@ -289,6 +289,7 @@ def datetime_analyze():
                 neg_list.append(sentiment['document']['confidence']['negative'])
                 pos_list.append(sentiment['document']['confidence']['positive'])
                 neu_list.append(sentiment['document']['confidence']['neutral'])
+
         # 순서를 바꿔야 선 그래프를 그릴 때 맞는 방향으로 나온다.
         neg_list.reverse()
         pos_list.reverse()
