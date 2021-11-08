@@ -257,6 +257,12 @@ def re_analyze(post_id):
 @app.route("/datetime", methods=['GET', 'POST'])
 @login_required
 def datetime_analyze():
+
+    return render_template("datetime.html")
+
+@app.route('/series_analysis', methods=['GET', 'POST'])
+@login_required
+def series_analysis():
     if request.method == "POST":
         # 날짜 받아오기
         start_date = request.form['startdate']
@@ -283,18 +289,11 @@ def datetime_analyze():
             text_list.append(post.ocr_text)
             date_format = post.pub_date.strftime('%Y-%m-%d')
             date_list.append(str(date_format))
-            sentiment_list.append(post.sentiment)
 
-            for sentiment in sentiment_list:
-                neg_list.append(sentiment['document']['confidence']['negative'])
-                pos_list.append(sentiment['document']['confidence']['positive'])
-                neu_list.append(sentiment['document']['confidence']['neutral'])
+            neg_list.append(post.sentiment['document']['confidence']['negative'])
+            pos_list.append(post.sentiment['document']['confidence']['positive'])
+            neu_list.append(post.sentiment['document']['confidence']['neutral'])
 
-        # 순서를 바꿔야 선 그래프를 그릴 때 맞는 방향으로 나온다.
-        neg_list.reverse()
-        pos_list.reverse()
-        neu_list.reverse()
-        date_list.reverse()
         # 리스트에 담은 문자열을 모두 하나의 문자열로 만든다
         texts = ' '.join(text_list)
         print(texts)
@@ -359,7 +358,6 @@ def datetime_analyze():
         return render_template("analyze_series.html", series_post=series_post, posts=posts,
                                pos_list=pos_list, neg_list=neg_list, neu_list=neu_list,
                                date_list=date_list)
-    return render_template("datetime.html")
 
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):
