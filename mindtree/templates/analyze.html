@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- 배경 이미지 -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        .font {
+            font-family: 'Gowun Dodum', sans-serif;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 3%;
+        }
+        footer{
+            
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+    </style>    
+    <!-- 도입 문구 -->
+    <div style="display: flex; justify-content: center; ">
+        <span class="font">
+            <br><p>
+                안녕하세요.<b> {{ current_user.username }} </b> 님! :D  <br>
+                아래는 <b> {{ current_user.username }} </b> 님이 올려주신 일기 이미지입니다. <br>
+            </p>
+            <!-- 일기 이미지 -->
+            <div class="media">
+                <img src="{{ url_for('get_upload_img', post_id=post.id )}}" alt="diary image" class="img-fluid rounded mx-auto d-block"><br><br>
+            </div>
+            <p style="margin-top: 10%;">
+                {{ post.last_updated | datetime }}에 올려주신 일기의 메인 감정은 {{ post.sentiment['document']['sentiment'] }}
+                <!-- 메인 감정 표현 이미지 -->
+                {% if post.sentiment['document']['sentiment'] == 'negative' %}                    
+                    <img src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/000000/external-sad-social-media-basic-1-sbts2018-flat-sbts2018.png"/>
+                    <script>$(document.body).toggleClass('analyze-negative')</script>
+                {% elif post.sentiment['document']['sentiment'] == 'positive'%}
+                    <img src="https://img.icons8.com/ios-glyphs/30/000000/happy.png"/>
+                    <script>$(document.body).toggleClass('analyze-positive')</script>
+                {% else %}
+                    <img src="https://img.icons8.com/ios-glyphs/30/000000/neutral-emoticon--v2.png"/>
+                    <script>$(document.body).toggleClass('analyze-neutral')</script>
+                {% endif %}
+                입니다.
+            </p>
+        </span>
+    </div>
+    <div class="content-section container-fluid mt-5">
+        <h1 class="d-flex justify-content-center">{{ current_user.username }}님의 감정분석상태</h1>
+        {# 차트 #}
+        <div class="align-items-start flex-column" >
+            <div class="d-flex justify-content-center m-3" >
+                <canvas class='report d-flex mb-auto p-2 bd-highlight' id="bar-chart" width="500vw" height="500vh" style="margin-top: 2%; margin-bottom: 5%;"></canvas><br><br>
+            </div>
+            <div class="font" style="display: flex; justify-content: center;" >
+                {{ current_user.username }} 님의 메인 감정
+
+                {% if post.sentiment['document']['sentiment'] == 'negative' %}
+                {{ post.sentiment['document']['sentiment'] }} 가
+                    {{ post.sentiment['document']['confidence']['negative'] }} 이네요! <br>
+                    힘든 하루를 보내셨군요. <br>
+                    고된 하루를 버틴 {{ current_user.username }}님 정말 고생 많으셨어요. <br> 
+                
+                {% elif post.sentiment['document']['sentiment'] == 'positive' %}
+                    {{ post.sentiment['document']['sentiment'] }} 가
+                    {{ post.sentiment['document']['confidence']['positive'] }} 이네요! <br>
+                    좋은 하루를 보내셨군요! <br>
+                    다음날은 또 어떤 좋은 일들이 생길까요? 벌써 기대됩니다 :D <br>
+
+                {% else %}
+                {{ post.sentiment['document']['sentiment'] }} 이
+                    {{ post.sentiment['document']['confidence']['neutral'] }} 이네요! <br>
+                    무난한 하루를 보내셨군요. <br>
+                    나쁜 일이 생기지 않은 것만으로도 좋은 날이에요! <br>
+                    다음날은 오늘보다 얼마나 더 좋은 일들이 생길까요? <br>
+                    앞으로도 꽃길만 걷도록 MindTree가 응원합니다!
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-center m-3" >
+                <canvas class='report' id="doughnut-chart" width="500vw" height="500vh" style=" margin-top: 5%; margin-bottom: 5%;"></canvas><br><br>
+            </div>
+        </div>
+    </div>
+    <span class="font" style="margin-bottom: 5%; display: flex; justify-content: center; ">
+        아래는 일기에 언급된 {{ current_user.username }} 님의 생각을 단어 구름 형태로 나타내보았어요. <br>
+        가장 크게 눈에 띄는 단어가 평소에 가장 많이 생각하고 있는 단어입니다. <br>
+        어떤 단어가 제일 크게 보이나요? <br>
+        그 단어가  {{ current_user.username }}님의 메인 감정에 제일 크게 영향을 미치는 단어인가요? <br>
+        단어 구름의 단어들을 보니 어떤 생각이 드나요?
+    </span>
+    {# 워드클라우드 #}
+    <img src="{{ url_for('get_word_cloud_file', post_id=post.id )}}" alt="wordcloud" class="img-fluid rounded mx-auto d-block" style="width: 600px;"><br><br>
+    <div class="font" style="margin-bottom: 5%; display: flex; justify-content: center; ">
+        MindTree의 심리분석 서비스는 여기까지입니다. <br>
+        저희 서비스가 {{ current_user.username }}님에게 조금이라도 도움이 되었나요? <br>
+        자신의 상태를 객관적으로 파악하는 것만으로도 내가 가진 고민에 큰 도움이 된답니다. <br>
+        MindTree는 {{ current_user.username }}님의 건강한 자아 확립과 성장을 응원합니다 :)
+    </div>
+    
+    <script>
+        // 'static/js/**.js' 파일에서 변수를 사용하기 위해서는 여기서 정의해둬야 한다.
+        let sentimentJson = {{ post.sentiment | tojson }}
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js')}}"></script>
+
+    <footer class="py-3 my-4" >
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+          <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+          <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+          <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+          <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2021 Team MindTree</p><br>
+    </footer>
+{% endblock %}

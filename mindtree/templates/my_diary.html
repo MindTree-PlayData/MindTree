@@ -1,0 +1,172 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <script>
+    $(document.body).toggleClass('my-diary')
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        .font {
+            font-family: 'Gowun Dodum', sans-serif;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 3%;
+
+        }
+        .media {
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+        footer::after{
+            position:absolute;
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+
+    </style>
+<div class="container mt-4 mb-3">
+    <div class="row g-1">
+        <h2 class="header-bar col"> <b>{{ current_user.username }} 님의 다이어리</b> </h2>
+
+        {# 업로드 링크 버튼 시작 #}
+        <div class="col d-flex justify-content-end">
+        <!--<div class="me-3">
+                <a class="btn btn-primary" href="" role="button">일기 입력하기</a>
+            </div>-->
+            <div class="">
+                <a class="btn btn-primary" href="{{ url_for('upload') }}" role="button">일기업로드</a>
+            </div>
+        </div>
+        {# 업로드 링크 버튼 끝 #}
+    </div>
+</div>
+
+{# 작성 게시글 목록 시작 #}
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" class="text-nowrap">글 번호</th>
+            <th scope="col" class="text-nowrap col-5">작성일자</th>
+            <th scope="col" class="text-nowrap ">상태</th>
+            <th scope="col" class="text-nowrap ">감성비율</th>
+            <th scope="col" class="text-nowrap col-1">삭제</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for post in posts.items %}
+            <tr>
+                <th scope="row">{{ post.id }}</th>
+                {% if post.completed %}
+                    <td>
+                        <a type='button' class='btn btn-outline-success ' href="{{ url_for('analyze', post_id=post.id) }}">{{ post.pub_date|datetime }}</a>
+{#                        <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a>#}
+                    </td>
+
+                    <td style="color: #1e2125";> <b>분석 완료</b> </td>
+                    <td>
+                       <img src="{{url_for('get_stacked_bar_chart_img', post_id=post.id)}} " style="width: 60px; margin: 0%;" alt="감정비율 그래프">
+                    </td>
+
+                {% elif post.error == True %}
+                    <td><button class="graph_container">{{ post.pub_date|datetime }}</button>
+                        <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">다시 분석하기</a></td>
+                    <td style="color: #f81d31"> <b>분석 오류</b> </td>
+                    <td style="color: #f81d31"> <b>분석 오류</b> </td>
+                {% else %}
+                    <td class="text-nowrap"><button class="btn btn-outline-dark">{{ post.pub_date|datetime }}</button>
+                        <a type="button" class="btn btn-secondary ms-5 btn-sm text-nowrap" href="{{ url_for('re_analyze', post_id=post.id) }}">분석 중 다시 분석하기</a></td>
+                    <td style="color: #6c757d"> <b> 분석 중... </b> </td>
+                    <td style="color: #6c757d"> <b> 분석 중... </b> </td>
+                {% endif %}
+                    <td>
+                        {% if post.author == current_user %}
+                            <button type="button" class="btn btn-danger btn-sm m-1 text-nowrap" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">삭제</button>
+
+                            {# 삭제 확인 모달창 시작 #} {# 각 모달창 마다 고유한 id가 있어야 정상적으로 삭제된다. #}
+                            <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            정말로 삭제하시겠습니까?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                            <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                                                <input type="submit" class="btn btn-danger" value="삭제하기">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {# 삭제 확인 모달창 끝 #}
+                        {% endif %}
+                    </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# pagination 시작 #}
+    <div id="pages">
+        {# previous #}
+        {% if posts.page > 1 %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=posts.page - 1) }}">previous</a>
+        {% elif  posts.page == 1 %}
+            <button class="btn btn-outline-info mb-4">previous</button>
+        {% endif %}
+
+        {# pages #}
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=3) %}
+            {% if page_num %}  {# iter할 페이지가 있으면(page_num하나에 좌우 3개까지 iter 페이지라고 정의함.) #}
+                {% if posts.page == page_num %}  {# 현재 포스트들이 있는 페이지와  iter하는 페이지가 같으면 #}
+                    <button class="btn btn-info mb-4">{{ page_num }}</button>
+                {% else %}  {# 예시) 현재 포스트들의 페이지는 1인데 표시할 iter 페이지는 2일 때.#}
+                    <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+
+        {# next #}
+        {% if posts.page < (posts.total/posts.per_page) %}  {# 마지막 페이지가 아닐 때 #}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('my_diary', page=posts.page + 1) }}">next</a>
+        {% else %}  {# 마지막 페이지일 때 #}
+            <button class="btn btn-outline-info mb-4">next</button>
+        {% endif %}
+
+    </div>
+    {# pagination 끝 #}
+    
+</div>
+{#    작성 게시글 목록 끝 #}
+
+<footer class="py-3 my-4" >
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+      <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+      <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+      <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+      <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2021 Team MindTree</p>
+</footer>
+
+{#<script>#}
+{#    $("div").css("position", "relative")#}
+{#</script>#}
+
+{% endblock %}

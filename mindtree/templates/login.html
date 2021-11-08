@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block content %}
+    <style>
+        
+        footer{
+            position:absolute;
+            bottom:10%;
+            margin:0;
+            padding:0;
+            height:0%;
+            display:block;
+            width: 100%;
+            text-decoration-color: black;
+            font-weight: bold;
+        }
+        body{
+            background-color: rgba(228, 215, 184, 0.3);
+        }
+        
+    </style>
+    <div class="content-section container-fluid">
+        <div class="d-flex justify-content-center">
+            
+            {# 로그인상태의 홈화면 #}
+            {% if current_user.is_authenticated %}
+                <div class="col mt-5">
+                    <h3 class="text-center h3 text-muted mb-3"> 내 다이어리 보기 </h3>
+                    <a href="{{ url_for('my_diary') }}"><center><img src="{{ url_for('static', filename='images/open_diary.jpeg') }}" style="width:640px;height:360px;" class="img-fluid" alt=""></center></a>
+                </div>
+
+            {% else %}
+            {# 시작화면 #}
+              
+                <div class="m-3" style="width:500px;">
+                
+                <form method="POST" action="" class="container-fluid" >
+                    {{ form.hidden_tag() }}
+                    <fieldset class="form-group" >
+                    <legend class="border-bottom mb-4 mt-5" style="width: 500px; ">로그인</legend>
+                            <div class="mb-3" style="width: 500px; ">
+                                {{ form.email.label(class="form-label")}}
+                                {{ form.email(class="form-control form-control-lg")}}
+                            </div>
+                            <div class="mb-3" style="width: 500px; ">
+                                {{ form.password.label(class="form-label")}}
+                                {{ form.password(class="form-control form-control-lg")}}
+                            </div>
+                            <div class="form-check mb-3" style="width: 500px; ">
+                                {{ form.remember(class="form-check-input") }}
+                                {{ form.remember.label(class="form-check-label") }}
+                            </div>
+                    </fieldset>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-outline-info") }}
+            {#            <small class="text-muted ml-2">#}
+            {#                <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>#}
+            {#            </small>#}
+                    </div>
+                </form>
+                </div>
+            
+            {% endif %}
+
+
+        </div>
+    </div>
+
+    <footer class="py-3 my-4" >
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3" >
+          <li class="nav-item"><a href="https://github.com/GoodDonkey" class="nav-link px-2 text-muted" target='_blank'>Donkey</a></li>
+          <li class="nav-item"><a href="https://github.com/metaego" class="nav-link px-2 text-muted" target='_blank'>Suyeon</a></li>
+          <li class="nav-item"><a href="https://github.com/taeyoung0103" class="nav-link px-2 text-muted" target='_blank'>Taeyoung</a></li>
+          <li class="nav-item"><a href="https://github.com/mechaniclib" class="nav-link px-2 text-muted" target='_blank'>Youngmin</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2021 Team MindTree</p>
+    </footer>
+
+{% endblock %}

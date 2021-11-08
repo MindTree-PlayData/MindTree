@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{#    배경을 지정하는 스크립트 #}
+    <script>
+        $(document.body).toggleClass('datetime')
+    </script>
+<div class="d-flex flex-column align-items-stretch">
+    <div class="container-fluid mt-4 mb-3 d-flex flex-column">
+
+        <div class="container">
+            <h2 class="me-5">분석기간을 선택하세요</h2>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <form class="container" action="{{ url_for('series_analysis') }}" method="POST" enctype="multipart/form-data">
+                <label>
+                    <input class="me-3" name="startdate" type="date" required>
+                </label>
+                <label>
+                    <input class="me-3" name="finishdate" type="date" required>
+                </label>
+
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#waitModal">분석하기</button>
+            </form>
+
+            {# 대기 모달창 시작 #}
+            <div class="modal fade" id="waitModal" tabindex="-1" role="dialog" aria-labelledby="waitModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="waitModalLabel">잠시만 기다려 주세요</h5>
+                        </div>
+
+                        <div class="modal-body">
+                            일기들을 분석중입니다....
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# 대기 모달창 끝 #}
+        </div>
+    </div>
+    <div class="d-flex align-self-end mt-auto">
+    </div>
+</div>
+{% endblock %}
